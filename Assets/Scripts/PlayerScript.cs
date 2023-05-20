@@ -8,11 +8,10 @@ public class PlayerScript : MonoBehaviour
 
     private float _playerMoveSpeed = 8f;
 
-    private float _maxJumpForce = 8f;
-    private float _minJumpForce = 2f;
-    private float _instantJumpForce = 16f;
+    private float _highestJumpForce = 7f;
+    private float _lowestJumpForce = 9f;
     private float _currentJumpForce;
-    private float _maxJumpTime = 0.5f;
+    private float _maxJumpTime = 0.3f;
     private float _jumpTime = 0f;
     private bool _isTryingToJump = false;
     private bool _isGrounded;
@@ -132,6 +131,7 @@ public class PlayerScript : MonoBehaviour
                 if (_jumpTime <= _maxJumpTime) {
                     HandleJumpPressingOverTime();
                 } else _jumpState = JumpState.Falling;
+
                 break;
             case JumpState.AirJumping:
                 _jumpTime += Time.deltaTime;
@@ -149,14 +149,13 @@ public class PlayerScript : MonoBehaviour
     }
 
     private void HandleJumpFirstFrame() {
-        //_playerRigidBody.AddForce(Vector2.up * _instantJumpForce, ForceMode2D.Impulse);
-        _currentPlayerVelocity.y = _instantJumpForce;
+        _currentPlayerVelocity.y = _lowestJumpForce;
         SetPlayerVelocity(_currentPlayerVelocity);
     }
 
     private void HandleJumpPressingOverTime() {
         float normalizedJumpTime = Mathf.Clamp01(_jumpTime / _maxJumpTime);
-        _currentJumpForce = Mathf.Lerp(_minJumpForce, _maxJumpForce, normalizedJumpTime);
+        _currentJumpForce = Mathf.Lerp(_lowestJumpForce, _highestJumpForce, normalizedJumpTime);
 
         _currentPlayerVelocity.y = _currentJumpForce;
         SetPlayerVelocity(_currentPlayerVelocity);
