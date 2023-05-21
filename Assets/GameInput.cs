@@ -17,9 +17,11 @@ public class GameInput : MonoBehaviour
     public event EventHandler OnJumpPerformed;
     public event EventHandler OnJumpCanceled;
 
+    public event EventHandler OnTurboPressed;
+    public event EventHandler OnTurboCanceled;
 
     public event EventHandler OnAttackPressed;
-    public event EventHandler OnTurboPressed;
+    
 
 
     private void Awake() {
@@ -39,8 +41,11 @@ public class GameInput : MonoBehaviour
         _gameInputActions.Player.Jump.performed += Jump_performed;
         _gameInputActions.Player.Jump.canceled += Jump_canceled;
 
-        _gameInputActions.Player.Attack.performed += Attack_performed;
         _gameInputActions.Player.Turbo.performed += Turbo_performed;
+        _gameInputActions.Player.Turbo.canceled += Turbo_canceled;
+
+        _gameInputActions.Player.Attack.performed += Attack_performed;
+        
     }
 
     private void Jump_started(InputAction.CallbackContext obj) {
@@ -59,6 +64,10 @@ public class GameInput : MonoBehaviour
         OnTurboPressed?.Invoke(this, EventArgs.Empty);
     }
 
+    private void Turbo_canceled(InputAction.CallbackContext obj) {
+        OnTurboCanceled?.Invoke(this, EventArgs.Empty);
+    }
+
     private void Attack_performed(InputAction.CallbackContext obj) {
         OnAttackPressed?.Invoke(this, EventArgs.Empty);
     }
@@ -66,9 +75,12 @@ public class GameInput : MonoBehaviour
     public Vector2 GetMovementVectorNormalized() {
         Vector2 inputVector = _gameInputActions.Player.Move.ReadValue<Vector2>();
 
-        inputVector = inputVector.normalized;
+        Vector2 vectorToReturn = new Vector2(inputVector.x, 0f);
 
-        return inputVector;
+        vectorToReturn = vectorToReturn.normalized;
+
+        return vectorToReturn;
+
     }
 
 }

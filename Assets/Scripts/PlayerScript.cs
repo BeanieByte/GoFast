@@ -5,23 +5,52 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
+    [Header("Player Elements")]
 
-    private float _playerMoveSpeed = 8f;
+    [SerializeField] private PlayerVisualScript _playerVisual;
+    private Rigidbody2D _playerRigidBody;
 
-    private float _highestJumpForce = 7f;
-    private float _lowestJumpForce = 9f;
+    private Vector2 _currentPlayerVelocity;
+
+
+    [Header("Player Stats")]
+
+    [SerializeField] private float _playerMoveSpeed = 8f;
+    private float _playerMoveSpeedMultiplier = 1f;
+    private float _playerMoveSpeedMultiplierDefault = 1f;
+    [SerializeField] private bool _playerFacingRight;
+
+    [SerializeField] private float _highestJumpForce = 7f;
+    [SerializeField] private float _lowestJumpForce = 9f;
     private float _currentJumpForce;
-    private float _maxJumpTime = 0.3f;
-    private float _jumpTime = 0f;
-    private bool _isTryingToJump = false;
-    private bool _isGrounded;
+
+    [SerializeField] private int _maxAvailableAirJumps = 1;
+    private int _currentAvailableAirJumps;
+
+    private float _playerCrouchedMoveSpeedMultiplier = 0.5f;
+    private float _decreasedSpeedModifier = 0.5f;
+
+    [Header("Jump Elements")]
+
     [SerializeField] private Transform _playerFeetPos;
     [SerializeField] private LayerMask _layerIsGrounded;
     private float _checkFeetRadius = 0.3f;
-    private int _maxAvailableAirJumps = 1;
-    private int _currentAvailableAirJumps;
+    private bool _isGrounded;
 
-    private Vector2 _currentPlayerVelocity;
+    private bool _isTryingToJump = false;
+    private float _maxJumpTime = 0.3f;
+    private float _jumpTime = 0f;
+
+
+    [Header("Turbo Elements")]
+
+    [SerializeField] private float _maxTurboTime = 3f;
+    private float _currentTurboTime = 0f;
+    private float _turboSpeedMultiplier = 2f;
+    private bool _canTurbo = true;
+    private bool _isTryingToTurbo = false;
+    private float _cooldownUntilStartingTurboRefill = 2f;
+    private float _currentTurboCooldownTime = 0f;
 
 
     enum JumpState { 
@@ -33,11 +62,14 @@ public class PlayerScript : MonoBehaviour
 
     private JumpState _jumpState;
 
-    [SerializeField] private PlayerVisualScript _playerVisual;
 
-    [SerializeField] private bool _playerFacingRight;
+    enum SpeedState { 
+        Regular,
+        Turbo,
+        Decreased
+    }
 
-    private Rigidbody2D _playerRigidBody;
+    private SpeedState _speedState;
 
     private void Awake() {
         _playerRigidBody = GetComponent<Rigidbody2D>();
@@ -50,23 +82,26 @@ public class PlayerScript : MonoBehaviour
         GameInput.Instance.OnJumpPerformed += Instance_OnJumpPressed;
         GameInput.Instance.OnJumpCanceled += Instance_OnJumpCanceled;
 
-        GameInput.Instance.OnAttackPressed += Instance_OnAttackPressed;
         GameInput.Instance.OnTurboPressed += Instance_OnTurboPressed;
-        
+        GameInput.Instance.OnTurboCanceled += Instance_OnTurboCanceled;
+
+        GameInput.Instance.OnAttackPressed += Instance_OnAttackPressed;
+
         if (!_playerFacingRight) {
             _playerVisual.Flip();
         }
 
         _jumpState = JumpState.Grounded;
+
+        _speedState = SpeedState.Regular;
+        _currentTurboTime = _maxTurboTime;
     }
 
     private void Instance_OnJumpStarted(object sender, System.EventArgs e) {
         if (_jumpState == JumpState.Grounded) {
-            HandleJumpFirstFrame();
             _jumpState = JumpState.Jumping;
         } else if (_jumpState == JumpState.Falling && _currentAvailableAirJumps > 0) {
             StopYVelocity();
-            HandleJumpFirstFrame();
             _jumpState = JumpState.AirJumping;
             _currentAvailableAirJumps--;
         }
@@ -87,8 +122,19 @@ public class PlayerScript : MonoBehaviour
     }
 
     private void Instance_OnTurboPressed(object sender, System.EventArgs e) {
-        throw new System.NotImplementedException();
+        if (!_isTryingToTurbo) {
+            _isTryingToTurbo = true;
+            _currentTurboCooldownTime = 0f;
+        }
     }
+
+    private void Instance_OnTurboCanceled(object sender, System.EventArgs e) {
+        if (_isTryingToTurbo) {
+            _isTryingToTurbo = false;
+            _currentTurboCooldownTime = 0f;
+        }
+    }
+
 
     private void Instance_OnAttackPressed(object sender, System.EventArgs e) {
         throw new System.NotImplementedException();
@@ -97,9 +143,9 @@ public class PlayerScript : MonoBehaviour
     private void Update() {
         Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
 
-        Vector2 moveDir = new Vector2(inputVector.x, inputVector.y);
+        Vector2 moveDir = new Vector2(inputVector.x, 0);
 
-        transform.position = (Vector2)transform.position + _playerMoveSpeed * Time.deltaTime * moveDir;
+        transform.position = (Vector2)transform.position + _playerMoveSpeed * Time.deltaTime * moveDir * _playerMoveSpeedMultiplier;
 
         _isGrounded = Physics2D.OverlapCircle(_playerFeetPos.position, _checkFeetRadius, _layerIsGrounded);
 
@@ -113,6 +159,34 @@ public class PlayerScript : MonoBehaviour
         } else if (moveDir.x > 0 && !_playerFacingRight){
             _playerVisual.Flip();
             _playerFacingRight = !_playerFacingRight;
+        }
+
+        if (_isTryingToTurbo && _canTurbo) {
+            _speedState = SpeedState.Turbo;
+        }
+
+        switch (_speedState) {
+            case SpeedState.Regular:
+                SetPlayerMovementVelocity(_playerMoveSpeedMultiplierDefault);
+                RecoverTurboSpeedOverTime();
+                if (_currentTurboTime > 0) {
+                    _canTurbo = true;
+                }
+                break;
+            case SpeedState.Turbo:
+                _currentTurboTime -= Time.deltaTime;
+                if (_currentTurboTime > 0) {
+                    SetPlayerMovementVelocity(_turboSpeedMultiplier);
+                } else _canTurbo = false;
+                if (!_canTurbo) {
+                    _speedState = SpeedState.Regular;
+                }
+                break;
+            case SpeedState.Decreased:
+                _canTurbo = false;
+                SetPlayerMovementVelocity(_decreasedSpeedModifier);
+                RecoverTurboSpeedOverTime();
+                break;
         }
     }
 
@@ -148,9 +222,10 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
+    //Unused for now
     private void HandleJumpFirstFrame() {
         _currentPlayerVelocity.y = _lowestJumpForce;
-        SetPlayerVelocity(_currentPlayerVelocity);
+        SetPlayerRigidBodyVelocity(_currentPlayerVelocity);
     }
 
     private void HandleJumpPressingOverTime() {
@@ -158,15 +233,38 @@ public class PlayerScript : MonoBehaviour
         _currentJumpForce = Mathf.Lerp(_lowestJumpForce, _highestJumpForce, normalizedJumpTime);
 
         _currentPlayerVelocity.y = _currentJumpForce;
-        SetPlayerVelocity(_currentPlayerVelocity);
+        SetPlayerRigidBodyVelocity(_currentPlayerVelocity);
     }
 
     private void StopYVelocity() {
         _currentPlayerVelocity.y = 0f;
-        SetPlayerVelocity(_currentPlayerVelocity);
+        SetPlayerRigidBodyVelocity(_currentPlayerVelocity);
     }
 
-    private void SetPlayerVelocity(Vector2 newPlayerVelocity) {
+    private void SetPlayerRigidBodyVelocity(Vector2 newPlayerVelocity) {
         _playerRigidBody.velocity = newPlayerVelocity;
+    }
+
+    private void SetPlayerMovementVelocity(float speedMultiplier) {
+        _playerMoveSpeedMultiplier = speedMultiplier;
+    }
+
+    private void RecoverTurboSpeedOverTime() {
+        if (!_isTryingToTurbo && _currentTurboTime < _maxTurboTime) {
+            _currentTurboCooldownTime += Time.deltaTime;
+            if (_currentTurboCooldownTime >= _cooldownUntilStartingTurboRefill) {
+                _currentTurboTime += Time.deltaTime;
+                if (_currentTurboTime > _maxTurboTime) {
+                    _currentTurboTime = _maxTurboTime;
+                }
+            }
+        }
+    }
+
+    //Unused for now
+    private void RecoverTurboSpeedInstantly() {
+        if (_currentTurboTime != _maxTurboTime) { 
+            _currentTurboTime = _maxTurboTime;
+        }
     }
 }

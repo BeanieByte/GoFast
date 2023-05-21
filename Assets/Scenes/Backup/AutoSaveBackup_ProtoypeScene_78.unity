@@ -1428,7 +1428,6 @@ MonoBehaviour:
   _layerIsGrounded:
     serializedVersion: 2
     m_Bits: 64
-  _maxTurboTime: 3
 --- !u!1 &1611152868
 GameObject:
   m_ObjectHideFlags: 2

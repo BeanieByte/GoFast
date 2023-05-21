@@ -1418,17 +1418,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc30e1be9ecde3d40a3fbc7fe3121922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerVisual: {fileID: 802244516}
   _playerMoveSpeed: 8
-  _playerFacingRight: 1
-  _highestJumpForce: 7
+  _highestJumpForce: 20
   _lowestJumpForce: 9
-  _maxAvailableAirJumps: 1
   _playerFeetPos: {fileID: 636070180}
   _layerIsGrounded:
     serializedVersion: 2
     m_Bits: 64
-  _maxTurboTime: 3
+  _playerVisual: {fileID: 802244516}
+  _playerFacingRight: 1
 --- !u!1 &1611152868
 GameObject:
   m_ObjectHideFlags: 2
