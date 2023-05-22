@@ -1,10 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
 
-public class PlayerScript : MonoBehaviour
-{
+public class PlayerScript : MonoBehaviour {
     [Header("Player Elements")]
 
     [SerializeField] private PlayerVisualScript _playerVisual;
@@ -42,15 +42,22 @@ public class PlayerScript : MonoBehaviour
     private float _jumpTime = 0f;
 
 
-    [Header("Turbo Elements")]
+    [field: Header("Turbo Elements")]
 
-    [SerializeField] private float _maxTurboTime = 3f;
+    [field: SerializeField] public float _maxTurboTime { get; private set; }
     private float _currentTurboTime = 0f;
-    private float _turboSpeedMultiplier = 2f;
     private bool _canTurbo = true;
     private bool _isTryingToTurbo = false;
+
+    private float _turboSpeedMultiplier = 2f;
+
     private float _cooldownUntilStartingTurboRefill = 2f;
     private float _currentTurboCooldownTime = 0f;
+
+    public event EventHandler<OnTurboTimeChangedEventArgs> OnTurboTimeChanged;
+    public class OnTurboTimeChangedEventArgs : EventArgs {
+        public float turboTime;
+    }
 
 
     enum JumpState { 
@@ -94,7 +101,12 @@ public class PlayerScript : MonoBehaviour
         _jumpState = JumpState.Grounded;
 
         _speedState = SpeedState.Regular;
+        _maxTurboTime = 3f;
         _currentTurboTime = _maxTurboTime;
+
+        OnTurboTimeChanged?.Invoke(this, new OnTurboTimeChangedEventArgs {
+            turboTime = _currentTurboTime
+        }) ;
     }
 
     private void Instance_OnJumpStarted(object sender, System.EventArgs e) {
@@ -175,6 +187,9 @@ public class PlayerScript : MonoBehaviour
                 break;
             case SpeedState.Turbo:
                 _currentTurboTime -= Time.deltaTime;
+                OnTurboTimeChanged?.Invoke(this, new OnTurboTimeChangedEventArgs {
+                    turboTime = _currentTurboTime
+                });
                 if (_currentTurboTime > 0) {
                     SetPlayerMovementVelocity(_turboSpeedMultiplier);
                 } else _canTurbo = false;
@@ -252,10 +267,16 @@ public class PlayerScript : MonoBehaviour
     private void RecoverTurboSpeedOverTime() {
         if (!_isTryingToTurbo && _currentTurboTime < _maxTurboTime) {
             _currentTurboCooldownTime += Time.deltaTime;
+            OnTurboTimeChanged?.Invoke(this, new OnTurboTimeChangedEventArgs {
+                turboTime = _currentTurboTime
+            });
             if (_currentTurboCooldownTime >= _cooldownUntilStartingTurboRefill) {
                 _currentTurboTime += Time.deltaTime;
                 if (_currentTurboTime > _maxTurboTime) {
                     _currentTurboTime = _maxTurboTime;
+                    OnTurboTimeChanged?.Invoke(this, new OnTurboTimeChangedEventArgs {
+                        turboTime = _currentTurboTime
+                    });
                 }
             }
         }
@@ -265,6 +286,9 @@ public class PlayerScript : MonoBehaviour
     private void RecoverTurboSpeedInstantly() {
         if (_currentTurboTime != _maxTurboTime) { 
             _currentTurboTime = _maxTurboTime;
+            OnTurboTimeChanged?.Invoke(this, new OnTurboTimeChangedEventArgs {
+                turboTime = _currentTurboTime
+            });
         }
     }
 }
