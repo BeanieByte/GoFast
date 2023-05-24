@@ -79,6 +79,12 @@ public class GameInput : MonoBehaviour
 
         vectorToReturn = vectorToReturn.normalized;
 
+        // Fazer uma maneira de, quando o player está a carregar no A e no D ao mesmo tempo, em vez de parar, o movimento é na direção da última key pressed
+
+        //if (vectorToReturn.normalized == Vector2.zero && _gameInputActions.KeyboardScheme) { 
+            
+        //}
+
         return vectorToReturn;
 
     }

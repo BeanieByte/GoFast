@@ -15,6 +15,10 @@ public class PlayerScript : MonoBehaviour {
 
     [Header("Player Stats")]
 
+    [SerializeField] private int _maxHealth = 100;
+    private int _currentHealth;
+    [SerializeField] private int _attackPower = 20;
+
     [SerializeField] private float _playerMoveSpeed = 8f;
     private float _playerMoveSpeedMultiplier = 1f;
     private float _playerMoveSpeedMultiplierDefault = 1f;
@@ -59,6 +63,9 @@ public class PlayerScript : MonoBehaviour {
         public float turboTime;
     }
 
+    [field: Header("Attack Elements")]
+    [SerializeField] private CircleCollider2D _attackCollider;
+    [SerializeField] private PlayerAttackScript _playerAttack;
 
     enum JumpState { 
         Grounded,
@@ -82,6 +89,7 @@ public class PlayerScript : MonoBehaviour {
         _playerRigidBody = GetComponent<Rigidbody2D>();
 
         _currentPlayerVelocity = _playerRigidBody.velocity;
+        _currentHealth = _maxHealth;
     }
 
     private void Start() {
@@ -93,6 +101,8 @@ public class PlayerScript : MonoBehaviour {
         GameInput.Instance.OnTurboCanceled += Instance_OnTurboCanceled;
 
         GameInput.Instance.OnAttackPressed += Instance_OnAttackPressed;
+
+        _playerAttack.OnKillingEnemy += _playerAttack_OnKillingEnemy;
 
         if (!_playerFacingRight) {
             _playerVisual.Flip();
@@ -107,6 +117,10 @@ public class PlayerScript : MonoBehaviour {
         OnTurboTimeChanged?.Invoke(this, new OnTurboTimeChangedEventArgs {
             turboTime = _currentTurboTime
         }) ;
+    }
+
+    private void _playerAttack_OnKillingEnemy(object sender, EventArgs e) {
+        RecoverTurboSpeedInstantly();
     }
 
     private void Instance_OnJumpStarted(object sender, System.EventArgs e) {
@@ -147,10 +161,10 @@ public class PlayerScript : MonoBehaviour {
         }
     }
 
-
     private void Instance_OnAttackPressed(object sender, System.EventArgs e) {
-        throw new System.NotImplementedException();
+        Attack();
     }
+
 
     private void Update() {
         Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
@@ -193,7 +207,7 @@ public class PlayerScript : MonoBehaviour {
                 if (_currentTurboTime > 0) {
                     SetPlayerMovementVelocity(_turboSpeedMultiplier);
                 } else _canTurbo = false;
-                if (!_canTurbo) {
+                if (!_canTurbo || !_isTryingToTurbo) {
                     _speedState = SpeedState.Regular;
                 }
                 break;
@@ -203,6 +217,8 @@ public class PlayerScript : MonoBehaviour {
                 RecoverTurboSpeedOverTime();
                 break;
         }
+
+        Debug.Log("Player's health is " + _currentHealth);
     }
 
     private void FixedUpdate() {
@@ -265,30 +281,65 @@ public class PlayerScript : MonoBehaviour {
     }
 
     private void RecoverTurboSpeedOverTime() {
-        if (!_isTryingToTurbo && _currentTurboTime < _maxTurboTime) {
-            _currentTurboCooldownTime += Time.deltaTime;
-            OnTurboTimeChanged?.Invoke(this, new OnTurboTimeChangedEventArgs {
-                turboTime = _currentTurboTime
-            });
-            if (_currentTurboCooldownTime >= _cooldownUntilStartingTurboRefill) {
-                _currentTurboTime += Time.deltaTime;
-                if (_currentTurboTime > _maxTurboTime) {
-                    _currentTurboTime = _maxTurboTime;
-                    OnTurboTimeChanged?.Invoke(this, new OnTurboTimeChangedEventArgs {
-                        turboTime = _currentTurboTime
-                    });
-                }
-            }
-        }
-    }
+        //if (!_isTryingToTurbo && _currentTurboTime < _maxTurboTime) {
+        //    _currentTurboCooldownTime += Time.deltaTime;
+        //    OnTurboTimeChanged?.Invoke(this, new OnTurboTimeChangedEventArgs {
+        //        turboTime = _currentTurboTime
+        //    });
+        //    if (_currentTurboCooldownTime >= _cooldownUntilStartingTurboRefill) {
+        //        _currentTurboTime += Time.deltaTime;
+        //        if (_currentTurboTime > _maxTurboTime) {
+        //            _currentTurboTime = _maxTurboTime;
+        //            OnTurboTimeChanged?.Invoke(this, new OnTurboTimeChangedEventArgs {
+        //                turboTime = _currentTurboTime
+        //            });
+        //        }
+        //    }
+        //}
 
-    //Unused for now
-    private void RecoverTurboSpeedInstantly() {
-        if (_currentTurboTime != _maxTurboTime) { 
+        if (_currentTurboTime > _maxTurboTime) {
             _currentTurboTime = _maxTurboTime;
             OnTurboTimeChanged?.Invoke(this, new OnTurboTimeChangedEventArgs {
                 turboTime = _currentTurboTime
             });
         }
+
+        if (_isTryingToTurbo || _currentTurboTime >= _maxTurboTime) {
+            return;
+        }
+
+        _currentTurboCooldownTime += Time.deltaTime;
+
+        if (_currentTurboCooldownTime >= _cooldownUntilStartingTurboRefill && _currentTurboTime < _maxTurboTime) {
+            _currentTurboTime += Time.deltaTime;
+            OnTurboTimeChanged?.Invoke(this, new OnTurboTimeChangedEventArgs {
+                turboTime = _currentTurboTime
+            });
+        }
+        
+        
+    }
+
+    private void RecoverTurboSpeedInstantly() {
+        Debug.Log("Trying to Instantly Recover Speed");
+        if (_currentTurboTime != _maxTurboTime) {
+            Debug.Log("Instantly Recovered Speed");
+            _currentTurboTime = _maxTurboTime;
+            OnTurboTimeChanged?.Invoke(this, new OnTurboTimeChangedEventArgs {
+                turboTime = _currentTurboTime
+            });
+        }
+    }
+
+    private void Attack() {
+        if (!_attackCollider.isActiveAndEnabled) {
+            _attackCollider.gameObject.SetActive(true);
+        }
+        _playerAttack.SetAttackPower(_attackPower);
+    }
+    
+
+    public void Damage(int enemyAttackPower) {
+        _currentHealth -= enemyAttackPower;
     }
 }
