@@ -15,9 +15,11 @@ public class PlayerAttackScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision) {
         IDamageable enemy = collision.GetComponent<IDamageable>();
+        Debug.Log("Hit!");
         if (enemy == null) {
             return;
         }
+        
         enemy.Damage(_attackPower);
         if (enemy.DeadCheck()){
             OnKillingEnemy.Invoke(this, EventArgs.Empty);
