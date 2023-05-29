@@ -1,47 +1,108 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyBaseScript : MonoBehaviour, IDamageable
 {
-    [SerializeField] private EnemySO _mySO;
-    [SerializeField] private EnemyVisualBaseScript _myVisual;
+    [SerializeField] protected EnemySO _mySO;
+    [SerializeField] protected EnemyVisualBaseScript _myVisual;
+    [SerializeField] private Collider2D _touchAttackTrigger;
 
-    private Rigidbody2D _myRigidBody;
-    [SerializeField] private CapsuleCollider2D _attackCollider;
+    protected Rigidbody2D _myRigidBody;
+    protected Collider2D _myCollider;
 
-    private int _currentHealth;
+    [SerializeField] private bool _isFacingRight;
+    private Vector2 _moveDir;
+
+    protected int _currentHealth;
+
+    private bool _canIWalk;
+
+    [SerializeField] private Transform _wallCheck;
+    [SerializeField] private Transform _edgeCheck;
+    [SerializeField] private LayerMask _layerIsGrounded;
+    private float _checkRadius = 0.1f;
 
     private void Awake() {
         _myRigidBody = GetComponent<Rigidbody2D>();
+    }
 
+    protected virtual void Start() {
+        _myVisual.GetComponent<SpriteRenderer>().material = _mySO.material;
+        
         _currentHealth = _mySO.health;
+
+        if (_isFacingRight) {
+            _myVisual.Flip();
+        }
+        CanIWalk(true);
     }
 
     private void Update() {
-        Debug.Log("Mushroom's health is " + _currentHealth);
+
+        if (_isFacingRight && _moveDir.x <= 0) {
+            _moveDir = new Vector2(1f, 0f);
+            _myVisual.Flip();
+        } else if (!_isFacingRight && _moveDir.x >= 0) {
+            _moveDir = new Vector2(-1f, 0f);
+            _myVisual.Flip();
+        }
+
+        if (!_canIWalk) {
+            
+            return;
+        }
+
+
+        transform.position = (Vector2)transform.position + _mySO.speed * Time.deltaTime * _moveDir;
+
+
+        if (!Physics2D.OverlapCircle(_edgeCheck.position, _checkRadius, _layerIsGrounded) || Physics2D.OverlapCircle(_wallCheck.position, _checkRadius, _layerIsGrounded)) {
+            _isFacingRight = !_isFacingRight;
+        };
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
         PlayerScript player = collision.GetComponent<PlayerScript>();
-        IDamageable enemy = collision.GetComponent<IDamageable>();
         if (player != null) {
-            player.Damage(_mySO.attackPower);
-        }
-        if (enemy != null) {
-            enemy.Damage(_mySO.attackPower);
+            player.Damage(_mySO.touchPower);
         }
     }
 
-
-    public void Damage(int attackPower) {
+    public virtual void Damage(int attackPower) {
         _currentHealth -= attackPower;
         DeadCheck();
     }
 
-    public bool DeadCheck() {
+    public virtual bool DeadCheck() {
         if (_currentHealth > 0) {
+            _myVisual.PlayHitAnim();
             return false;
-        } else return true;
+        }
+        _myRigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
+        _myVisual.PlayDeadAnim();
+        return true;
+    }
+
+    public void CanIWalk(bool canIWalk) {
+        _canIWalk = canIWalk;
+    }
+
+    public void SetTouchAttackTrigger(bool isActive) {
+        _touchAttackTrigger.gameObject.SetActive(isActive);
+    }
+
+    public float EnemyBounceOffMultiplier() {
+        return _mySO.bounceOffMultiplier;
+    }
+
+    public bool CanBounceButIsHurt() {
+        return _mySO.canBounceOffButIsHurt;
+    }
+
+    public int TouchAttackPower() {
+        return _mySO.touchPower;
     }
 }

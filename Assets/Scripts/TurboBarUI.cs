@@ -9,8 +9,8 @@ public class TurboBarUI : MonoBehaviour
     [SerializeField] private Slider _turboBarUI;
 
     private void Start() {
-        _turboBarUI.maxValue = _playerScript._maxTurboTime;
         _playerScript.OnTurboTimeChanged += _playerScript_OnTurboTimeChanged;
+        _turboBarUI.maxValue = _playerScript.MaxTurboTime();
     }
 
     private void _playerScript_OnTurboTimeChanged(object sender, PlayerScript.OnTurboTimeChangedEventArgs e) {
@@ -18,8 +18,8 @@ public class TurboBarUI : MonoBehaviour
     }
 
     private void Update() {
-        if (_turboBarUI.maxValue != _playerScript._maxTurboTime){
-            _turboBarUI.maxValue = _playerScript._maxTurboTime;
+        if (_turboBarUI.maxValue != _playerScript.MaxTurboTime()) {
+            _turboBarUI.maxValue = _playerScript.MaxTurboTime();
         }
     }
 }

@@ -10,12 +10,8 @@ public class PlayerAttackScript : MonoBehaviour
 
     public event EventHandler OnKillingEnemy;
 
-    private void Awake() {
-    }
-
     private void OnTriggerEnter2D(Collider2D collision) {
         IDamageable enemy = collision.GetComponent<IDamageable>();
-        Debug.Log("Hit!");
         if (enemy == null) {
             return;
         }
@@ -23,7 +19,6 @@ public class PlayerAttackScript : MonoBehaviour
         enemy.Damage(_attackPower);
         if (enemy.DeadCheck()){
             OnKillingEnemy.Invoke(this, EventArgs.Empty);
-            Destroy(collision.gameObject);
         }
 
     }

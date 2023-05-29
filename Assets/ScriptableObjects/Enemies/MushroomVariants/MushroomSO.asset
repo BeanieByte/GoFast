@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b0f8fa96bb6a7a4cb3ee95c2622c1f4, type: 3}
+  m_Name: MushroomSO
+  m_EditorClassIdentifier: 
+  sprite: {fileID: -28054898, guid: a48b97781b4adf2459375aa310cf1233, type: 3}
+  prefab: {fileID: 4787343910479774887, guid: 14328becb0ddea843b7e68d70a8d9357, type: 3}
+  material: {fileID: 2100000, guid: 0697972c40c6556469eb412a7f27ad4a, type: 2}
+  enemyName: Mushroom
+  health: 10
+  attackPower: 0
+  touchAttackPower: 1
+  speed: 1
+  bounceOffMultiplier: 1
+  canBounceButIsHurt: 0

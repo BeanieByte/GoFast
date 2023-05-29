@@ -4,15 +4,48 @@ using UnityEngine;
 
 public class EnemyVisualBaseScript : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    protected EnemyBaseScript _myLogicScript;
+    protected Animator _myAnimator;
+
+    private const string hit_CONST = "hit";
+    protected const string die_CONST = "die";
+
+    private void Awake() {
+        _myLogicScript = GetComponentInParent<EnemyBaseScript>();
+        _myAnimator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    protected virtual void Start() { 
+    
+    }
+
+    public void Flip() {
+        transform.Rotate(0f, 180f, 0f);
+    }
+
+    public void PlayHitAnim() {
+        _myAnimator.SetTrigger(hit_CONST);
+    }
+
+    public virtual void PlayDeadAnim() {
+        _myAnimator.SetTrigger(die_CONST);
+    }
+
+    public void Die() {
+        Destroy(_myLogicScript.gameObject);
+    }
+
+    public void DisableTouchAttackTrigger() {
+        _myLogicScript.CanIWalk(false);
+        _myLogicScript.SetTouchAttackTrigger(false);
+    }
+
+    public void EnableTouchAttackTrigger() {
+        _myLogicScript.CanIWalk(true);
+        _myLogicScript.SetTouchAttackTrigger(true);
+    }
+
+    public virtual void Crushed() { 
+    
     }
 }

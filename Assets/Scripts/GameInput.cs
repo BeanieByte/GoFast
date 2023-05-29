@@ -21,11 +21,13 @@ public class GameInput : MonoBehaviour
     public event EventHandler OnTurboCanceled;
 
     public event EventHandler OnAttackPressed;
-    
+
+
+    private bool _isPressingLeft;
+    private bool _isPressingRight;
 
 
     private void Awake() {
-        // If there is an instance, and it's not me, delete myself.
         if (Instance != null && Instance != this) 
         {
             Destroy(this);
@@ -46,6 +48,11 @@ public class GameInput : MonoBehaviour
 
         _gameInputActions.Player.Attack.performed += Attack_performed;
         
+    }
+
+    private void Start() {
+        _isPressingLeft = false;
+        _isPressingRight = false;
     }
 
     private void Jump_started(InputAction.CallbackContext obj) {
@@ -73,20 +80,14 @@ public class GameInput : MonoBehaviour
     }
 
     public Vector2 GetMovementVectorNormalized() {
+
         Vector2 inputVector = _gameInputActions.Player.Move.ReadValue<Vector2>();
 
         Vector2 vectorToReturn = new Vector2(inputVector.x, 0f);
 
         vectorToReturn = vectorToReturn.normalized;
 
-        // Fazer uma maneira de, quando o player está a carregar no A e no D ao mesmo tempo, em vez de parar, o movimento é na direção da última key pressed
-
-        //if (vectorToReturn.normalized == Vector2.zero && _gameInputActions.KeyboardScheme) { 
-            
-        //}
-
         return vectorToReturn;
-
     }
 
 }

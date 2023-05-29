@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class MushroomVisualScript : EnemyVisualBaseScript
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    private const string crushed_CONST = "crushed";
+
+    protected override void Start() {
+        base.Start();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public override void Crushed() {
+        _myAnimator.SetTrigger(crushed_CONST);
     }
 }

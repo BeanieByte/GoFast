@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b0f8fa96bb6a7a4cb3ee95c2622c1f4, type: 3}
+  m_Name: MushroomFireSO
+  m_EditorClassIdentifier: 
+  sprite: {fileID: -28054898, guid: a48b97781b4adf2459375aa310cf1233, type: 3}
+  prefab: {fileID: 6544517686958218581, guid: a028f1a4ef421564bb451086ccaf75dd, type: 3}
+  material: {fileID: 2100000, guid: 96d7165b0f52fb64c8011de479d84435, type: 2}
+  enemyName: Mushroom Fire
+  health: 20
+  attackPower: 0
+  touchPower: 10
+  speed: 1.5
+  bounceOffMultiplier: 1
+  canBounceOffButIsHurt: 1

@@ -8,17 +8,17 @@ public class PlayerVisualScript : MonoBehaviour
 
     private Animator _playerAnimator;
 
-    private const string isRunningBool = "isRunning";
-    private const string isGroundedBool = "isGrounded";
-    private const string jumpedTrigger = "jumped";
-    private const string airJumpedTrigger = "airJumped";
-    private const string fellTrigger = "fell";
-    private const string isAttackingBool = "isAttacking";
-    private const string attackTrigger = "attack";
-    private const string isJumpingBool = "isJumping";
-    private const string isFallingBool = "isFalling";
-    private const string dieTrigger = "die";
-    private const string hitTrigger = "hit";
+    private const string isRunning_CONST = "isRunning";
+    private const string runAnimSpeed_CONST = "runAnimSpeed";
+    private const string isGrounded_CONST = "isGrounded";
+    private const string jumped_CONST = "jumped";
+    private const string airJumped_CONST = "airJumped";
+    private const string isAttacking_CONST = "isAttacking";
+    private const string attack_CONST = "attack";
+    private const string isJumping_CONST = "isJumping";
+    private const string isFalling_CONST = "isFalling";
+    private const string die_CONST = "die";
+    private const string isAlive_CONST = "isAlive";
 
     enum AnimAirState { 
         Grounded,
@@ -36,25 +36,33 @@ public class PlayerVisualScript : MonoBehaviour
 
     private void Start()
     {
+        _playerAnimator.SetBool(isAlive_CONST, true);
+        
+        _playerLogicScript.OnRunAnimSpeedChange += _playerLogicScript_OnRunAnimSpeedChange;
+
         _playerLogicScript.OnPlayerAttacked += _playerLogicScript_OnPlayerAttacked;
 
         _playerLogicScript.OnPlayerJumped += _playerLogicScript_OnPlayerJumped;
         _playerLogicScript.OnPlayerAirJumped += _playerLogicScript_OnPlayerAirJumped;
     }
 
+    private void _playerLogicScript_OnRunAnimSpeedChange(object sender, PlayerScript.OnRunAnimSpeedChangeEventArgs e) {
+        _playerAnimator.SetFloat(runAnimSpeed_CONST, e.runAnimSpeedMultiplier);
+    }
+
     private void _playerLogicScript_OnPlayerAirJumped(object sender, System.EventArgs e)
     {
-        _playerAnimator.SetTrigger(airJumpedTrigger);
+        _playerAnimator.SetTrigger(airJumped_CONST);
     }
 
     private void _playerLogicScript_OnPlayerJumped(object sender, System.EventArgs e)
     {
-        _playerAnimator.SetTrigger(jumpedTrigger);
+        _playerAnimator.SetTrigger(jumped_CONST);
     }
 
     private void _playerLogicScript_OnPlayerAttacked(object sender, System.EventArgs e)
     {
-        _playerAnimator.SetTrigger(attackTrigger);
+        _playerAnimator.SetTrigger(attack_CONST);
     }
 
     public void Flip() {
@@ -63,10 +71,11 @@ public class PlayerVisualScript : MonoBehaviour
 
     private void Update()
     {
+
         if (_playerLogicScript.IsPlayerRunning()) {
-            _playerAnimator.SetBool(isRunningBool, true);
+            _playerAnimator.SetBool(isRunning_CONST, true);
         }
-        else _playerAnimator.SetBool(isRunningBool, false);
+        else _playerAnimator.SetBool(isRunning_CONST, false);
 
         if (_playerLogicScript.PlayersYVelocity() == 0)
         {
@@ -83,22 +92,39 @@ public class PlayerVisualScript : MonoBehaviour
 
         switch (_animAirState) {
             case AnimAirState.Grounded:
-                _playerAnimator.SetBool(isGroundedBool, true);
-                _playerAnimator.SetBool(isJumpingBool, false);
-                _playerAnimator.SetBool(isFallingBool, false);
+                _playerAnimator.SetBool(isGrounded_CONST, true);
+                _playerAnimator.SetBool(isJumping_CONST, false);
+                _playerAnimator.SetBool(isFalling_CONST, false);
                 break;
             case AnimAirState.Jumping:
-                _playerAnimator.SetBool(isGroundedBool, false);
-                _playerAnimator.SetBool(isJumpingBool, true);
-                _playerAnimator.SetBool(isFallingBool, false);
+                _playerAnimator.SetBool(isGrounded_CONST, false);
+                _playerAnimator.SetBool(isJumping_CONST, true);
+                _playerAnimator.SetBool(isFalling_CONST, false);
                 break;
             case AnimAirState.Falling:
-                _playerAnimator.SetBool(isGroundedBool, false);
-                _playerAnimator.SetBool(isJumpingBool, false);
-                _playerAnimator.SetBool(isFallingBool, true);
+                _playerAnimator.SetBool(isGrounded_CONST, false);
+                _playerAnimator.SetBool(isJumping_CONST, false);
+                _playerAnimator.SetBool(isFalling_CONST, true);
                 break;
         }
     }
-    
+
+    private void SetIsAttackingToTrue() {
+        _playerAnimator.SetBool(isAttacking_CONST, true);
+    }
+
+    private void SetIsAttackingToFalse() {
+        _playerAnimator.SetBool(isAttacking_CONST, false);
+    }
+
+    public void PlayDeathAnim() {
+        _playerAnimator.SetBool(isAlive_CONST, false);
+        _playerAnimator.SetTrigger(die_CONST);
+        _playerLogicScript.StopPlayer();
+    }
+
+    public void Die() {
+        Destroy(_playerLogicScript.gameObject);
+    }
 }
 
