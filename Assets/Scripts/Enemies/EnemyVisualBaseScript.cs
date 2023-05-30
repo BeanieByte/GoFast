@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,9 @@ public class EnemyVisualBaseScript : MonoBehaviour
 
     private const string hit_CONST = "hit";
     protected const string die_CONST = "die";
+
+    public event EventHandler OnEnemyHitAnimStarted;
+    public event EventHandler OnEnemyHitAnimStopped;
 
     private void Awake() {
         _myLogicScript = GetComponentInParent<EnemyBaseScript>();
@@ -25,6 +29,11 @@ public class EnemyVisualBaseScript : MonoBehaviour
 
     public void PlayHitAnim() {
         _myAnimator.SetTrigger(hit_CONST);
+        OnEnemyHitAnimStarted?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void StopHitAnim() {
+        OnEnemyHitAnimStopped?.Invoke(this, EventArgs.Empty);
     }
 
     public virtual void PlayDeadAnim() {
@@ -43,6 +52,7 @@ public class EnemyVisualBaseScript : MonoBehaviour
     public void EnableTouchAttackTrigger() {
         _myLogicScript.CanIWalk(true);
         _myLogicScript.SetTouchAttackTrigger(true);
+        StopHitAnim();
     }
 
     public virtual void Crushed() { 

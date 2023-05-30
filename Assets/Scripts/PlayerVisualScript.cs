@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine;
 public class PlayerVisualScript : MonoBehaviour
 {
     private PlayerScript _playerLogicScript;
+    private PlayerVisualShaderScript _playerShaderScript;
 
     private Animator _playerAnimator;
 
@@ -20,6 +22,9 @@ public class PlayerVisualScript : MonoBehaviour
     private const string die_CONST = "die";
     private const string isAlive_CONST = "isAlive";
 
+    public event EventHandler OnPlayerHitAnimStarted;
+    public event EventHandler OnPlayerHitAnimStopped;
+
     enum AnimAirState { 
         Grounded,
         Jumping,
@@ -31,6 +36,7 @@ public class PlayerVisualScript : MonoBehaviour
     private void Awake()
     {
         _playerLogicScript = GetComponentInParent<PlayerScript>();
+        _playerShaderScript = GetComponent<PlayerVisualShaderScript>();
         _playerAnimator = GetComponent<Animator>();
     }
 
@@ -69,7 +75,7 @@ public class PlayerVisualScript : MonoBehaviour
         transform.Rotate(0f, 180f, 0f);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
 
         if (_playerLogicScript.IsPlayerRunning()) {
@@ -115,6 +121,14 @@ public class PlayerVisualScript : MonoBehaviour
 
     private void SetIsAttackingToFalse() {
         _playerAnimator.SetBool(isAttacking_CONST, false);
+    }
+
+    public void PlayHitAnim() {
+        OnPlayerHitAnimStarted?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void StopHitAnim() {
+        OnPlayerHitAnimStopped?.Invoke(this, EventArgs.Empty);
     }
 
     public void PlayDeathAnim() {

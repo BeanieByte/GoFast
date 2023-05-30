@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using TarodevController;
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour {
@@ -33,7 +34,6 @@ public class PlayerScript : MonoBehaviour {
     [SerializeField] private int _maxAvailableAirJumps = 1;
     private int _currentAvailableAirJumps;
 
-    private float _playerCrouchedMoveSpeedMultiplier = 0.5f;
     private float _decreasedSpeedModifier = 0.5f;
 
     private float _maxUntilCanAttackCooldown = 1f;
@@ -50,7 +50,7 @@ public class PlayerScript : MonoBehaviour {
 
     [SerializeField] private Transform _playerFeetPos;
     [SerializeField] private LayerMask _layerIsGrounded;
-    private float _checkFeetRadius = 0.3f;
+    private float _checkFeetRadius = 0.2f;
     private bool _isGrounded;
 
     private bool _isTryingToJump = false;
@@ -194,12 +194,15 @@ public class PlayerScript : MonoBehaviour {
         }
     }
 
+    private void OnDrawGizmos() {
+        Gizmos.DrawSphere(_playerFeetPos.position, _checkFeetRadius);
+    }
 
-    private void Update() {
+    private void FixedUpdate() {
         if (_isDead) {
             return;
         }
-        
+
         Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
 
         if (inputVector == Vector2.zero) {
@@ -219,7 +222,7 @@ public class PlayerScript : MonoBehaviour {
         if (moveDir.x < 0 && _playerFacingRight) {
             _playerVisual.Flip();
             _playerFacingRight = !_playerFacingRight;
-        } else if (moveDir.x > 0 && !_playerFacingRight){
+        } else if (moveDir.x > 0 && !_playerFacingRight) {
             _playerVisual.Flip();
             _playerFacingRight = !_playerFacingRight;
         }
@@ -269,16 +272,6 @@ public class PlayerScript : MonoBehaviour {
                 break;
         }
 
-        if (_isInvincible) {
-            Debug.Log("Player is invincible");
-        }
-    }
-
-    private void FixedUpdate() {
-        if (_isDead) {
-            return;
-        }
-
         switch (_jumpState) {
             case JumpState.Grounded:
                 RecoverAirJumps();
@@ -313,6 +306,11 @@ public class PlayerScript : MonoBehaviour {
         SetPlayerRigidBodyVelocity(_currentPlayerVelocity);
     }
 
+    public void UpdateDecreaseSpeedModifier(float newDecreaseSpeedModifier) {
+        _decreasedSpeedModifier = newDecreaseSpeedModifier;
+        _speedState = SpeedState.Decreased;
+    }
+
     private void RecoverAirJumps() {
         if (_currentAvailableAirJumps < _maxAvailableAirJumps) {
             for (int i = 0; i < _maxAvailableAirJumps; i++) {
@@ -344,9 +342,9 @@ public class PlayerScript : MonoBehaviour {
         OnRunAnimSpeedChange?.Invoke(this, new OnRunAnimSpeedChangeEventArgs {
             runAnimSpeedMultiplier = speedMultiplier
         }) ;
-        if (speedMultiplier != 1f) {
+        if (speedMultiplier != _playerMoveSpeedMultiplierDefault) {
             _maxUntilCanAttackCooldown /= speedMultiplier;
-        } else _maxUntilCanAttackCooldown = 1f;
+        } else _maxUntilCanAttackCooldown = _playerMoveSpeedMultiplierDefault;
     }
 
     private void RecoverTurboSpeedOverTime() {
@@ -398,6 +396,7 @@ public class PlayerScript : MonoBehaviour {
 
         if (_currentHealth <= 0) {
             _playerVisual.PlayDeathAnim();
+            return;
         }
 
         StartInvincibleTime();
@@ -405,10 +404,12 @@ public class PlayerScript : MonoBehaviour {
 
     private void StartInvincibleTime() {
         SetInvincibleBool(true);
+        _playerVisual.PlayHitAnim();
     }
 
     private void StopInvincibleTime() {
         SetInvincibleBool(false);
+        _playerVisual.StopHitAnim();
         _currentInvincibleTime = 0f;
     }
 

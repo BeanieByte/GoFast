@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5980661767100698103}
   - component: {fileID: 8204186069160383359}
   - component: {fileID: 3501216923662223631}
+  - component: {fileID: 7659368584346502800}
   - component: {fileID: 6101890689855203151}
   m_Layer: 7
   m_Name: MushroomVisual
@@ -59,7 +60,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 0697972c40c6556469eb412a7f27ad4a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -123,6 +124,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31d1c04c5115689499581bdfc271dfdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7659368584346502800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410817998260630396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9035e72d5a0078b4eb918a83a006bd48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _myVisualScript: {fileID: 3501216923662223631}
 --- !u!114 &6101890689855203151
 MonoBehaviour:
   m_ObjectHideFlags: 0

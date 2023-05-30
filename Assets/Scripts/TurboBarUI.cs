@@ -17,7 +17,7 @@ public class TurboBarUI : MonoBehaviour
         _turboBarUI.value = e.turboTime;
     }
 
-    private void Update() {
+    private void FixedUpdate() {
         if (_turboBarUI.maxValue != _playerScript.MaxTurboTime()) {
             _turboBarUI.maxValue = _playerScript.MaxTurboTime();
         }

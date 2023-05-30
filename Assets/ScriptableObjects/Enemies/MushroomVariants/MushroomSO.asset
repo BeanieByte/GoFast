@@ -18,7 +18,7 @@ MonoBehaviour:
   enemyName: Mushroom
   health: 10
   attackPower: 0
-  touchAttackPower: 1
+  touchPower: 1
   speed: 1
   bounceOffMultiplier: 1
-  canBounceButIsHurt: 0
+  canBounceOffButIsHurt: 0

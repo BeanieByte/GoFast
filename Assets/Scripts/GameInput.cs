@@ -23,10 +23,6 @@ public class GameInput : MonoBehaviour
     public event EventHandler OnAttackPressed;
 
 
-    private bool _isPressingLeft;
-    private bool _isPressingRight;
-
-
     private void Awake() {
         if (Instance != null && Instance != this) 
         {
@@ -48,11 +44,6 @@ public class GameInput : MonoBehaviour
 
         _gameInputActions.Player.Attack.performed += Attack_performed;
         
-    }
-
-    private void Start() {
-        _isPressingLeft = false;
-        _isPressingRight = false;
     }
 
     private void Jump_started(InputAction.CallbackContext obj) {

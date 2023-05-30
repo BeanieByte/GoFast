@@ -29,7 +29,6 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     }
 
     protected virtual void Start() {
-        _myVisual.GetComponent<SpriteRenderer>().material = _mySO.material;
         
         _currentHealth = _mySO.health;
 
@@ -39,7 +38,7 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
         CanIWalk(true);
     }
 
-    private void Update() {
+    private void FixedUpdate() {
 
         if (_isFacingRight && _moveDir.x <= 0) {
             _moveDir = new Vector2(1f, 0f);
