@@ -41,6 +41,7 @@ public class EnemyVisualBaseScript : MonoBehaviour
     }
 
     public void Die() {
+        EnemyManager.Instance.IncreaseKilledEnemiesCounter();
         Destroy(_myLogicScript.gameObject);
     }
 
@@ -55,7 +56,6 @@ public class EnemyVisualBaseScript : MonoBehaviour
         StopHitAnim();
     }
 
-    public virtual void Crushed() { 
-    
+    public virtual void Crushed() {
     }
 }

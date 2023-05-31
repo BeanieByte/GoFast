@@ -17,6 +17,7 @@ public class MushroomScript : EnemyBaseScript {
 
     private void _mushroomEnemyCrushScript_OnEnemyCrushed(object sender, EventArgs e) {
         _wasCrushed = true;
+        _mushroomEnemyCrushScript.gameObject.SetActive(false);
         Damage(_mySO.health);
     }
 
@@ -30,12 +31,14 @@ public class MushroomScript : EnemyBaseScript {
             _myVisual.PlayHitAnim();
             return false;
         }
-        _mushroomEnemyCrushScript.gameObject.SetActive(false);
+
         _myRigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
+
         if (_wasCrushed) {
             _myVisual.Crushed();
             return true;
         }
+
         _myVisual.PlayDeadAnim();
         return true;
     }

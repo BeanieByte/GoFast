@@ -76,11 +76,14 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     }
 
     public virtual bool DeadCheck() {
+        
         if (_currentHealth > 0) {
             _myVisual.PlayHitAnim();
             return false;
         }
         _myRigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
+        EnemyManager.Instance.IncreaseKilledEnemiesCounter();
+
         _myVisual.PlayDeadAnim();
         return true;
     }
@@ -97,8 +100,8 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
         return _mySO.bounceOffMultiplier;
     }
 
-    public bool CanBounceButIsHurt() {
-        return _mySO.canBounceOffButIsHurt;
+    public bool CanBurn() {
+        return _mySO.canBurn;
     }
 
     public int TouchAttackPower() {

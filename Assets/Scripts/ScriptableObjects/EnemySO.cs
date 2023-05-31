@@ -41,5 +41,17 @@ public class EnemySO : ScriptableObject
     public float bounceOffMultiplier;
 
     [BoxGroup("Enemy/Split/Right/Stats and Values")]
-    public bool canBounceOffButIsHurt;
+    public bool canBurn;
+
+    [BoxGroup("Enemy/Split/Right/Stats and Values")]
+    public bool canParalyze;
+
+    [BoxGroup("Enemy/Split/Right/Stats and Values")]
+    public bool canFreeze;
+
+    [BoxGroup("Enemy/Split/Right/Stats and Values")]
+    public bool canPoison;
+
+    [BoxGroup("Enemy/Split/Right/Stats and Values")]
+    public bool canSlime;
 }

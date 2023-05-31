@@ -25,7 +25,7 @@ public class EnemyCrush : MonoBehaviour
                 player.BounceOffCrush(_myEnemyBaseGameObject.EnemyBounceOffMultiplier());
             }
 
-            if (!_myEnemyBaseGameObject.CanBounceButIsHurt()) {
+            if (!_myEnemyBaseGameObject.CanBurn()) {
                 return;
             }
 

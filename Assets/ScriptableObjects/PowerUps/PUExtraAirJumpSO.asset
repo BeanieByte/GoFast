@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8b06efb207b30b499523164cb285640, type: 3}
+  m_Name: PUExtraAirJumpSO
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: 7b1ba3c520fef2143b29063f358be8c5, type: 3}
+  prefab: {fileID: 3203141630740307513, guid: 25ca63cc32f415e4099075ae6b3deabf, type: 3}
+  material: {fileID: 0}
+  powerUpName: Extra Air Jump
+  healthRegen: 0
+  turboTimeDuplication: 0
+  extraAirJump: 1
+  invincibility: 0

@@ -15,7 +15,7 @@ public class PlayerAttackScript : MonoBehaviour
         if (enemy == null) {
             return;
         }
-        
+
         enemy.Damage(_attackPower);
         if (enemy.DeadCheck()){
             OnKillingEnemy.Invoke(this, EventArgs.Empty);

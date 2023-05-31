@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using TarodevController;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,6 +17,7 @@ public class PlayerScript : MonoBehaviour {
     [Header("Player Stats")]
 
     [SerializeField] private int _maxHealth = 20;
+    private int _totalMaxHealth = 99;
     private int _currentHealth;
     [SerializeField] private int _attackPower = 20;
 
@@ -46,6 +46,12 @@ public class PlayerScript : MonoBehaviour {
 
     private bool _isDead = false;
 
+    public event EventHandler<OnHealthChangedEventArgs> OnHealthChanged;
+
+    public class OnHealthChangedEventArgs : EventArgs {
+        public int health;
+    }
+
     [Header("Jump Elements")]
 
     [SerializeField] private Transform _playerFeetPos;
@@ -57,6 +63,14 @@ public class PlayerScript : MonoBehaviour {
     private float _maxJumpTime = 0.3f;
     private float _jumpTime = 0f;
 
+    public event EventHandler OnPlayerJumped;
+    public event EventHandler OnPlayerAirJumped;
+
+    public event EventHandler<OnAirJumpCounterChangedEventArgs> OnAirJumpCounterChanged;
+
+    public class OnAirJumpCounterChangedEventArgs : EventArgs {
+        public int airJumps;
+    }
 
     [field: Header("Turbo Elements")]
 
@@ -81,9 +95,6 @@ public class PlayerScript : MonoBehaviour {
     }
 
     public event EventHandler OnPlayerAttacked;
-
-    public event EventHandler OnPlayerJumped;
-    public event EventHandler OnPlayerAirJumped;
 
 
     [field: Header("Attack Elements")]
@@ -131,6 +142,17 @@ public class PlayerScript : MonoBehaviour {
         _currentPlayerVelocity = _playerRigidBody.velocity;
         _currentHealth = _maxHealth;
 
+        OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
+            health = _currentHealth
+        });
+
+        _currentAvailableAirJumps = _maxAvailableAirJumps;
+
+        OnAirJumpCounterChanged?.Invoke(this, new OnAirJumpCounterChangedEventArgs {
+            airJumps = _currentAvailableAirJumps
+        });
+
+
         _jumpState = JumpState.Grounded;
 
         _speedState = SpeedState.Regular;
@@ -155,6 +177,9 @@ public class PlayerScript : MonoBehaviour {
             _jumpState = JumpState.AirJumping;
             _currentAvailableAirJumps--;
             OnPlayerAirJumped?.Invoke(this, EventArgs.Empty);
+            OnAirJumpCounterChanged?.Invoke(this, new OnAirJumpCounterChangedEventArgs {
+                airJumps = _currentAvailableAirJumps
+            });
         }
     }
 
@@ -315,10 +340,20 @@ public class PlayerScript : MonoBehaviour {
         if (_currentAvailableAirJumps < _maxAvailableAirJumps) {
             for (int i = 0; i < _maxAvailableAirJumps; i++) {
                 _currentAvailableAirJumps++;
+                OnAirJumpCounterChanged?.Invoke(this, new OnAirJumpCounterChangedEventArgs {
+                    airJumps = _currentAvailableAirJumps
+                });
             }
         }
     }
 
+    public void IncrementMaxHealth(int incrementAmount) {
+        _maxHealth += incrementAmount;
+
+        if (_maxHealth >= _totalMaxHealth) {
+            _maxHealth = _totalMaxHealth;
+        }
+    }
 
     private void HandleJumpPressingOverTime() {
         float normalizedJumpTime = Mathf.Clamp01(_jumpTime / _maxJumpTime);
@@ -395,9 +430,17 @@ public class PlayerScript : MonoBehaviour {
         _currentHealth -= enemyAttackPower;
 
         if (_currentHealth <= 0) {
+            _currentHealth = 0;
             _playerVisual.PlayDeathAnim();
+            OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
+                health = _currentHealth
+            });
             return;
         }
+
+        OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
+            health = _currentHealth
+        });
 
         StartInvincibleTime();
     }

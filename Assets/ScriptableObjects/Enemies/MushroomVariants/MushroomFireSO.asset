@@ -21,4 +21,8 @@ MonoBehaviour:
   touchPower: 10
   speed: 1.5
   bounceOffMultiplier: 2
-  canBounceOffButIsHurt: 1
+  canBurn: 1
+  canParalyze: 0
+  canFreeze: 0
+  canPoison: 0
+  canSlime: 0
