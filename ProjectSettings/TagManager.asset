@@ -15,7 +15,7 @@ TagManager:
   - isGrounded
   - Enemy
   - Player
-  - 
+  - Minimap
   - 
   - 
   - 
@@ -45,12 +45,12 @@ TagManager:
   - name: Platforms
     uniqueID: 4266897585
     locked: 0
+  - name: Collectables
+    uniqueID: 466806147
+    locked: 0
   - name: Enemies
     uniqueID: 1561608559
     locked: 0
   - name: Player
     uniqueID: 3053654727
-    locked: 0
-  - name: Collectables
-    uniqueID: 466806147
     locked: 0

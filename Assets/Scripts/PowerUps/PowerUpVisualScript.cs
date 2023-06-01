@@ -23,7 +23,7 @@ public class PowerUpVisualScript : MonoBehaviour
         _myAnimator.CrossFade(PickUp, 0f, 0);
     }
 
-    public void DestroyCoin() {
+    public void DestroyPowerUp() {
         Destroy(_myLogicScript.gameObject);
     }
 }

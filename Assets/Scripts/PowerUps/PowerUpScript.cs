@@ -23,6 +23,24 @@ public class PowerUpScript : MonoBehaviour
         PlayerScript player = collision.GetComponent<PlayerScript>();
         if (player != null) {
 
+            if (_mySO.healthRegen) {
+
+                player.PowerUpHealthRegen(_mySO.increaseHealthBy);
+
+            } else if (_mySO.turboTimeDuplication) {
+
+                player.PowerUpTurboTimeDuplication(_mySO.increaseTurboTimeMultiplier);
+
+            } else if (_mySO.extraAirJump) {
+
+                player.PowerUpExtraAirJump(_mySO.increaseAirJumpsBy);
+
+            } else if (_mySO.invincibility) {
+
+                player.PowerUpInvincibility(_mySO.invincibilityTimer);
+
+            }
+
             PickUpPowerUp();
         }
     }

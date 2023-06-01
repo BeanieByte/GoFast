@@ -17,6 +17,10 @@ MonoBehaviour:
   material: {fileID: 0}
   powerUpName: Health Regen PU
   healthRegen: 1
+  increaseHealthBy: 5
   turboTimeDuplication: 0
+  increaseTurboTimeBy: 0
   extraAirJump: 0
+  increaseAirJumpsBy: 0
   invincibility: 0
+  invincibilityTimer: 0

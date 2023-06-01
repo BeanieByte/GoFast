@@ -47,30 +47,37 @@ public class GameInput : MonoBehaviour
     }
 
     private void Jump_started(InputAction.CallbackContext obj) {
+        if (!GameManager.Instance.IsGamePlaying()) return;
         OnJumpStarted?.Invoke(this, EventArgs.Empty);
     }
 
     private void Jump_performed(InputAction.CallbackContext obj) {
+        if (!GameManager.Instance.IsGamePlaying()) return;
         OnJumpPerformed?.Invoke(this, EventArgs.Empty);
     }
 
     private void Jump_canceled(InputAction.CallbackContext obj) {
+        if (!GameManager.Instance.IsGamePlaying()) return;
         OnJumpCanceled?.Invoke(this, EventArgs.Empty);
     }
 
     private void Turbo_performed(InputAction.CallbackContext obj) {
+        if (!GameManager.Instance.IsGamePlaying()) return;
         OnTurboPressed?.Invoke(this, EventArgs.Empty);
     }
 
     private void Turbo_canceled(InputAction.CallbackContext obj) {
+        if (!GameManager.Instance.IsGamePlaying()) return;
         OnTurboCanceled?.Invoke(this, EventArgs.Empty);
     }
 
     private void Attack_performed(InputAction.CallbackContext obj) {
+        if (!GameManager.Instance.IsGamePlaying()) return;
         OnAttackPressed?.Invoke(this, EventArgs.Empty);
     }
 
     public Vector2 GetMovementVectorNormalized() {
+        if (!GameManager.Instance.IsGamePlaying()) return new Vector2(0f, 0f);
 
         Vector2 inputVector = _gameInputActions.Player.Move.ReadValue<Vector2>();
 

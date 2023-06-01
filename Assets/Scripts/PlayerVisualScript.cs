@@ -25,6 +25,9 @@ public class PlayerVisualScript : MonoBehaviour
     public event EventHandler OnPlayerHitAnimStarted;
     public event EventHandler OnPlayerHitAnimStopped;
 
+    public event EventHandler OnPlayerInvincibleAnimStarted;
+    public event EventHandler OnPlayerInvincibleAnimStopped;
+
     enum AnimAirState { 
         Grounded,
         Jumping,
@@ -131,10 +134,18 @@ public class PlayerVisualScript : MonoBehaviour
         OnPlayerHitAnimStopped?.Invoke(this, EventArgs.Empty);
     }
 
+    public void PlayInvincibleAnim() {
+        OnPlayerInvincibleAnimStarted?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void StopInvincibleAnim() {
+        OnPlayerInvincibleAnimStopped?.Invoke(this, EventArgs.Empty);
+    }
+
     public void PlayDeathAnim() {
         _playerAnimator.SetBool(isAlive_CONST, false);
         _playerAnimator.SetTrigger(die_CONST);
-        _playerLogicScript.StopPlayer();
+        GameManager.Instance.SetGameOver();
     }
 
     public void Die() {

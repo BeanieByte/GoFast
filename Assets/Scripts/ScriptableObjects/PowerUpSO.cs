@@ -27,11 +27,23 @@ public class PowerUpSO : ScriptableObject
     public bool healthRegen;
 
     [BoxGroup("PowerUp/Split/Right/Stats and Values")]
+    public int increaseHealthBy;
+
+    [BoxGroup("PowerUp/Split/Right/Stats and Values")]
     public bool turboTimeDuplication;
+
+    [BoxGroup("PowerUp/Split/Right/Stats and Values")]
+    public float increaseTurboTimeMultiplier;
 
     [BoxGroup("PowerUp/Split/Right/Stats and Values")]
     public bool extraAirJump;
 
     [BoxGroup("PowerUp/Split/Right/Stats and Values")]
+    public int increaseAirJumpsBy;
+
+    [BoxGroup("PowerUp/Split/Right/Stats and Values")]
     public bool invincibility;
+
+    [BoxGroup("PowerUp/Split/Right/Stats and Values")]
+    public float invincibilityTimer;
 }

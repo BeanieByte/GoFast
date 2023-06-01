@@ -39,6 +39,7 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     }
 
     private void FixedUpdate() {
+        if (!GameManager.Instance.IsGamePlaying()) return;
 
         if (_isFacingRight && _moveDir.x <= 0) {
             _moveDir = new Vector2(1f, 0f);

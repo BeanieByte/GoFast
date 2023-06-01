@@ -17,6 +17,7 @@ public class PlayerScript : MonoBehaviour {
     [Header("Player Stats")]
 
     [SerializeField] private int _maxHealth = 20;
+    private int _maxHealthDefault = 20;
     private int _totalMaxHealth = 99;
     private int _currentHealth;
     [SerializeField] private int _attackPower = 20;
@@ -32,6 +33,7 @@ public class PlayerScript : MonoBehaviour {
     private float _currentJumpForce;
 
     [SerializeField] private int _maxAvailableAirJumps = 1;
+    private int _maxAvailableAirJumpsDefault = 1;
     private int _currentAvailableAirJumps;
 
     private float _decreasedSpeedModifier = 0.5f;
@@ -42,7 +44,9 @@ public class PlayerScript : MonoBehaviour {
 
     private bool _isInvincible = false;
     private float _maxInvincibleTime = 1.5f;
+    private float _maxInvicibleTimeDefault = 1.5f;
     private float _currentInvincibleTime = 0f;
+    private bool _gotInvinciblePowerUp = false;
 
     private bool _isDead = false;
 
@@ -56,7 +60,7 @@ public class PlayerScript : MonoBehaviour {
 
     [SerializeField] private Transform _playerFeetPos;
     [SerializeField] private LayerMask _layerIsGrounded;
-    private float _checkFeetRadius = 0.2f;
+    private float _checkFeetRadius = 0.3f;
     private bool _isGrounded;
 
     private bool _isTryingToJump = false;
@@ -75,6 +79,7 @@ public class PlayerScript : MonoBehaviour {
     [field: Header("Turbo Elements")]
 
     [field: SerializeField] private float _maxTurboTime = 3f;
+    private float _maxTurboTimeDefault = 3f;
     private float _currentTurboTime = 0f;
     private bool _canTurbo = true;
     private bool _isTryingToTurbo = false;
@@ -140,12 +145,14 @@ public class PlayerScript : MonoBehaviour {
         }
 
         _currentPlayerVelocity = _playerRigidBody.velocity;
+        _maxHealth = _maxHealthDefault;
         _currentHealth = _maxHealth;
 
         OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
             health = _currentHealth
         });
 
+        _maxAvailableAirJumps = _maxAvailableAirJumpsDefault;
         _currentAvailableAirJumps = _maxAvailableAirJumps;
 
         OnAirJumpCounterChanged?.Invoke(this, new OnAirJumpCounterChangedEventArgs {
@@ -156,7 +163,7 @@ public class PlayerScript : MonoBehaviour {
         _jumpState = JumpState.Grounded;
 
         _speedState = SpeedState.Regular;
-        _maxTurboTime = 3f;
+        _maxTurboTime = _maxTurboTimeDefault;
         _currentTurboTime = _maxTurboTime;
 
         OnTurboTimeChanged?.Invoke(this, new OnTurboTimeChangedEventArgs {
@@ -299,7 +306,7 @@ public class PlayerScript : MonoBehaviour {
 
         switch (_jumpState) {
             case JumpState.Grounded:
-                RecoverAirJumps();
+                RecoverAirJumpsInstantly();
                 break;
             case JumpState.Jumping:
                 _jumpTime += Time.deltaTime;
@@ -336,22 +343,37 @@ public class PlayerScript : MonoBehaviour {
         _speedState = SpeedState.Decreased;
     }
 
-    private void RecoverAirJumps() {
+    private void IncrementMaxAvailableAirJumps(int incrementBy) {
+        _maxAvailableAirJumps += incrementBy;
+    }
+
+    private void RecoverAirJumpsInstantly() {
         if (_currentAvailableAirJumps < _maxAvailableAirJumps) {
-            for (int i = 0; i < _maxAvailableAirJumps; i++) {
-                _currentAvailableAirJumps++;
-                OnAirJumpCounterChanged?.Invoke(this, new OnAirJumpCounterChangedEventArgs {
-                    airJumps = _currentAvailableAirJumps
-                });
-            }
+            _currentAvailableAirJumps = _maxAvailableAirJumps;
+            OnAirJumpCounterChanged?.Invoke(this, new OnAirJumpCounterChangedEventArgs {
+                airJumps = _currentAvailableAirJumps
+            });
         }
     }
 
-    public void IncrementMaxHealth(int incrementAmount) {
+    private void IncrementMaxHealth(int incrementAmount) {
+        if (_maxHealth == _totalMaxHealth) {
+            return;
+        }
+        
         _maxHealth += incrementAmount;
 
-        if (_maxHealth >= _totalMaxHealth) {
+        if (_maxHealth > _totalMaxHealth) {
             _maxHealth = _totalMaxHealth;
+        }
+    }
+
+    private void RecoverHealthInstantly() {
+        if (_currentHealth != _maxHealth) {
+            _currentHealth = _maxHealth;
+            OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
+                health = _currentHealth
+            });
         }
     }
 
@@ -380,6 +402,10 @@ public class PlayerScript : MonoBehaviour {
         if (speedMultiplier != _playerMoveSpeedMultiplierDefault) {
             _maxUntilCanAttackCooldown /= speedMultiplier;
         } else _maxUntilCanAttackCooldown = _playerMoveSpeedMultiplierDefault;
+    }
+
+    private void MultiplyTurboTime(float multiplyBy) {
+        _maxTurboTime *= multiplyBy;
     }
 
     private void RecoverTurboSpeedOverTime() {
@@ -431,10 +457,10 @@ public class PlayerScript : MonoBehaviour {
 
         if (_currentHealth <= 0) {
             _currentHealth = 0;
-            _playerVisual.PlayDeathAnim();
             OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
                 health = _currentHealth
             });
+            Die();
             return;
         }
 
@@ -445,15 +471,31 @@ public class PlayerScript : MonoBehaviour {
         StartInvincibleTime();
     }
 
+    private void Die() {
+        _playerVisual.PlayDeathAnim();
+        StopPlayer();
+    }
+
     private void StartInvincibleTime() {
         SetInvincibleBool(true);
+        if (_gotInvinciblePowerUp) {
+            _playerVisual.PlayInvincibleAnim();
+            return;
+        }
         _playerVisual.PlayHitAnim();
     }
 
     private void StopInvincibleTime() {
         SetInvincibleBool(false);
-        _playerVisual.StopHitAnim();
         _currentInvincibleTime = 0f;
+        _maxInvincibleTime = _maxInvicibleTimeDefault;
+        if (_gotInvinciblePowerUp) {
+            _playerVisual.StopInvincibleAnim();
+            _gotInvinciblePowerUp = false;
+            return;
+        }
+        _playerVisual.StopHitAnim();
+        
     }
 
     public float PlayersYVelocity()
@@ -478,12 +520,37 @@ public class PlayerScript : MonoBehaviour {
         return _maxTurboTime;
     }
 
+    private void ModifyInvincibleTime(float modifyTo) {
+        _maxInvincibleTime = modifyTo;
+    }
+
     public void SetInvincibleBool(bool isInvincible) {
         _isInvincible = isInvincible;
     }
 
-    public void StopPlayer() {
+    private void StopPlayer() {
         _isDead = true;
         _playerRigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
+    }
+
+    public void PowerUpHealthRegen(int increaseMaxHealthBy) {
+        IncrementMaxHealth(increaseMaxHealthBy);
+        RecoverHealthInstantly();
+    }
+
+    public void PowerUpTurboTimeDuplication(float multiplyTimeBy) {
+        MultiplyTurboTime(multiplyTimeBy);
+        RecoverTurboSpeedInstantly();
+    }
+
+    public void PowerUpExtraAirJump(int increaseMaxAirJumpsBy) {
+        IncrementMaxAvailableAirJumps(increaseMaxAirJumpsBy);
+        RecoverAirJumpsInstantly();
+    }
+
+    public void PowerUpInvincibility(float changeTimerTo) {
+        _gotInvinciblePowerUp = true;
+        ModifyInvincibleTime(changeTimerTo);
+        StartInvincibleTime();
     }
 }

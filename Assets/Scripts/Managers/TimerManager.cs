@@ -11,8 +11,6 @@ public class TimerManager : MonoBehaviour
     private double _timeTaken;
     private string _timeText;
 
-    private bool _isTiming = false;
-
     public event EventHandler<OnTimerChangedEventArgs> OnTimerChanged;
 
     private string minutes;
@@ -31,16 +29,14 @@ public class TimerManager : MonoBehaviour
     }
 
     private void Start() {
-        _isTiming = false;
         _timerStart = 0f;
+        _timeTaken = _timerStart;
     }
 
     private void FixedUpdate() {
-        //if (!_isTiming) {
-        //    return;
-        //}
-
-        _timeTaken = _timerStart + Time.fixedTimeAsDouble;
+        if (!GameManager.Instance.IsGamePlaying()) return;
+        
+        _timeTaken += Time.deltaTime;
 
         FormatTime(_timeTaken);
     }
@@ -64,9 +60,5 @@ public class TimerManager : MonoBehaviour
         OnTimerChanged?.Invoke(this, new OnTimerChangedEventArgs {
             currentTimeText = _timeText
         });
-    }
-
-    private void StartTimer() {
-        _isTiming = true;
     }
 }

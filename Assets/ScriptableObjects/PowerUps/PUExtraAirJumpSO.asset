@@ -17,6 +17,10 @@ MonoBehaviour:
   material: {fileID: 0}
   powerUpName: Extra Air Jump
   healthRegen: 0
+  increaseHealthBy: 0
   turboTimeDuplication: 0
+  increaseTurboTimeBy: 0
   extraAirJump: 1
+  increaseAirJumpsBy: 1
   invincibility: 0
+  invincibilityTimer: 0
