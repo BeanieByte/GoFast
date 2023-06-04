@@ -21,6 +21,11 @@ public class MushroomScript : EnemyBaseScript {
         Damage(_mySO.health);
     }
 
+    protected override void Attack()
+    {
+
+    }
+
     public override void Damage(int attackPower) {
         _currentHealth -= attackPower;
         DeadCheck();

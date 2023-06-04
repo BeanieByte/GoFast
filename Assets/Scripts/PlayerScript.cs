@@ -20,7 +20,9 @@ public class PlayerScript : MonoBehaviour {
     private int _maxHealthDefault = 20;
     private int _totalMaxHealth = 99;
     private int _currentHealth;
-    [SerializeField] private int _attackPower = 20;
+    [SerializeField] private int _maxAttackPower = 20;
+    private int _maxAttackPowerDefault = 20;
+    private int _currentAttackPower;
 
     [SerializeField] private float _playerMoveSpeed = 8f;
     private bool _isPlayerRunning = false;
@@ -105,6 +107,27 @@ public class PlayerScript : MonoBehaviour {
     [field: Header("Attack Elements")]
     [SerializeField] private PlayerAttackScript _playerAttack;
 
+
+    [field: Header("Status Effects")]
+
+    private bool _isPlayerAfflictedWithStatus = false;
+    private float _statusTimer = 0f;
+
+    private bool _isBurned = false;
+    private float _maxBurnedTime = 5f;
+
+    private bool _isParalyzed = false;
+    private float _maxParalyzedTime = 5f;
+
+    private bool _isFrozen = false;
+    private float _maxFrozenTime = 3f;
+
+    private bool _isPoisoned = false;
+    private float _maxPoisonedTime = 10f;
+
+    private bool _isSlimed = false;
+    private float _maxSlimedTime = 5f;
+
     enum JumpState { 
         Grounded,
         Jumping,
@@ -122,6 +145,18 @@ public class PlayerScript : MonoBehaviour {
     }
 
     private SpeedState _speedState;
+
+    enum StatusState
+    {
+        Unafflicted,
+        Burned,
+        Paralyzed,
+        Frozen,
+        Poisoned,
+        Slimed
+    }
+
+    private StatusState _statusState;
 
     private void Awake() {
         _playerRigidBody = GetComponent<Rigidbody2D>(); 
@@ -144,6 +179,14 @@ public class PlayerScript : MonoBehaviour {
             _playerVisual.Flip();
         }
 
+        _isPlayerAfflictedWithStatus = false;
+        _statusTimer = 0f;
+        _isBurned = false;
+        _isParalyzed = false;
+        _isFrozen = false;
+        _isPoisoned = false;
+        _isSlimed = false;
+
         _currentPlayerVelocity = _playerRigidBody.velocity;
         _maxHealth = _maxHealthDefault;
         _currentHealth = _maxHealth;
@@ -158,6 +201,9 @@ public class PlayerScript : MonoBehaviour {
         OnAirJumpCounterChanged?.Invoke(this, new OnAirJumpCounterChangedEventArgs {
             airJumps = _currentAvailableAirJumps
         });
+
+        _maxAttackPower = _maxAttackPowerDefault;
+        _currentAttackPower = _maxAttackPower;
 
 
         _jumpState = JumpState.Grounded;
@@ -328,10 +374,65 @@ public class PlayerScript : MonoBehaviour {
                 }
                 break;
         }
+
+        switch (_statusState) {
+            case StatusState.Unafflicted:
+                break;
+            case StatusState.Burned:
+                _statusTimer -= Time.deltaTime;
+                while (_statusTimer > 0)
+                {
+                    _isBurned = true;
+                }
+                StopStatusConditions();
+                _isBurned = false;
+                _statusState = StatusState.Unafflicted;
+                break;
+            case StatusState.Paralyzed:
+                _statusTimer -= Time.deltaTime;
+                while (_statusTimer > 0)
+                {
+                    _isParalyzed = true;
+                }
+                StopStatusConditions();
+                _isParalyzed = false;
+                _statusState = StatusState.Unafflicted;
+                break;
+            case StatusState.Frozen:
+                _statusTimer -= Time.deltaTime;
+                while (_statusTimer > 0)
+                {
+                    _isFrozen = true;
+                }
+                StopStatusConditions();
+                _isFrozen = false;
+                _statusState = StatusState.Unafflicted;
+                break;
+            case StatusState.Poisoned:
+                _statusTimer -= Time.deltaTime;
+                while(_statusTimer > 0) {
+                    _isPoisoned = true;
+                }
+                StopStatusConditions();
+                _isPoisoned = false;
+                _statusState = StatusState.Unafflicted;
+                break;
+            case StatusState.Slimed:
+                _statusTimer -= Time.deltaTime;
+                while (_statusTimer > 0)
+                {
+                    _isSlimed = true;
+                }
+                StopStatusConditions();
+                _isSlimed = false;
+                _statusState = StatusState.Unafflicted;
+                break;  
+        }
     }
 
     public void BounceOffCrush(float jumpBoostMultiplier) {
         RecoverTurboSpeedInstantly();
+        RecoverAirJumpsInstantly();
         _currentPlayerVelocity.y = _lowestJumpForce * jumpBoostMultiplier;
         _jumpState = JumpState.Jumping;
         OnPlayerJumped?.Invoke(this, EventArgs.Empty);
@@ -443,7 +544,7 @@ public class PlayerScript : MonoBehaviour {
     }
 
     private void Attack() {
-        _playerAttack.SetAttackPower(_attackPower);
+        _playerAttack.SetAttackPower(_maxAttackPower);
         OnPlayerAttacked?.Invoke(this, EventArgs.Empty);
     }
     
@@ -553,4 +654,78 @@ public class PlayerScript : MonoBehaviour {
         ModifyInvincibleTime(changeTimerTo);
         StartInvincibleTime();
     }
+
+    private void ChangeAttackPower(int attackMultiplier) {
+        _currentAttackPower = (_maxAttackPower * attackMultiplier);
+    }
+
+    private void StopStatusConditions()
+    {
+        _isPlayerAfflictedWithStatus = false;
+        _statusTimer = 0f;
+    }
+
+    public bool DoesPlayerHaveStatus()
+    {
+        return _isPlayerAfflictedWithStatus;
+    }
+
+    public void PlayerWasBurned() {
+        _statusTimer = _maxBurnedTime;
+        _isPlayerAfflictedWithStatus = true;
+        _statusState = StatusState.Burned;
+    }
+
+    public bool IsPlayerBurned()
+    {
+        return _isBurned;
+    }
+
+    public void PlayerWasParalyzed()
+    {
+        _statusTimer = _maxParalyzedTime;
+        _isPlayerAfflictedWithStatus = true;
+        _statusState = StatusState.Paralyzed;
+    }
+
+    public bool IsPlayerParalyzed()
+    {
+        return _isParalyzed;
+    }
+
+    public void PlayerWasFrozen()
+    {
+        _statusTimer = _maxFrozenTime;
+        _isPlayerAfflictedWithStatus = true;
+        _statusState = StatusState.Frozen;
+    }
+
+    public bool IsPlayerFrozen()
+    {
+        return _isFrozen;
+    }
+
+    public void PlayerWasPoisoned()
+    {
+        _statusTimer = _maxPoisonedTime;
+        _isPlayerAfflictedWithStatus = true;
+        _statusState = StatusState.Poisoned;
+    }
+
+    public bool IsPlayerPoisoned() {
+        return _isPoisoned;
+    }  
+
+    public void PlayerWasSlimed()
+    {
+        _statusTimer = _maxSlimedTime;
+        _isPlayerAfflictedWithStatus = true;
+        _statusState = StatusState.Slimed;
+    }
+
+    public bool IsPlayerSlimed()
+    {
+        return _isSlimed;
+    }
+    
 }

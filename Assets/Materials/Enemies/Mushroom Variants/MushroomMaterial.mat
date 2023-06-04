@@ -9,8 +9,10 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: MushroomMaterial
   m_Shader: {fileID: 4800000, guid: a36b7719ff0465b42ab1407d67672c5f, type: 3}
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_ValidKeywords:
+  - GREYSCALEOUTLINE_ON
+  m_InvalidKeywords:
+  - _GREYSCALEOUTLINE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -129,8 +131,8 @@ Material:
     - _GrassSpeed: 2
     - _GrassWind: 20
     - _GreyscaleBlend: 1
-    - _GreyscaleLuminosity: 0
-    - _GreyscaleOutline: 0
+    - _GreyscaleLuminosity: 0.1
+    - _GreyscaleOutline: 1
     - _HandDrawnAmount: 10
     - _HandDrawnSpeed: 5
     - _HitEffectBlend: 1
@@ -187,16 +189,16 @@ Material:
     - _ShakeUvSpeed: 2.5
     - _ShakeUvX: 1.5
     - _ShakeUvY: 1
-    - _ShineGlow: 1
-    - _ShineLocation: 0.5
-    - _ShineRotate: 0
+    - _ShineGlow: 33.1
+    - _ShineLocation: 0.14
+    - _ShineRotate: 2.84
     - _ShineWidth: 0.1
     - _TextureScrollXSpeed: 1
     - _TextureScrollYSpeed: 0
-    - _TwistUvAmount: 1
-    - _TwistUvPosX: 0.5
-    - _TwistUvPosY: 0.5
-    - _TwistUvRadius: 0.75
+    - _TwistUvAmount: 0.04
+    - _TwistUvPosX: 0.495
+    - _TwistUvPosY: 0.327
+    - _TwistUvRadius: 0.61
     - _WaveAmount: 7
     - _WaveSpeed: 10
     - _WaveStrength: 7.5

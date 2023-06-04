@@ -25,11 +25,35 @@ public class EnemyCrush : MonoBehaviour
                 player.BounceOffCrush(_myEnemyBaseGameObject.EnemyBounceOffMultiplier());
             }
 
-            if (!_myEnemyBaseGameObject.CanBurn()) {
+            if (_myEnemyBaseGameObject.CanBurn()) {
+                player.Damage(_myEnemyBaseGameObject.TouchAttackPower());
+                player.PlayerWasBurned();
                 return;
             }
 
-            player.Damage(_myEnemyBaseGameObject.TouchAttackPower());
+            if (_myEnemyBaseGameObject.CanParalyze())
+            {
+                player.PlayerWasParalyzed();
+                return;
+            }
+
+            if (_myEnemyBaseGameObject.CanFreeze())
+            {
+                player.PlayerWasFrozen();
+                return;
+            }
+
+            if (_myEnemyBaseGameObject.CanPoison())
+            {
+                player.PlayerWasPoisoned();
+                return;
+            }
+
+            if (_myEnemyBaseGameObject.CanSlime())
+            {
+                player.PlayerWasSlimed();
+                return;
+            }
         }
     }
 }

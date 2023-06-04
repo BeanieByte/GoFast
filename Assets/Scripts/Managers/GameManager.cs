@@ -31,6 +31,13 @@ public class GameManager : MonoBehaviour
     }
 
     private void FixedUpdate() {
+        
+        //DEBUG ONLY, DELETE ON RELEASE
+        if(Input.GetKeyDown(KeyCode.G))
+        {
+            _state = State.GamePlaying;
+        }
+
         switch (_state) {
             case State.WaitingToStart:
                 _waitingToStartTimer -= Time.deltaTime;

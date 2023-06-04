@@ -54,21 +54,53 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
             return;
         }
 
-
-        transform.position = (Vector2)transform.position + _mySO.speed * Time.deltaTime * _moveDir;
-
-
-        if (!Physics2D.OverlapCircle(_edgeCheck.position, _checkRadius, _layerIsGrounded) || Physics2D.OverlapCircle(_wallCheck.position, _checkRadius, _layerIsGrounded)) {
-            _isFacingRight = !_isFacingRight;
-        };
+        Walk();
+        
 
     }
+
+
+    protected virtual void Walk()
+    {
+        transform.position = (Vector2)transform.position + _mySO.speed * Time.deltaTime * _moveDir;
+
+        if (!Physics2D.OverlapCircle(_edgeCheck.position, _checkRadius, _layerIsGrounded) || Physics2D.OverlapCircle(_wallCheck.position, _checkRadius, _layerIsGrounded))
+        {
+            _isFacingRight = !_isFacingRight;
+        };
+    }
+
 
     private void OnTriggerEnter2D(Collider2D collision) {
         PlayerScript player = collision.GetComponent<PlayerScript>();
         if (player != null) {
             player.Damage(_mySO.touchPower);
+
+            if(_mySO.canBurn)
+            {
+                player.PlayerWasBurned();
+            }
+            if (_mySO.canParalyze)
+            {
+                player.PlayerWasParalyzed();
+            }
+            if(_mySO.canFreeze)
+            {
+                player.PlayerWasFrozen();
+            }
+            if(_mySO.canPoison) 
+            { 
+                player.PlayerWasPoisoned();
+            }
+            if (_mySO.canSlime) 
+            {
+                player.PlayerWasSlimed();
+            }
         }
+    }
+
+    protected virtual void Attack() {
+        _myVisual.Attack();
     }
 
     public virtual void Damage(int attackPower) {
@@ -103,6 +135,25 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
 
     public bool CanBurn() {
         return _mySO.canBurn;
+    }
+
+    public bool CanParalyze() {
+        return _mySO.canParalyze;
+    }
+
+    public bool CanFreeze()
+    {
+        return _mySO.canFreeze;
+    }
+
+    public bool CanPoison()
+    {
+        return _mySO.canPoison;
+    }
+
+    public bool CanSlime()
+    {
+        return _mySO.canSlime;
     }
 
     public int TouchAttackPower() {

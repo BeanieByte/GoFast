@@ -31,7 +31,7 @@ Transform:
   m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 8189829595576183431}
+  - {fileID: 5294817770354500592}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -60,7 +60,7 @@ SortingGroup:
   m_GameObject: {fileID: 8189829596392502466}
   m_Enabled: 1
   m_SortingLayerID: 466806147
-  m_SortingLayer: 4
+  m_SortingLayer: 2
   m_SortingOrder: 0
 --- !u!114 &8189829596392503103
 MonoBehaviour:
@@ -75,7 +75,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mySO: {fileID: 11400000, guid: 2842481fc882dcb4e858d0ecaf33dae2, type: 2}
---- !u!1001 &7954322824904960006
+--- !u!1001 &6246924114776727921
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -132,8 +132,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc00b17bb56e6fa48be1d9db158b39fe, type: 3}
---- !u!4 &8189829595576183431 stripped
+--- !u!4 &5294817770354500592 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2291048904175731329, guid: fc00b17bb56e6fa48be1d9db158b39fe, type: 3}
-  m_PrefabInstance: {fileID: 7954322824904960006}
+  m_PrefabInstance: {fileID: 6246924114776727921}
   m_PrefabAsset: {fileID: 0}

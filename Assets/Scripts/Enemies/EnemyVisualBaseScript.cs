@@ -10,6 +10,7 @@ public class EnemyVisualBaseScript : MonoBehaviour
 
     private const string hit_CONST = "hit";
     protected const string die_CONST = "die";
+    protected const string attack_CONST = "attack";
 
     public event EventHandler OnEnemyHitAnimStarted;
     public event EventHandler OnEnemyHitAnimStopped;
@@ -25,6 +26,10 @@ public class EnemyVisualBaseScript : MonoBehaviour
 
     public void Flip() {
         transform.Rotate(0f, 180f, 0f);
+    }
+
+    public void Attack() { 
+    
     }
 
     public void PlayHitAnim() {
