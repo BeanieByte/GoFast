@@ -9,44 +9,61 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     [SerializeField] protected EnemyVisualBaseScript _myVisual;
     [SerializeField] private Collider2D _touchAttackTrigger;
 
+
     protected Rigidbody2D _myRigidBody;
     protected Collider2D _myCollider;
 
-    [SerializeField] private bool _isFacingRight;
+    [SerializeField] protected bool _isFacingRight;
     private Vector2 _moveDir;
 
     protected int _currentHealth;
 
-    private bool _canIWalk;
+    protected bool _canIWalk;
 
     [SerializeField] private Transform _wallCheck;
     [SerializeField] private Transform _edgeCheck;
     [SerializeField] private LayerMask _layerIsGrounded;
     private float _checkRadius = 0.1f;
 
-    private void Awake() {
+
+    private bool _canAttack;
+    protected float _attackCooldownTime = 3f;
+    protected float _currentAttackCooldownTime;
+
+
+    protected virtual void Awake() {
         _myRigidBody = GetComponent<Rigidbody2D>();
+        _canAttack = true;
     }
 
     protected virtual void Start() {
         
         _currentHealth = _mySO.health;
 
-        if (_isFacingRight) {
+        if (!_isFacingRight) {
             _myVisual.Flip();
         }
         CanIWalk(true);
     }
 
-    private void FixedUpdate() {
+    protected virtual void FixedUpdate() {
         if (!GameManager.Instance.IsGamePlaying()) return;
 
-        if (_isFacingRight && _moveDir.x <= 0) {
-            _moveDir = new Vector2(1f, 0f);
-            _myVisual.Flip();
-        } else if (!_isFacingRight && _moveDir.x >= 0) {
-            _moveDir = new Vector2(-1f, 0f);
-            _myVisual.Flip();
+        //if (_isFacingRight && _moveDir.x <= 0) {
+        //    _moveDir = new Vector2(1f, 0f);
+        //    _myVisual.Flip();
+        //} else if (!_isFacingRight && _moveDir.x >= 0) {
+        //    _moveDir = new Vector2(-1f, 0f);
+        //    _myVisual.Flip();
+        //}
+
+        if (_currentAttackCooldownTime >= _attackCooldownTime) {
+            _canAttack = true;
+        }
+
+
+        if (!_canAttack) {
+            _currentAttackCooldownTime += Time.deltaTime;
         }
 
         if (!_canIWalk) {
@@ -56,12 +73,20 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
 
         Walk();
         
-
+        
     }
 
 
     protected virtual void Walk()
     {
+        if (!_isFacingRight && _moveDir.x <= 0) {
+            _moveDir = new Vector2(1f, 0f);
+            _myVisual.Flip();
+        } else if (_isFacingRight && _moveDir.x >= 0) {
+            _moveDir = new Vector2(-1f, 0f);
+            _myVisual.Flip();
+        }
+
         transform.position = (Vector2)transform.position + _mySO.speed * Time.deltaTime * _moveDir;
 
         if (!Physics2D.OverlapCircle(_edgeCheck.position, _checkRadius, _layerIsGrounded) || Physics2D.OverlapCircle(_wallCheck.position, _checkRadius, _layerIsGrounded))
@@ -70,37 +95,11 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
         };
     }
 
-
-    private void OnTriggerEnter2D(Collider2D collision) {
-        PlayerScript player = collision.GetComponent<PlayerScript>();
-        if (player != null) {
-            player.Damage(_mySO.touchPower);
-
-            if(_mySO.canBurn)
-            {
-                player.PlayerWasBurned();
-            }
-            if (_mySO.canParalyze)
-            {
-                player.PlayerWasParalyzed();
-            }
-            if(_mySO.canFreeze)
-            {
-                player.PlayerWasFrozen();
-            }
-            if(_mySO.canPoison) 
-            { 
-                player.PlayerWasPoisoned();
-            }
-            if (_mySO.canSlime) 
-            {
-                player.PlayerWasSlimed();
-            }
-        }
-    }
-
-    protected virtual void Attack() {
+    public virtual void Attack() {
+        if (!_canAttack) { return; }
         _myVisual.Attack();
+        _currentAttackCooldownTime = 0f;
+        _canAttack = false;
     }
 
     public virtual void Damage(int attackPower) {
@@ -158,5 +157,9 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
 
     public int TouchAttackPower() {
         return _mySO.touchPower;
+    }
+
+    public bool IsFacingRight() {
+        return _isFacingRight;
     }
 }

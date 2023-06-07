@@ -18,6 +18,7 @@ MonoBehaviour:
   enemyName: Bomber Goblin
   health: 20
   attackPower: 0
+  attackCooldownTime: 5
   touchPower: 10
   speed: 1
   bounceOffMultiplier: 0

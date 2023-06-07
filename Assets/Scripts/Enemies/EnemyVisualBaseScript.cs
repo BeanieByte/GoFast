@@ -28,8 +28,8 @@ public class EnemyVisualBaseScript : MonoBehaviour
         transform.Rotate(0f, 180f, 0f);
     }
 
-    public void Attack() { 
-    
+    public void Attack() {
+        _myAnimator.SetTrigger(attack_CONST);
     }
 
     public void PlayHitAnim() {

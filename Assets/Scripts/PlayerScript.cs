@@ -375,57 +375,37 @@ public class PlayerScript : MonoBehaviour {
                 break;
         }
 
+        if (!_isPlayerAfflictedWithStatus) {
+            _statusState = StatusState.Unafflicted;
+        }
+
         switch (_statusState) {
             case StatusState.Unafflicted:
                 break;
             case StatusState.Burned:
                 _statusTimer -= Time.deltaTime;
-                while (_statusTimer > 0)
-                {
-                    _isBurned = true;
-                }
+                if (_statusTimer > 0) { return; }
                 StopStatusConditions();
-                _isBurned = false;
-                _statusState = StatusState.Unafflicted;
                 break;
             case StatusState.Paralyzed:
                 _statusTimer -= Time.deltaTime;
-                while (_statusTimer > 0)
-                {
-                    _isParalyzed = true;
-                }
+                if (_statusTimer > 0) { return; }
                 StopStatusConditions();
-                _isParalyzed = false;
-                _statusState = StatusState.Unafflicted;
                 break;
             case StatusState.Frozen:
                 _statusTimer -= Time.deltaTime;
-                while (_statusTimer > 0)
-                {
-                    _isFrozen = true;
-                }
+                if (_statusTimer > 0) { return; }
                 StopStatusConditions();
-                _isFrozen = false;
-                _statusState = StatusState.Unafflicted;
                 break;
             case StatusState.Poisoned:
                 _statusTimer -= Time.deltaTime;
-                while(_statusTimer > 0) {
-                    _isPoisoned = true;
-                }
+                if (_statusTimer > 0) { return; }
                 StopStatusConditions();
-                _isPoisoned = false;
-                _statusState = StatusState.Unafflicted;
                 break;
             case StatusState.Slimed:
                 _statusTimer -= Time.deltaTime;
-                while (_statusTimer > 0)
-                {
-                    _isSlimed = true;
-                }
+                if (_statusTimer > 0) { return; }
                 StopStatusConditions();
-                _isSlimed = false;
-                _statusState = StatusState.Unafflicted;
                 break;  
         }
     }
@@ -550,6 +530,9 @@ public class PlayerScript : MonoBehaviour {
     
 
     public void Damage(int enemyAttackPower) {
+        if (!GameManager.Instance.IsGamePlaying()) return;
+
+
         if (_isInvincible) {
             return;
         }

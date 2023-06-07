@@ -21,7 +21,7 @@ public class MushroomScript : EnemyBaseScript {
         Damage(_mySO.health);
     }
 
-    protected override void Attack()
+    public override void Attack()
     {
 
     }

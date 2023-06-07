@@ -17,6 +17,7 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: ffe06dd4ea8ad174fb51e65a0cc9b15c, type: 2}
   bombName: Bomb
   attackPower: 40
+  explosionTimer: 5
   canBurn: 1
   canParalyze: 0
   canFreeze: 0

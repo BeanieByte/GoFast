@@ -28,6 +28,9 @@ public class BombSO : ScriptableObject
     public int attackPower;
 
     [BoxGroup("Bomb/Split/Right/Stats and Values")]
+    public float explosionTimer;
+
+    [BoxGroup("Bomb/Split/Right/Stats and Values")]
     public bool canBurn;
 
     [BoxGroup("Bomb/Split/Right/Stats and Values")]

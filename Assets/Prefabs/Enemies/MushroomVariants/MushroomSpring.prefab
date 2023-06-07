@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3244238138033710377, guid: 14328becb0ddea843b7e68d70a8d9357, type: 3}
+      propertyPath: _mySO
+      value: 
+      objectReference: {fileID: 11400000, guid: 506d60b4ced4f124099ea16fbce27b32, type: 2}
     - target: {fileID: 4787343910479774886, guid: 14328becb0ddea843b7e68d70a8d9357, type: 3}
       propertyPath: m_Name
       value: MushroomSpring

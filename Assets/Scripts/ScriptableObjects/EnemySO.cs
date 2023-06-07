@@ -32,6 +32,9 @@ public class EnemySO : ScriptableObject
     public int attackPower;
 
     [BoxGroup("Enemy/Split/Right/Stats and Values")]
+    public float attackCooldownTime;
+
+    [BoxGroup("Enemy/Split/Right/Stats and Values")]
     public int touchPower;
 
     [BoxGroup("Enemy/Split/Right/Stats and Values")]

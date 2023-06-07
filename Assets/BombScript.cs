@@ -2,101 +2,65 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BombScript : MonoBehaviour
-{
+public class BombScript : MonoBehaviour {
+
     [SerializeField] private BombSO _mySO;
     [SerializeField] private BombVisualScript _myVisual;
 
+    private Rigidbody2D _myRigidBody;
+
     private bool _hasExploded = false;
+
+    private bool _setAlmostExploding = false;
+
+    private float _myExplosionTimer;
+    private float _closeToExplodingTime;
+    private float _explodingTimeOffset = 3f;
+
+    private void Awake() {
+        _myRigidBody = GetComponent<Rigidbody2D>();
+        _myExplosionTimer = _mySO.explosionTimer;
+    }
 
     private void Start()
     {
         _hasExploded = false;
+
+        _setAlmostExploding = false;
+        _closeToExplodingTime = _mySO.explosionTimer / _explodingTimeOffset;
+
     }
 
-    private void OnColliderEnter2D(Collider2D collision)
-    {
-        PlayerScript player = collision.GetComponent<PlayerScript>();
-        if (player != null)
+    private void FixedUpdate() {
+        if (_hasExploded) { return; }
+
+        _myExplosionTimer -= Time.deltaTime;
+
+        if (_myExplosionTimer <= _closeToExplodingTime) 
         {
-
-            player.Damage(_mySO.attackPower);
-            _hasExploded = true;
-
-            if (_mySO.canBurn)
-            {
-                player.PlayerWasBurned();
+            AlmostExploding();
+            if (_myExplosionTimer > 0) {
+                return;
             }
-            if (_mySO.canParalyze)
-            {
-                player.PlayerWasParalyzed();
-            }
-            if (_mySO.canFreeze)
-            {
-                player.PlayerWasFrozen();
-            }
-            if (_mySO.canPoison)
-            {
-                player.PlayerWasPoisoned();
-            }
-            if (_mySO.canSlime)
-            {
-                player.PlayerWasSlimed();
-            }
+            Explode();
         }
     }
 
-    private void Explode()
+    private void AlmostExploding() {
+        if (_setAlmostExploding) { return; }
+
+        _myVisual.AlmostExploding();
+        _setAlmostExploding = true;
+    }
+
+    public void Explode()
     {
         if (_hasExploded)
         {
             return;
         }
         _myVisual.Explode();
+        _myRigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
         _hasExploded = true;
-    }
-    
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (!_hasExploded) {
-            return;
-        }
-
-        PlayerScript player = collision.GetComponent<PlayerScript>();
-        EnemyBaseScript enemy = collision.GetComponent<EnemyBaseScript>();
-
-        int halvedDamage = _mySO.attackPower / 2;
-
-        if (player != null)
-        {
-            player.Damage(halvedDamage);
-
-            if (_mySO.canBurn)
-            {
-                player.PlayerWasBurned();
-            }
-            if (_mySO.canParalyze)
-            {
-                player.PlayerWasParalyzed();
-            }
-            if (_mySO.canFreeze)
-            {
-                player.PlayerWasFrozen();
-            }
-            if (_mySO.canPoison)
-            {
-                player.PlayerWasPoisoned();
-            }
-            if (_mySO.canSlime)
-            {
-                player.PlayerWasSlimed();
-            }
-        }
-
-        if(enemy != null)
-        {
-            enemy.Damage(halvedDamage);
-        }
     }
 }
