@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b0f8fa96bb6a7a4cb3ee95c2622c1f4, type: 3}
+  m_Name: GoblinSO
+  m_EditorClassIdentifier: 
+  sprite: {fileID: -540200352, guid: 0c23164d765e77f45b089e4fa30f8be1, type: 3}
+  prefab: {fileID: 1731944372156082105, guid: 397a8268ae55606449da5f3cef1ae402, type: 3}
+  material: {fileID: 2100000, guid: cae317eaacd486040b4653057685eb2f, type: 2}
+  enemyName: Goblin
+  health: 20
+  attackPower: 15
+  attackCooldownTime: 3
+  touchPower: 10
+  speed: 3
+  bounceOffMultiplier: 0
+  canBurn: 0
+  canParalyze: 0
+  canFreeze: 0
+  canPoison: 0
+  canSlime: 0

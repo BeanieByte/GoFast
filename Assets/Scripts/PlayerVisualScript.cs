@@ -118,11 +118,11 @@ public class PlayerVisualScript : MonoBehaviour
         }
     }
 
-    private void SetIsAttackingToTrue() {
+    public void SetIsAttackingToTrue() {
         _playerAnimator.SetBool(isAttacking_CONST, true);
     }
 
-    private void SetIsAttackingToFalse() {
+    public void SetIsAttackingToFalse() {
         _playerAnimator.SetBool(isAttacking_CONST, false);
     }
 

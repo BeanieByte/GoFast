@@ -9,6 +9,11 @@ public class MushroomScript : EnemyBaseScript {
 
     private bool _wasCrushed;
 
+    protected override void Awake() {
+        base.Awake();
+        _isOriginallyFacingRight = true;
+    }
+
     protected override void Start() {
         base.Start();
         _wasCrushed = false;
@@ -21,7 +26,7 @@ public class MushroomScript : EnemyBaseScript {
         Damage(_mySO.health);
     }
 
-    public override void Attack()
+    protected override void Attack()
     {
 
     }

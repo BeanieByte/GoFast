@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -8,25 +9,28 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     [SerializeField] protected EnemySO _mySO;
     [SerializeField] protected EnemyVisualBaseScript _myVisual;
     [SerializeField] private Collider2D _touchAttackTrigger;
+    [SerializeField] private Collider2D _attackTrigger;
 
 
     protected Rigidbody2D _myRigidBody;
     protected Collider2D _myCollider;
 
+    protected bool _isOriginallyFacingRight;
     [SerializeField] protected bool _isFacingRight;
-    private Vector2 _moveDir;
+    protected Vector2 _moveDir;
 
     protected int _currentHealth;
 
     protected bool _canIWalk;
 
-    [SerializeField] private Transform _wallCheck;
-    [SerializeField] private Transform _edgeCheck;
-    [SerializeField] private LayerMask _layerIsGrounded;
-    private float _checkRadius = 0.1f;
+    [SerializeField] protected Transform _wallCheck;
+    [SerializeField] protected Transform _edgeCheck;
+    [SerializeField] protected LayerMask _layerIsGrounded;
+    protected float _checkRadius = 0.1f;
 
+    protected bool _isEnemyWalking;
 
-    private bool _canAttack;
+    protected bool _canAttack;
     protected float _attackCooldownTime = 3f;
     protected float _currentAttackCooldownTime;
 
@@ -40,9 +44,14 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
         
         _currentHealth = _mySO.health;
 
+        if (!_isOriginallyFacingRight) {
+            _myVisual.Flip();
+        }
+
         if (!_isFacingRight) {
             _myVisual.Flip();
         }
+
         CanIWalk(true);
     }
 
@@ -66,10 +75,14 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
             _currentAttackCooldownTime += Time.deltaTime;
         }
 
+
         if (!_canIWalk) {
-            
             return;
         }
+
+        if (_moveDir.x == 0f) {
+            _isEnemyWalking = false;
+        } else _isEnemyWalking = true;
 
         Walk();
         
@@ -89,13 +102,16 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
 
         transform.position = (Vector2)transform.position + _mySO.speed * Time.deltaTime * _moveDir;
 
-        if (!Physics2D.OverlapCircle(_edgeCheck.position, _checkRadius, _layerIsGrounded) || Physics2D.OverlapCircle(_wallCheck.position, _checkRadius, _layerIsGrounded))
-        {
+        CheckToFlipIfIsEdgeOrHasWall();
+    }
+
+    protected virtual void CheckToFlipIfIsEdgeOrHasWall() {
+        if (!Physics2D.OverlapCircle(_edgeCheck.position, _checkRadius, _layerIsGrounded) || Physics2D.OverlapCircle(_wallCheck.position, _checkRadius, _layerIsGrounded)) {
             _isFacingRight = !_isFacingRight;
         };
     }
 
-    public virtual void Attack() {
+    protected virtual void Attack() {
         if (!_canAttack) { return; }
         _myVisual.Attack();
         _currentAttackCooldownTime = 0f;
@@ -103,6 +119,7 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     }
 
     public virtual void Damage(int attackPower) {
+        if (!GameManager.Instance.IsGamePlaying()) return;
         _currentHealth -= attackPower;
         DeadCheck();
     }
@@ -126,6 +143,10 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
 
     public void SetTouchAttackTrigger(bool isActive) {
         _touchAttackTrigger.gameObject.SetActive(isActive);
+    }
+
+    public void SetAttackTrigger(bool isActive) {
+        _attackTrigger.gameObject.SetActive(isActive);
     }
 
     public float EnemyBounceOffMultiplier() {
@@ -159,7 +180,22 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
         return _mySO.touchPower;
     }
 
+    public int AttackPower() {
+        return _mySO.attackPower;
+    }
+
     public bool IsFacingRight() {
         return _isFacingRight;
+    }
+
+    public virtual float PlayersCurrentXLocation() {
+        return transform.position.x;
+    }
+
+    public virtual void SetPlayerRadiusCheckTrigger(bool isActive) {
+    }
+
+    public virtual bool IsEnemyWalking() {
+        return _isEnemyWalking;
     }
 }

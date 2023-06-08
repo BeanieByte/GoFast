@@ -17,12 +17,24 @@ public class CheckForPlayerRadiusScript : MonoBehaviour {
 
         if (player == null) { 
             
-            OnPlayerMissing?.Invoke(this, EventArgs.Empty);
+            //OnPlayerMissing?.Invoke(this, EventArgs.Empty);
             return;
         }
 
         _playerPosition = player.transform.position;
         OnPlayerDetected?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void OnTriggerExit2D(Collider2D collision) {
+
+        PlayerScript player = collision.GetComponent<PlayerScript>();
+
+        if (player == null) {
+
+            return;
+        }
+
+        OnPlayerMissing?.Invoke(this, EventArgs.Empty);
     }
 
     public float PlayersCurrentXPosition() {

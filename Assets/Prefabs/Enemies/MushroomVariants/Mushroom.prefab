@@ -185,7 +185,7 @@ MonoBehaviour:
   _mySO: {fileID: 11400000, guid: 298f18271cadc104ab6c95348acea528, type: 2}
   _myVisual: {fileID: 3594700256780348411}
   _touchAttackTrigger: {fileID: 4298186999492676514}
-  _isFacingRight: 0
+  _isFacingRight: 1
   _wallCheck: {fileID: 2767439066754580494}
   _edgeCheck: {fileID: 5014093605941489882}
   _layerIsGrounded:
@@ -253,7 +253,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe680398ea55c964394e37b7b0dde393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mySO: {fileID: 11400000, guid: 298f18271cadc104ab6c95348acea528, type: 2}
 --- !u!1001 &104747085913187060
 PrefabInstance:
   m_ObjectHideFlags: 0

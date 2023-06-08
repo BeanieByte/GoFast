@@ -74,8 +74,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.00038852295, y: -0.0018413564}
-  m_Size: {x: 0.23, y: 0.3}
+  m_Offset: {x: -0.00038852543, y: 0.0009843409}
+  m_Size: {x: 0.23, y: 0.2562018}
   m_Direction: 0
 --- !u!210 &1731944372156082106
 SortingGroup:
@@ -103,7 +103,7 @@ MonoBehaviour:
   _mySO: {fileID: 11400000, guid: 702e754b196691c4eb896ac2866c24a2, type: 2}
   _myVisual: {fileID: 6351418446318249045}
   _touchAttackTrigger: {fileID: 8551576845787069730}
-  _isFacingRight: 0
+  _isFacingRight: 1
   _wallCheck: {fileID: 0}
   _edgeCheck: {fileID: 0}
   _layerIsGrounded:
@@ -156,8 +156,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.00038852295, y: -0.0018413564}
-  m_Size: {x: 0.23, y: 0.3}
+  m_Offset: {x: -0.00038852543, y: 0.0009843409}
+  m_Size: {x: 0.23, y: 0.2562018}
   m_Direction: 0
 --- !u!114 &6642191135734698574
 MonoBehaviour:

@@ -4,36 +4,24 @@ using UnityEngine;
 
 public class BombTouchTriggerScript : MonoBehaviour
 {
-    [SerializeField] private BombSO _mySO;
-
     private BombScript _myLogicScript;
+
+    private EnemyBaseScript _myEnemyParent;
 
     private void Awake() {
         _myLogicScript = GetComponentInParent<BombScript>();
+        _myEnemyParent = GetComponentInParent<EnemyBaseScript>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
         PlayerScript player = collision.GetComponent<PlayerScript>();
-        if (player != null) {
+        EnemyBaseScript enemy = collision.GetComponent<EnemyBaseScript>();
 
-            player.Damage(_mySO.attackPower);
+
+
+        if (player != null || (enemy != null && enemy != _myEnemyParent)) {
+
             _myLogicScript.Explode();
-
-            if (_mySO.canBurn) {
-                player.PlayerWasBurned();
-            }
-            if (_mySO.canParalyze) {
-                player.PlayerWasParalyzed();
-            }
-            if (_mySO.canFreeze) {
-                player.PlayerWasFrozen();
-            }
-            if (_mySO.canPoison) {
-                player.PlayerWasPoisoned();
-            }
-            if (_mySO.canSlime) {
-                player.PlayerWasSlimed();
-            }
         }
     }
 }

@@ -11,13 +11,13 @@ public class PlayerAttackScript : MonoBehaviour
     public event EventHandler OnKillingEnemy;
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        IDamageable enemy = collision.GetComponent<IDamageable>();
-        if (enemy == null) {
+        IDamageable damageable = collision.GetComponent<IDamageable>();
+        if (damageable == null) {
             return;
         }
 
-        enemy.Damage(_attackPower);
-        if (enemy.DeadCheck()){
+        damageable.Damage(_attackPower);
+        if (damageable.DeadCheck()){
             OnKillingEnemy.Invoke(this, EventArgs.Empty);
         }
 

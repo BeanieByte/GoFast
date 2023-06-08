@@ -11,6 +11,7 @@ public class EnemyVisualBaseScript : MonoBehaviour
     private const string hit_CONST = "hit";
     protected const string die_CONST = "die";
     protected const string attack_CONST = "attack";
+    protected const string isRunning_CONST = "isRunning";
 
     public event EventHandler OnEnemyHitAnimStarted;
     public event EventHandler OnEnemyHitAnimStopped;
@@ -22,6 +23,10 @@ public class EnemyVisualBaseScript : MonoBehaviour
 
     protected virtual void Start() { 
     
+    }
+
+    protected virtual void FixedUpdate() { 
+        
     }
 
     public void Flip() {
@@ -37,7 +42,7 @@ public class EnemyVisualBaseScript : MonoBehaviour
         OnEnemyHitAnimStarted?.Invoke(this, EventArgs.Empty);
     }
 
-    private void StopHitAnim() {
+    protected void StopHitAnim() {
         OnEnemyHitAnimStopped?.Invoke(this, EventArgs.Empty);
     }
 
@@ -50,17 +55,39 @@ public class EnemyVisualBaseScript : MonoBehaviour
         Destroy(_myLogicScript.gameObject);
     }
 
-    public void DisableTouchAttackTrigger() {
+    public virtual void DisableTouchAttackTrigger() {
         _myLogicScript.CanIWalk(false);
         _myLogicScript.SetTouchAttackTrigger(false);
     }
 
-    public void EnableTouchAttackTrigger() {
+    public virtual void EnableTouchAttackTrigger() {
         _myLogicScript.CanIWalk(true);
         _myLogicScript.SetTouchAttackTrigger(true);
         StopHitAnim();
     }
 
+    public void EnableAttackTrigger() {
+        _myLogicScript.SetAttackTrigger(true);
+    }
+
+    public void DisableAttackTrigger() {
+        _myLogicScript.SetAttackTrigger(false);
+    }
+
     public virtual void Crushed() {
     }
+
+    public virtual void DisableAllCollidersOnDeath() {
+        DisableTouchAttackTrigger();
+        DisableAttackTrigger();
+    }
+
+    public void SetIsWalkingBoolTrue() {
+        _myAnimator.SetBool(isRunning_CONST, true);
+    }
+
+    public void SetIsWalkingBoolFalse() {
+        _myAnimator.SetBool(isRunning_CONST, false);
+    }
+
 }

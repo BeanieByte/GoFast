@@ -215,6 +215,8 @@ public class PlayerScript : MonoBehaviour {
         OnTurboTimeChanged?.Invoke(this, new OnTurboTimeChangedEventArgs {
             turboTime = _currentTurboTime
         }) ;
+
+        _canAttack = true;
     }
 
     private void _playerAttack_OnKillingEnemy(object sender, EventArgs e) {
@@ -267,8 +269,6 @@ public class PlayerScript : MonoBehaviour {
     private void Instance_OnAttackPressed(object sender, System.EventArgs e) {
         if (_canAttack) {
             Attack();
-            _currentCanAttackCooldown = 0f;
-            _canAttack = false;
         }
     }
 
@@ -526,6 +526,8 @@ public class PlayerScript : MonoBehaviour {
     private void Attack() {
         _playerAttack.SetAttackPower(_maxAttackPower);
         OnPlayerAttacked?.Invoke(this, EventArgs.Empty);
+        _currentCanAttackCooldown = 0f;
+        _canAttack = false;
     }
     
 

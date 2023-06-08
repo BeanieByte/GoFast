@@ -9,12 +9,10 @@ public class BombExplosionScript : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision) {
 
         PlayerScript player = collision.GetComponent<PlayerScript>();
-        EnemyBaseScript enemy = collision.GetComponent<EnemyBaseScript>();
-
-        int halvedDamage = _mySO.attackPower / 2;
+        IDamageable damageable = collision.GetComponent<IDamageable>();
 
         if (player != null) {
-            player.Damage(halvedDamage);
+            player.Damage(_mySO.attackPower);
 
             if (_mySO.canBurn) {
                 player.PlayerWasBurned();
@@ -33,8 +31,8 @@ public class BombExplosionScript : MonoBehaviour
             }
         }
 
-        if (enemy != null) {
-            enemy.Damage(halvedDamage);
+        if (damageable != null) {
+            damageable.Damage(_mySO.attackPower);
         }
     }
 }

@@ -34,8 +34,6 @@ public class BomberGoblinVisualScript : EnemyVisualBaseScript
 
         Transform myBomb = Instantiate(_myBomb, _bombThrowStartPoint.position, _bombRotation, _bombHolder);
 
-        //Rigidbody2D bombRigidBody = myBomb.GetComponent<Rigidbody2D>();
-
         myBomb.GetComponent<Rigidbody2D>().AddForce(new Vector2(_throwVectorX, _throwVectorY) * _throwForce, ForceMode2D.Impulse);
     }
 }

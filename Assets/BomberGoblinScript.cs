@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BomberGoblinScript : EnemyBaseScript
 {
+
     private CheckForPlayerRadiusScript _myRadiusScript;
 
     private bool _isPlayerWithinRange;
@@ -12,6 +13,7 @@ public class BomberGoblinScript : EnemyBaseScript
 
     protected override void Awake() {
         base.Awake();
+        _isOriginallyFacingRight = true;
         _myRadiusScript = GetComponentInChildren<CheckForPlayerRadiusScript>();
     }
 
@@ -23,6 +25,8 @@ public class BomberGoblinScript : EnemyBaseScript
         if (!_isFacingRight) {
             _myVisual.Flip();
         }
+
+        _isPlayerWithinRange = false;
 
         _myRadiusScript.OnPlayerDetected += _myRadiusScript_OnPlayerDetected;
         _myRadiusScript.OnPlayerMissing += _myRadiusScript_OnPlayerMissing;
@@ -53,7 +57,7 @@ public class BomberGoblinScript : EnemyBaseScript
         
     }
 
-    public override void Attack() {
+    protected override void Attack() {
         if (!_isPlayerWithinRange) { return; }
         base.Attack();
     }
