@@ -23,25 +23,26 @@ public class EnemySO : ScriptableObject
 
     [VerticalGroup("Enemy/Split/Right")]
     [BoxGroup("Enemy/Split/Right/Stats and Values")]
+    [Required]
     public string enemyName;
 
     [BoxGroup("Enemy/Split/Right/Stats and Values")]
+    [Required]
     public int health;
+
+    [BoxGroup("Enemy/Split/Right/Stats and Values")]
+    [Required]
+    public int touchPower;
+
+    [BoxGroup("Enemy/Split/Right/Stats and Values")]
+    [Required]
+    public float speed;
 
     [BoxGroup("Enemy/Split/Right/Stats and Values")]
     public int attackPower;
 
     [BoxGroup("Enemy/Split/Right/Stats and Values")]
     public float attackCooldownTime;
-
-    [BoxGroup("Enemy/Split/Right/Stats and Values")]
-    public int touchPower;
-
-    [BoxGroup("Enemy/Split/Right/Stats and Values")]
-    public float speed;
-
-    [BoxGroup("Enemy/Split/Right/Stats and Values")]
-    public float bounceOffMultiplier;
 
     [BoxGroup("Enemy/Split/Right/Stats and Values")]
     public bool canBurn;
@@ -57,4 +58,7 @@ public class EnemySO : ScriptableObject
 
     [BoxGroup("Enemy/Split/Right/Stats and Values")]
     public bool canSlime;
+
+    [BoxGroup("Enemy/Split/Right/Stats and Values")]
+    public float bounceOffMultiplier;
 }

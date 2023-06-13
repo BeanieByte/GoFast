@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b0f8fa96bb6a7a4cb3ee95c2622c1f4, type: 3}
-  m_Name: MushroomSpringSO
+  m_Name: SlimeSO
   m_EditorClassIdentifier: 
-  sprite: {fileID: -28054898, guid: a48b97781b4adf2459375aa310cf1233, type: 3}
-  prefab: {fileID: 0}
-  material: {fileID: 2100000, guid: f8bbc6e602b195746b050dd33d8e4430, type: 2}
-  enemyName: Spring Mushroom
-  health: 50
+  sprite: {fileID: -730779726, guid: 871c9ec8d63ce76438b5814e0f9646e1, type: 3}
+  prefab: {fileID: 4787343910479774887, guid: c4710f6d2f8b7214c884021e81629cd4, type: 3}
+  material: {fileID: 2100000, guid: 19b1cc87d76fafd41b2b04447e11a28f, type: 2}
+  enemyName: Slime
+  health: 5
   touchPower: 5
-  speed: 0.8
+  speed: 1.2
   attackPower: 0
   attackCooldownTime: 0
   canBurn: 0
   canParalyze: 0
   canFreeze: 0
   canPoison: 0
-  canSlime: 0
-  bounceOffMultiplier: 5
+  canSlime: 1
+  bounceOffMultiplier: 0
