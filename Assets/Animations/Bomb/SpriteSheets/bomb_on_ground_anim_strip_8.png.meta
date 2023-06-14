@@ -70,7 +70,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -284,6 +284,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: bomb_on_ground_anim_strip_8_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 374c74540dd56f347be2a7146e1e891f
+      internalID: 1578791450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -302,6 +323,7 @@ TextureImporter:
       bomb_on_ground_anim_strip_8_3: -1147666979
       bomb_on_ground_anim_strip_8_7: -1991584468
       bomb_on_ground_anim_strip_8_5: -63369092
+      bomb_on_ground_anim_strip_8_8: 1578791450
       bomb_on_ground_anim_strip_8_0: -1240551185
   spritePackingTag: 
   pSDRemoveMatte: 0

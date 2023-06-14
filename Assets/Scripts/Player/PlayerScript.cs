@@ -126,6 +126,11 @@ public class PlayerScript : MonoBehaviour {
 
     private bool _isPoisoned = false;
     private float _maxPoisonedTime = 10f;
+    private float _defaultPoisonTimer = 2f;
+    private float _currentPoisonTimer;
+    private int _currentHealthToDecrease;
+    private int _healthToDecreaseMultiplier = 2;
+    private int _poisonHealthDivider = 20;
 
     private bool _isSlimed = false;
     private float _maxSlimedTime = 5f;
@@ -224,6 +229,8 @@ public class PlayerScript : MonoBehaviour {
         }) ;
 
         _canAttack = true;
+
+        _currentPoisonTimer = _defaultPoisonTimer;
     }
 
     private void _playerAttack_OnKillingEnemy(object sender, EventArgs e) {
@@ -324,6 +331,7 @@ public class PlayerScript : MonoBehaviour {
         }
 
         if (_isInvincible) {
+            _statusState = StatusState.Unafflicted;
             _currentInvincibleTime += Time.deltaTime;
             if (_currentInvincibleTime >= _maxInvincibleTime) {
                 StopInvincibleTime();
@@ -335,7 +343,11 @@ public class PlayerScript : MonoBehaviour {
         JumpStateMachine();
 
         StatusStateMachine();
-        
+
+        //DEBUG ONLY, DELETE LATER
+        if (Input.GetKeyDown(KeyCode.Q)) {
+            PlayerWasBurned();
+        }
     }
 
     private void SpeedStateMachine() {
@@ -411,6 +423,7 @@ public class PlayerScript : MonoBehaviour {
                 _statusTimer -= Time.deltaTime;
                 if (_statusTimer > 0) { return; }
                 _currentAttackPower = _maxAttackPower;
+                _playerVisual.BurnPlayerStop();
                 StopStatusConditions();
                 break;
             case StatusState.Paralyzed:
@@ -418,6 +431,7 @@ public class PlayerScript : MonoBehaviour {
                 _statusTimer -= Time.deltaTime;
                 if (_statusTimer > 0) { return; }
                 _speedState = SpeedState.Regular;
+                _playerVisual.ParalyzePlayerStop();
                 StopStatusConditions();
                 break;
             case StatusState.Frozen:
@@ -425,11 +439,15 @@ public class PlayerScript : MonoBehaviour {
                 _statusTimer -= Time.deltaTime;
                 if (_statusTimer > 0) { return; }
                 _speedState = SpeedState.Regular;
+                _playerVisual.FreezePlayerStop();
                 StopStatusConditions();
                 break;
             case StatusState.Poisoned:
                 _statusTimer -= Time.deltaTime;
+                WhilePlayerIsPoisoned();
                 if (_statusTimer > 0) { return; }
+                _playerVisual.PoisonPlayerStop();
+                _currentPoisonTimer = _defaultPoisonTimer;
                 StopStatusConditions();
                 break;
             case StatusState.Slimed:
@@ -439,6 +457,7 @@ public class PlayerScript : MonoBehaviour {
                 if (_statusTimer > 0) { return; }
                 _speedState = SpeedState.Regular;
                 _canJump = true;
+                _playerVisual.SlimePlayerStop();
                 StopStatusConditions();
                 break;
         }
@@ -692,8 +711,8 @@ public class PlayerScript : MonoBehaviour {
     //}
 
     public void PlayerWasBurned() {
-        if (_statusState != StatusState.Unafflicted) { return; }
-        _playerVisual.BurnPlayer();
+        if (_statusState != StatusState.Unafflicted || _isInvincible) { return; }
+        _playerVisual.BurnPlayerStart();
         _statusTimer = _maxBurnedTime;
         _isPlayerAfflictedWithStatus = true;
         ChangeAttackPower(0.5f);
@@ -707,8 +726,8 @@ public class PlayerScript : MonoBehaviour {
 
     public void PlayerWasParalyzed()
     {
-        if (_statusState != StatusState.Unafflicted) { return; }
-        _playerVisual.ParalyzePlayer();
+        if (_statusState != StatusState.Unafflicted || _isInvincible) { return; }
+        _playerVisual.ParalyzePlayerStart();
         _statusTimer = _maxParalyzedTime;
         _isPlayerAfflictedWithStatus = true;
         _decreasedSpeedModifier = 0.5f;
@@ -723,8 +742,8 @@ public class PlayerScript : MonoBehaviour {
 
     public void PlayerWasFrozen()
     {
-        if (_statusState != StatusState.Unafflicted) { return; }
-        _playerVisual.FreezePlayer();
+        if (_statusState != StatusState.Unafflicted || _isInvincible) { return; }
+        _playerVisual.FreezePlayerStart();
         _statusTimer = _maxFrozenTime;
         _isPlayerAfflictedWithStatus = true;
         _decreasedSpeedModifier = 0f;
@@ -739,11 +758,23 @@ public class PlayerScript : MonoBehaviour {
 
     public void PlayerWasPoisoned()
     {
-        if (_statusState != StatusState.Unafflicted) { return; }
-        _playerVisual.PoisonPlayer();
+        if (_statusState != StatusState.Unafflicted || _isInvincible) { return; }
+        _playerVisual.PoisonPlayerStart();
         _statusTimer = _maxPoisonedTime;
         _isPlayerAfflictedWithStatus = true;
+        _currentHealthToDecrease = Mathf.RoundToInt(_currentHealth / _poisonHealthDivider);
         _statusState = StatusState.Poisoned;
+    }
+
+    private void WhilePlayerIsPoisoned() {
+        _currentPoisonTimer -= Time.deltaTime;
+
+        if (_currentPoisonTimer <= 0f) {
+            _currentHealth -= _currentHealthToDecrease;
+            _currentHealthToDecrease *= _healthToDecreaseMultiplier;
+            _currentPoisonTimer = _defaultPoisonTimer;
+        }
+
     }
 
     //public bool IsPlayerPoisoned() {
@@ -752,8 +783,8 @@ public class PlayerScript : MonoBehaviour {
 
     public void PlayerWasSlimed()
     {
-        if (_statusState != StatusState.Unafflicted) { return; }
-        _playerVisual.SlimePlayer();
+        if (_statusState != StatusState.Unafflicted || _isInvincible) { return; }
+        _playerVisual.SlimePlayerStart();
         _statusTimer = _maxSlimedTime;
         _isPlayerAfflictedWithStatus = true;
         _decreasedSpeedModifier = 0.75f;
@@ -765,5 +796,4 @@ public class PlayerScript : MonoBehaviour {
     //{
     //    return _isSlimed;
     //}
-    
 }

@@ -18,7 +18,7 @@ MonoBehaviour:
   bombName: Bomb
   attackPower: 40
   explosionTimer: 5
-  canBurn: 1
+  canBurn: 0
   canParalyze: 0
   canFreeze: 0
   canPoison: 0

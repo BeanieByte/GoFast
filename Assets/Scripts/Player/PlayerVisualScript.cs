@@ -28,6 +28,21 @@ public class PlayerVisualScript : MonoBehaviour
     public event EventHandler OnPlayerInvincibleAnimStarted;
     public event EventHandler OnPlayerInvincibleAnimStopped;
 
+    public event EventHandler OnPlayerBurnAnimStarted;
+    public event EventHandler OnPlayerBurnAnimStopped;
+
+    public event EventHandler OnPlayerParalyzedAnimStarted;
+    public event EventHandler OnPlayerParalyzedAnimStopped;
+
+    public event EventHandler OnPlayerFreezeAnimStarted;
+    public event EventHandler OnPlayerFreezeAnimStopped;
+
+    public event EventHandler OnPlayerPoisonedAnimStarted;
+    public event EventHandler OnPlayerPoisonedAnimStopped;
+
+    public event EventHandler OnPlayerSlimedAnimStarted;
+    public event EventHandler OnPlayerSlimedAnimStopped;
+
     enum AnimAirState { 
         Grounded,
         Jumping,
@@ -152,14 +167,44 @@ public class PlayerVisualScript : MonoBehaviour
         Destroy(_playerLogicScript.gameObject);
     }
 
-    public void BurnPlayer() { }
+    public void BurnPlayerStart() {
+        OnPlayerBurnAnimStarted?.Invoke(this, EventArgs.Empty);
+    }
 
-    public void ParalyzePlayer() { }
+    public void BurnPlayerStop() { 
+        OnPlayerBurnAnimStopped?.Invoke(this, EventArgs.Empty);
+    }
 
-    public void FreezePlayer() { }
+    public void ParalyzePlayerStart() { 
+        OnPlayerParalyzedAnimStarted?.Invoke(this, EventArgs.Empty);
+    }
 
-    public void PoisonPlayer() { }
+    public void ParalyzePlayerStop() { 
+        OnPlayerParalyzedAnimStopped?.Invoke(this, EventArgs.Empty);
+    }
 
-    public void SlimePlayer() { }
+    public void FreezePlayerStart() { 
+        OnPlayerFreezeAnimStarted?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void FreezePlayerStop() { 
+        OnPlayerFreezeAnimStopped?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void PoisonPlayerStart() { 
+        OnPlayerPoisonedAnimStarted?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void PoisonPlayerStop() { 
+        OnPlayerPoisonedAnimStopped?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void SlimePlayerStart() { 
+        OnPlayerSlimedAnimStarted?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void SlimePlayerStop() { 
+        OnPlayerSlimedAnimStopped?.Invoke(this, EventArgs.Empty);
+    }
 }
 
