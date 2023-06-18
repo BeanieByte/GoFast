@@ -189,6 +189,7 @@ GameObject:
   - component: {fileID: 8733151891558441148}
   - component: {fileID: 8733151891558441138}
   - component: {fileID: 8733151891558441139}
+  - component: {fileID: -2334177310158712577}
   m_Layer: 10
   m_Name: BombVisual
   m_TagString: Untagged
@@ -312,3 +313,17 @@ MonoBehaviour:
   normalStrength: 5
   normalSmoothing: 1
   computingNormal: 0
+--- !u!114 &-2334177310158712577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8733151891558441151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1625263d85e5d554284989eb9052e863, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  updateEveryFrame: 1
+  useMaterialInstanceIfPossible: 0

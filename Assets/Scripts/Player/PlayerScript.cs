@@ -9,6 +9,7 @@ public class PlayerScript : MonoBehaviour {
     [Header("Player Elements")]
 
     [SerializeField] private PlayerVisualScript _playerVisual;
+
     private Rigidbody2D _playerRigidBody;
 
     private Vector2 _currentPlayerVelocity;
@@ -171,6 +172,7 @@ public class PlayerScript : MonoBehaviour {
     }
 
     private void Start() {
+
         GameInput.Instance.OnJumpStarted += Instance_OnJumpStarted;
         GameInput.Instance.OnJumpPerformed += Instance_OnJumpPressed;
         GameInput.Instance.OnJumpCanceled += Instance_OnJumpCanceled;
@@ -303,7 +305,9 @@ public class PlayerScript : MonoBehaviour {
 
         Vector2 moveDir = new Vector2(inputVector.x, 0);
 
-        transform.position = (Vector2)transform.position + _playerMoveSpeed * Time.deltaTime * moveDir * _playerMoveSpeedMultiplier;
+        if (!_isFrozen) {
+            transform.position = (Vector2)transform.position + _playerMoveSpeed * Time.deltaTime * moveDir * _playerMoveSpeedMultiplier;
+        }
 
         _isGrounded = Physics2D.OverlapCircle(_playerFeetPos.position, _checkFeetRadius, _layerIsGrounded);
 
@@ -311,10 +315,10 @@ public class PlayerScript : MonoBehaviour {
             _jumpState = JumpState.Falling;
         }
 
-        if (moveDir.x < 0 && _playerFacingRight) {
+        if (moveDir.x < 0 && _playerFacingRight && !_isFrozen) {
             _playerVisual.Flip();
             _playerFacingRight = !_playerFacingRight;
-        } else if (moveDir.x > 0 && !_playerFacingRight) {
+        } else if (moveDir.x > 0 && !_playerFacingRight && !_isFrozen) {
             _playerVisual.Flip();
             _playerFacingRight = !_playerFacingRight;
         }
@@ -347,6 +351,10 @@ public class PlayerScript : MonoBehaviour {
         //DEBUG ONLY, DELETE LATER
         if (Input.GetKeyDown(KeyCode.Q)) {
             PlayerWasBurned();
+        }
+
+        if (Input.GetKeyDown(KeyCode.E)) {
+            PlayerWasFrozen();
         }
     }
 
@@ -435,11 +443,14 @@ public class PlayerScript : MonoBehaviour {
                 StopStatusConditions();
                 break;
             case StatusState.Frozen:
+                _isFrozen = true;
+                _canJump = false;
                 _canTurbo = false;
                 _statusTimer -= Time.deltaTime;
                 if (_statusTimer > 0) { return; }
-                _speedState = SpeedState.Regular;
                 _playerVisual.FreezePlayerStop();
+                _isFrozen = false;
+                _canJump = true;
                 StopStatusConditions();
                 break;
             case StatusState.Poisoned:
@@ -730,8 +741,7 @@ public class PlayerScript : MonoBehaviour {
         _playerVisual.ParalyzePlayerStart();
         _statusTimer = _maxParalyzedTime;
         _isPlayerAfflictedWithStatus = true;
-        _decreasedSpeedModifier = 0.5f;
-        _speedState = SpeedState.Decreased;
+        UpdateDecreaseSpeedModifier(0.5f);
         _statusState = StatusState.Paralyzed;
     }
 
@@ -746,13 +756,10 @@ public class PlayerScript : MonoBehaviour {
         _playerVisual.FreezePlayerStart();
         _statusTimer = _maxFrozenTime;
         _isPlayerAfflictedWithStatus = true;
-        _decreasedSpeedModifier = 0f;
-        _speedState = SpeedState.Decreased;
         _statusState = StatusState.Frozen;
     }
 
-    //public bool IsPlayerFrozen()
-    //{
+    //public bool IsPlayerFrozen() {
     //    return _isFrozen;
     //}
 
@@ -787,8 +794,7 @@ public class PlayerScript : MonoBehaviour {
         _playerVisual.SlimePlayerStart();
         _statusTimer = _maxSlimedTime;
         _isPlayerAfflictedWithStatus = true;
-        _decreasedSpeedModifier = 0.75f;
-        _speedState = SpeedState.Decreased;
+        UpdateDecreaseSpeedModifier(0.75f);
         _statusState = StatusState.Slimed;
     }
 

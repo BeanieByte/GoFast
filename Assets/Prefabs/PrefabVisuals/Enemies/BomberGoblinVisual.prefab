@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2768368265675256297}
   - component: {fileID: 2768368265675256296}
   - component: {fileID: 7833029436976818230}
+  - component: {fileID: -9219312879969893782}
   m_Layer: 7
   m_Name: BomberGoblinVisual
   m_TagString: Untagged
@@ -158,6 +159,20 @@ MonoBehaviour:
   normalStrength: 5
   normalSmoothing: 1
   computingNormal: 0
+--- !u!114 &-9219312879969893782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2768368265675256276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1625263d85e5d554284989eb9052e863, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  updateEveryFrame: 1
+  useMaterialInstanceIfPossible: 0
 --- !u!1 &5344447649439454431
 GameObject:
   m_ObjectHideFlags: 0

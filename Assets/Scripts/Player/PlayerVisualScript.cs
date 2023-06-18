@@ -10,6 +10,8 @@ public class PlayerVisualScript : MonoBehaviour
 
     private Animator _playerAnimator;
 
+    private static readonly int Idle = Animator.StringToHash("Idle");
+
     private const string isRunning_CONST = "isRunning";
     private const string runAnimSpeed_CONST = "runAnimSpeed";
     private const string isGrounded_CONST = "isGrounded";
@@ -183,11 +185,13 @@ public class PlayerVisualScript : MonoBehaviour
         OnPlayerParalyzedAnimStopped?.Invoke(this, EventArgs.Empty);
     }
 
-    public void FreezePlayerStart() { 
+    public void FreezePlayerStart() {
+        _playerAnimator.enabled = false;
         OnPlayerFreezeAnimStarted?.Invoke(this, EventArgs.Empty);
     }
 
-    public void FreezePlayerStop() { 
+    public void FreezePlayerStop() {
+        _playerAnimator.enabled = true;
         OnPlayerFreezeAnimStopped?.Invoke(this, EventArgs.Empty);
     }
 

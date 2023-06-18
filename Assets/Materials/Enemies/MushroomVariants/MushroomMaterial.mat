@@ -10,6 +10,7 @@ Material:
   m_Name: MushroomMaterial
   m_Shader: {fileID: 4800000, guid: a36b7719ff0465b42ab1407d67672c5f, type: 3}
   m_ValidKeywords:
+  - ATLAS_ON
   - GREYSCALEOUTLINE_ON
   m_InvalidKeywords:
   - _GREYSCALEOUTLINE_ON
@@ -149,7 +150,7 @@ Material:
     - _InnerOutlineAlpha: 1
     - _InnerOutlineGlow: 4
     - _InnerOutlineThickness: 1
-    - _MaxXUV: 1
+    - _MaxXUV: 0.125
     - _MaxYUV: 1
     - _MinXUV: 0
     - _MinYUV: 0

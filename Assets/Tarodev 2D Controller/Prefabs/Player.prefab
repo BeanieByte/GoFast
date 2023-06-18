@@ -14974,6 +14974,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveParticles: {fileID: 3836054527605825648}
   _tiltChangeSpeed: 0.05
+  _maxTiltAngle: 45
   _footstepClips:
   - {fileID: 8300000, guid: 2113f34717365ed4d9616fe3402bd43c, type: 3}
   - {fileID: 8300000, guid: 3db7790641583ba4ca4fc1fe33ed2fb3, type: 3}
@@ -14994,6 +14995,7 @@ MonoBehaviour:
   _dashRingParticles: {fileID: 3836054527679373923}
   _dashRingTransform: {fileID: 3836054526686142377}
   _minImpactForce: 20
+  _maxImpactForce: 40
   _landAnimDuration: 0.1
   _landClip: {fileID: 8300000, guid: f2433d011280e17498820544628ee930, type: 3}
   _jumpClip: {fileID: 8300000, guid: 101dc2feac7449645b4a53d89f9541f9, type: 3}
@@ -15025,7 +15027,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3044390528417316936}
   - component: {fileID: 6265755724033111475}
   - component: {fileID: 6101890689855203151}
+  - component: {fileID: 907161881418167404}
   m_Layer: 7
   m_Name: SlimeVisual
   m_TagString: Untagged
@@ -150,6 +151,20 @@ MonoBehaviour:
   normalStrength: 5
   normalSmoothing: 1
   computingNormal: 0
+--- !u!114 &907161881418167404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410817998260630396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1625263d85e5d554284989eb9052e863, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  updateEveryFrame: 1
+  useMaterialInstanceIfPossible: 0
 --- !u!1 &1195997627796495059
 GameObject:
   m_ObjectHideFlags: 0

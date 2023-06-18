@@ -5,35 +5,53 @@ using UnityEngine;
 
 public class PlayerVisualShaderScript : MonoBehaviour {
 
+
     private Renderer _playerRenderer;
     private Material _playerMaterial;
-    private SpriteMask _playerSpriteMask;
-
     private PlayerVisualScript _playerVisualScript;
 
-    private bool _isPlayerFlashing;
-    private bool _isPlayerShining;
 
-    private float _flashingBaseTime = 0f;
+    private bool _isPlayerHit;
+    private float _hitWhiteBlendAnimationMinValue = 0.2f;
+    private float _hitWhiteBlendAnimationMaxValue = 0.7f;
+    private float _hitWhiteBlendAnimationSpeed = 3f;
+
+
+    private bool _isPlayerInvincible;
+    [SerializeField] private Texture _invincibilityTexture;
+    private float _invincibleAnimationMinValue = -0.52f;
+    private float _invincibleAnimationMaxValue = 0.52f;
+    private float _invincibleAnimationSpeed = 3f;
+
 
     private bool _isPlayerBurning;
+    [SerializeField] private Material _playerBurningMaterial;
+    private float _burningAnimationSpeed = 3f;
+    private float _burningAnimationMinValue = 0.3f;
+    private float _burningAnimationMaxValue = 1.5f;
+
     private bool _isPlayerParalyzed;
+
     private bool _isPlayerFrozen;
+    [SerializeField] private Material _playerFrozenMaterial;
+    [SerializeField] private GameObject _freezeAnimationParticleSystemGameObject;
+    private float _freezeAnimationSpeed = 3f;
+    private float _freezeAnimationCurrentValue;
+    private float _freezeAnimationMinValue = 0f;
+    private float _freezeAnimationMaxValue = 0.75f;
+
     private bool _isPlayerPoisoned;
     private bool _isPlayerSlimed;
 
-    private UnityEngine.Color _burningOrangeRGB = new (255, 74, 0, 255);
 
     private void Awake() {
         _playerRenderer = GetComponent<Renderer>();
-        _playerMaterial = _playerRenderer.material;
-        _playerSpriteMask = GetComponent<SpriteMask>();
-
         _playerVisualScript = GetComponent<PlayerVisualScript>();
     }
 
     private void Start() {
-        _playerSpriteMask.enabled = false;
+
+        _isPlayerInvincible = false;
 
         _isPlayerBurning = false;
         _isPlayerParalyzed = false;
@@ -41,11 +59,10 @@ public class PlayerVisualShaderScript : MonoBehaviour {
         _isPlayerPoisoned = false;
         _isPlayerSlimed = false;
 
-        _isPlayerFlashing = false;
-        _isPlayerShining = false;
+        _playerRenderer.material.SetFloat("_HsvShift", (int)Random.Range(0f, 360f));
+        _playerRenderer.material.SetFloat("_HsvSaturation", Random.Range(0.5f, 1.5f));
 
-        _playerMaterial.SetFloat("_HsvShift", (int)Random.Range(0f, 360f));
-        _playerMaterial.SetFloat("_HsvSaturation", Random.Range(0.5f, 1.5f));
+        _playerMaterial = _playerRenderer.material;
 
         _playerVisualScript.OnPlayerHitAnimStarted += _playerVisualScript_OnPlayerHitAnimStarted;
         _playerVisualScript.OnPlayerHitAnimStopped += _playerVisualScript_OnPlayerHitAnimStopped;
@@ -69,57 +86,52 @@ public class PlayerVisualShaderScript : MonoBehaviour {
         _playerVisualScript.OnPlayerSlimedAnimStopped += _playerVisualScript_OnPlayerSlimedAnimStopped;
     }
 
-    private void _playerVisualScript_OnPlayerInvincibleAnimStarted(object sender, System.EventArgs e) {
-        _playerMaterial.EnableKeyword("SHINE_ON");
-        _isPlayerShining = true;
-        EnableFlashingHitEffect();
-    }
-
-    private void _playerVisualScript_OnPlayerInvincibleAnimStopped(object sender, System.EventArgs e) {
-        _playerMaterial.DisableKeyword("SHINE_ON");
-        _isPlayerShining = false;
-        DisableFlashingHitEffect();
-    }
-
     private void _playerVisualScript_OnPlayerHitAnimStarted(object sender, System.EventArgs e) {
-        EnableFlashingHitEffect();
+        _playerRenderer.material.EnableKeyword("HITEFFECT_ON");
+        _playerRenderer.material.SetColor("_HitEffectColor", UnityEngine.Color.white);
+        _playerRenderer.material.SetFloat("_HitEffectGlow", 0.9f);
+        _playerRenderer.material.EnableKeyword("FLICKER_ON");
+        _playerRenderer.material.SetFloat("_FlickerPercent", 0.5f);
+        _playerRenderer.material.SetFloat("_FlickerFreq", 1.2f);
+        _playerRenderer.material.SetFloat("_FlickerAlpha", 0f);
+        _isPlayerHit = true;
     }
 
     private void _playerVisualScript_OnPlayerHitAnimStopped(object sender, System.EventArgs e) {
-        DisableFlashingHitEffect();
+        _isPlayerHit = false;
+        _playerRenderer.material.DisableKeyword("HITEFFECT_ON");
+        _playerRenderer.material.DisableKeyword("FLICKER_ON");
     }
 
-    private void EnableFlashingHitEffect() {
-        _playerMaterial.EnableKeyword("HITEFFECT_ON");
-        _playerMaterial.EnableKeyword("FLICKER_ON");
-        _isPlayerFlashing = true;
+    private void _playerVisualScript_OnPlayerInvincibleAnimStarted(object sender, System.EventArgs e) {
+        _playerRenderer.material = _playerMaterial;
+        _playerMaterial.EnableKeyword("INNEROUTLINE_ON");
+        _playerMaterial.SetColor("_InnerOutlineColor", UnityEngine.Color.black);
+        _playerMaterial.SetFloat("_InnerOutlineThickness", 3f);
+        _playerMaterial.SetFloat("_InnerOutlineAlpha", 1f);
+        _playerMaterial.SetFloat("_InnerOutlineGlow", 250f);
+        _playerMaterial.EnableKeyword("COLORRAMP_ON");
+        _playerMaterial.SetTexture("_ColorRampTex", _invincibilityTexture);
+        _playerMaterial.SetFloat("_ColorRampBlend", 1f);
+        _playerMaterial.DisableKeyword("HSV_ON");
+        _isPlayerInvincible = true;
     }
 
-    private void DisableFlashingHitEffect() {
-        _playerMaterial.DisableKeyword("HITEFFECT_ON");
-        _playerMaterial.DisableKeyword("FLICKER_ON");
-        _isPlayerFlashing = false;
-        _flashingBaseTime = 0f;
+    private void _playerVisualScript_OnPlayerInvincibleAnimStopped(object sender, System.EventArgs e) {
+        _isPlayerInvincible = false;
+        _playerMaterial.EnableKeyword("HSV_ON");
+        _playerMaterial.DisableKeyword("INNEROUTLINE_ON");
+        _playerMaterial.DisableKeyword("COLORRAMP_ON");
     }
 
     private void _playerVisualScript_OnPlayerBurnAnimStarted(object sender, System.EventArgs e) {
-        _playerMaterial.EnableKeyword("OUTBASE_ON");
-        _playerMaterial.SetColor("_OutlineColor", _burningOrangeRGB);
-        _playerMaterial.SetFloat("_OutlineAlpha", 1);
-        _playerMaterial.SetFloat("_OutlineGlow", 5);
-        _playerMaterial.EnableKeyword("_Outline8Directions");
-        _playerMaterial.EnableKeyword("_OutlineIsPixel");
-        _playerMaterial.SetFloat("_OutlinePixelWidth", 2);
-        _playerSpriteMask.enabled = true;
+        _playerRenderer.material = _playerBurningMaterial;
         _isPlayerBurning = true;
     }
 
     private void _playerVisualScript_OnPlayerBurnAnimStopped(object sender, System.EventArgs e) {
+        _playerRenderer.material = _playerMaterial;
         _isPlayerBurning = false;
-        _playerMaterial.DisableKeyword("_OutlineIsPixel");
-        _playerMaterial.DisableKeyword("_Outline8Directions");
-        _playerMaterial.DisableKeyword("OUTBASE_ON");
-        _playerSpriteMask.enabled = false;
     }
 
     private void _playerVisualScript_OnPlayerParalyzedAnimStarted(object sender, System.EventArgs e) {
@@ -131,11 +143,19 @@ public class PlayerVisualShaderScript : MonoBehaviour {
     }
 
     private void _playerVisualScript_OnPlayerFreezeAnimStarted(object sender, System.EventArgs e) {
-        throw new System.NotImplementedException();
+        _playerRenderer.material = _playerFrozenMaterial;
+        _freezeAnimationParticleSystemGameObject.SetActive(true);
+        _freezeAnimationCurrentValue = _freezeAnimationMinValue;
+        PlayerFrozenShaderAnimationStarted();
+        _isPlayerFrozen = true;
     }
 
     private void _playerVisualScript_OnPlayerFreezeAnimStopped(object sender, System.EventArgs e) {
-        throw new System.NotImplementedException();
+        _isPlayerFrozen = false;
+        _freezeAnimationCurrentValue = _freezeAnimationMaxValue;
+        PlayerFrozenShaderAnimationEnded();
+        _freezeAnimationParticleSystemGameObject.SetActive(false);
+        _playerRenderer.material = _playerMaterial;
     }
 
     private void _playerVisualScript_OnPlayerPoisonedAnimStarted(object sender, System.EventArgs e) {
@@ -156,23 +176,66 @@ public class PlayerVisualShaderScript : MonoBehaviour {
 
     private void FixedUpdate() {
 
-        if (_isPlayerFlashing) {
-            _flashingBaseTime += (Time.deltaTime * 1f);
-            float currentValue = Mathf.PingPong(_flashingBaseTime, 0.1f);
-            _playerMaterial.SetFloat("_HitEffectBlend", currentValue);
+        if (_isPlayerHit) {
+            HitShaderAnimation();
+        }
 
-            if (!_isPlayerShining) { return; }
-
-            float currentShineValue = Mathf.PingPong(_flashingBaseTime, 0.7f);
-            _playerMaterial.SetFloat("_ShineLocation", currentShineValue);
+        if (_isPlayerInvincible) {
+            InvincibleShaderAnimation();
         }
 
         if (_isPlayerBurning) {
-            PlayerBurningShader();
+            PlayerBurningShaderAnimation();
         }
+
+        //
     }
 
-    private void PlayerBurningShader() { 
+    private void HitShaderAnimation() {
+        float t = Mathf.PingPong(Time.time * _hitWhiteBlendAnimationSpeed, 1f);
+        float interpolatedValue = Mathf.Lerp(_hitWhiteBlendAnimationMinValue, _hitWhiteBlendAnimationMaxValue, t);
+
+        _playerRenderer.material.SetFloat("_HitEffectBlend", interpolatedValue);
+    }
+
+    private void InvincibleShaderAnimation() {
+        float t = Mathf.PingPong(Time.time * _invincibleAnimationSpeed, 1f);
+        float interpolatedValue = Mathf.Lerp(_invincibleAnimationMinValue, _invincibleAnimationMaxValue, t);
+
+        _playerMaterial.SetFloat("_ColorRampLuminosity", interpolatedValue);
+    }
+
+    private void PlayerBurningShaderAnimation() {
+        float t = Mathf.PingPong(Time.time * _burningAnimationSpeed, 1f);
+        float interpolatedValue = Mathf.Lerp(_burningAnimationMinValue, _burningAnimationMaxValue, t);
+
+        _playerBurningMaterial.SetFloat("_OverlayGlow", interpolatedValue);
+    }
+
+    private void PlayerParalyzedShaderAnimation() { 
         
+    }
+
+    private void PlayerFrozenShaderAnimationStarted() {
+        
+        if (_freezeAnimationCurrentValue < _freezeAnimationMaxValue) {
+            _freezeAnimationCurrentValue += (Time.deltaTime * _freezeAnimationSpeed);
+        }
+
+        if (_freezeAnimationCurrentValue >= _freezeAnimationMaxValue) {
+            _freezeAnimationCurrentValue = _freezeAnimationMaxValue;
+        }
+
+        _playerFrozenMaterial.SetFloat("_OverlayGlow", _freezeAnimationCurrentValue);
+    }
+
+    private void PlayerFrozenShaderAnimationEnded() {
+        _freezeAnimationCurrentValue -= (Time.deltaTime * _freezeAnimationSpeed * 2);
+
+        _playerFrozenMaterial.SetFloat("_OverlayGlow", _freezeAnimationCurrentValue);
+
+        if (_freezeAnimationCurrentValue > _freezeAnimationMinValue){
+            return;
+        }
     }
 }

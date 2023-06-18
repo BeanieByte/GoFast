@@ -75,6 +75,7 @@ GameObject:
   - component: {fileID: 414571161716998654}
   - component: {fileID: 690705707355921681}
   - component: {fileID: 7833029436976818230}
+  - component: {fileID: 7902562448269240401}
   m_Layer: 7
   m_Name: FlyVisual
   m_TagString: Untagged
@@ -211,6 +212,20 @@ MonoBehaviour:
   normalStrength: 5
   normalSmoothing: 1
   computingNormal: 0
+--- !u!114 &7902562448269240401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2768368265675256276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1625263d85e5d554284989eb9052e863, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  updateEveryFrame: 1
+  useMaterialInstanceIfPossible: 0
 --- !u!1 &5002168524384229083
 GameObject:
   m_ObjectHideFlags: 0
