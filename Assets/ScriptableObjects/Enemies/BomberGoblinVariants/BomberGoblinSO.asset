@@ -17,13 +17,15 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 6f87d4605227262448cef4f3a1420fe0, type: 2}
   enemyName: Bomber Goblin
   health: 20
-  attackPower: 0
-  attackCooldownTime: 5
   touchPower: 10
   speed: 1
-  bounceOffMultiplier: 0
+  isAttacker: 1
+  attackPower: 0
+  attackCooldownTime: 5
   canBurn: 0
   canParalyze: 0
   canFreeze: 0
   canPoison: 0
   canSlime: 0
+  isBounceable: 0
+  bounceOffMultiplier: 0

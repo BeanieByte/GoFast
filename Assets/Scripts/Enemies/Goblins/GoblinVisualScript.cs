@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,23 +6,20 @@ using UnityEngine;
 public class GoblinVisualScript : EnemyVisualBaseScript 
 {
 
+    public event EventHandler OnEnemyAttackAnimStarted;
+    public event EventHandler OnEnemyAttackAnimStopped;
 
-    public void OnAttackStarted() {
-        EnableAttackTrigger();
-        _myLogicScript.SetPlayerRadiusCheckTrigger(false);
+    public override void Attack() {
+        base.Attack();
+        OnAttackStarted();
+    }
+
+    private void OnAttackStarted() {
+        OnEnemyAttackAnimStarted?.Invoke(this, EventArgs.Empty);
+
     }
 
     public void OnAttackFinished() {
-        DisableAttackTrigger();
-        _myLogicScript.SetPlayerRadiusCheckTrigger(true);
-    }
-
-    public override void DisableTouchAttackTrigger() {
-        _myLogicScript.SetTouchAttackTrigger(false);
-    }
-
-    public override void EnableTouchAttackTrigger() {
-        _myLogicScript.SetTouchAttackTrigger(true);
-        StopHitAnim();
+        OnEnemyAttackAnimStopped?.Invoke(this, EventArgs.Empty);
     }
 }

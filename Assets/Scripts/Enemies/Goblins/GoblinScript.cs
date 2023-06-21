@@ -15,11 +15,13 @@ public class GoblinScript : EnemyBaseScript
 
     protected override void Awake() {
         base.Awake();
-        _isOriginallyFacingRight = true;
         _myRadiusScript = GetComponentInChildren<CheckForPlayerRadiusScript>();
     }
 
     protected override void Start() {
+        _isOriginallyFacingRight = true;
+        CanIWalk(true);
+
         base.Start();
 
         _isPlayerWithinRange = false;
@@ -28,7 +30,23 @@ public class GoblinScript : EnemyBaseScript
 
         _myRadiusScript.OnPlayerDetected += _myRadiusScript_OnPlayerDetected;
         _myRadiusScript.OnPlayerMissing += _myRadiusScript_OnPlayerMissing;
+
+        _myVisual.GetComponent<GoblinVisualScript>().OnEnemyAttackAnimStarted += GoblinScript_OnEnemyAttackAnimStarted;
+        _myVisual.GetComponent<GoblinVisualScript>().OnEnemyAttackAnimStopped += GoblinScript_OnEnemyAttackAnimStopped;
     }
+
+    private void GoblinScript_OnEnemyAttackAnimStarted(object sender, System.EventArgs e) {
+        SetTouchAttackTrigger(false);
+        SetAttackTrigger(true);
+        CanIWalk(false);
+    }
+
+    private void GoblinScript_OnEnemyAttackAnimStopped(object sender, System.EventArgs e) {
+        SetTouchAttackTrigger(true);
+        CanIWalk(true);
+        SetAttackTrigger(false);
+    }
+
 
     private void _myRadiusScript_OnPlayerMissing(object sender, System.EventArgs e) {
         _isPlayerWithinRange = false;
@@ -42,24 +60,13 @@ public class GoblinScript : EnemyBaseScript
         Gizmos.DrawSphere(_checkIfCanAttackRadiusOrigin.position, _checkIfCanAttackRadius);
     }
 
-    protected override void FixedUpdate() {
-        if (!GameManager.Instance.IsGamePlaying()) return;
-
-        if (_currentAttackCooldownTime >= _attackCooldownTime) {
-            _canAttack = true;
-        }
-
-
-        if (!_canAttack) {
-            _currentAttackCooldownTime += Time.deltaTime;
-        }
+    protected override void Walk() {
 
         CanIWalk(true);
 
-
-        if (!_isPlayerWithinRange) 
-        {
+        if (!_isPlayerWithinRange) {
             CanIWalk(false);
+            _moveDir = Vector2.zero;
             _myVisual.SetIsWalkingBoolFalse();
             return;
         }
@@ -81,7 +88,6 @@ public class GoblinScript : EnemyBaseScript
         }
 
         if (!_canIWalk) {
-
             _moveDir = Vector2.zero;
             _myVisual.SetIsWalkingBoolFalse();
             return;
@@ -92,12 +98,6 @@ public class GoblinScript : EnemyBaseScript
         } else if (!_isFacingRight) {
             _moveDir = new Vector2(-1f, 0f);
         }
-
-        Walk();
-
-    }
-
-    protected override void Walk() {
 
         transform.position = (Vector2)transform.position + _mySO.speed * Time.deltaTime * _moveDir;
 
@@ -121,7 +121,7 @@ public class GoblinScript : EnemyBaseScript
         return _myRadiusScript.PlayersCurrentXPosition();
     }
 
-    public override void SetPlayerRadiusCheckTrigger(bool isActive) {
+    protected override void SetPlayerRadiusCheckTrigger(bool isActive) {
         _myRadiusScript.gameObject.SetActive(isActive);
     }
 

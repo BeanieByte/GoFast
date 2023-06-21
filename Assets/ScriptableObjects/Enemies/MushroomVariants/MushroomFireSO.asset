@@ -16,13 +16,17 @@ MonoBehaviour:
   prefab: {fileID: 6544517686958218581, guid: a028f1a4ef421564bb451086ccaf75dd, type: 3}
   material: {fileID: 2100000, guid: 96d7165b0f52fb64c8011de479d84435, type: 2}
   enemyName: Fire Mushroom
+  isWalker: 1
   health: 30
-  attackPower: 0
   touchPower: 10
   speed: 1.5
-  bounceOffMultiplier: 2
+  isAttacker: 0
+  attackPower: 0
+  attackCooldownTime: 0
   canBurn: 1
   canParalyze: 0
   canFreeze: 0
   canPoison: 0
   canSlime: 0
+  isBounceable: 1
+  bounceOffMultiplier: 2

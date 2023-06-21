@@ -87,6 +87,10 @@ PrefabInstance:
       propertyPath: _mySO
       value: 
       objectReference: {fileID: 11400000, guid: f28afb00cbc008d4886a239aadb518a3, type: 2}
+    - target: {fileID: 5172144180028975521, guid: 14328becb0ddea843b7e68d70a8d9357, type: 3}
+      propertyPath: _isFacingRight
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6020106382296018691, guid: 14328becb0ddea843b7e68d70a8d9357, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 

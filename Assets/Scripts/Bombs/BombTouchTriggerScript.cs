@@ -17,8 +17,6 @@ public class BombTouchTriggerScript : MonoBehaviour
         PlayerScript player = collision.GetComponent<PlayerScript>();
         EnemyBaseScript enemy = collision.GetComponent<EnemyBaseScript>();
 
-
-
         if (player != null || (enemy != null && enemy != _myEnemyParent)) {
 
             _myLogicScript.Explode();

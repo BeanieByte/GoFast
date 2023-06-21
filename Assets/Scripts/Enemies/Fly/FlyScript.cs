@@ -13,20 +13,44 @@ public class FlyScript : EnemyBaseScript
 
     private bool _isPlayerWithinRange;
 
+    private Vector3 _positionBeforeAttacking;
+
     protected override void Awake() {
         base.Awake();
-        _isOriginallyFacingRight = false;
         _myRadiusScript = GetComponentInChildren<CheckForPlayerRadiusScript>();
-        _startingXPosition = transform.position.x;
-        _maxLeftDistanceICanGo = _startingXPosition - _maxWalkDistance;
-        _maxRightDistanceICanGo = _startingXPosition + _maxWalkDistance;
     }
 
     protected override void Start() {
+        _isOriginallyFacingRight = false;
+        CanIWalk(true);
         base.Start();
+
+        _startingXPosition = transform.position.x;
+        _maxLeftDistanceICanGo = _startingXPosition - _maxWalkDistance;
+        _maxRightDistanceICanGo = _startingXPosition + _maxWalkDistance;
 
         _myRadiusScript.OnPlayerDetected += _myRadiusScript_OnPlayerDetected;
         _myRadiusScript.OnPlayerMissing += _myRadiusScript_OnPlayerMissing;
+
+        _myVisual.GetComponent<FlyVisualScript>().OnEnemyAttackAnimStarted += FlyScript_OnEnemyAttackAnimStarted;
+        _myVisual.GetComponent<FlyVisualScript>().OnEnemyAttackAnimStopped += FlyScript_OnEnemyAttackAnimStopped;
+    }
+
+    private void FlyScript_OnEnemyAttackAnimStarted(object sender, System.EventArgs e) {
+        SetTouchAttackTrigger(false);
+        SetAttackTrigger(true);
+        CanIWalk(false);
+        SetPlayerRadiusCheckTrigger(false);
+        _positionBeforeAttacking = transform.position;
+        transform.position = new Vector3(PlayersCurrentXLocation(), _positionBeforeAttacking.y, _positionBeforeAttacking.z);
+    }
+
+    private void FlyScript_OnEnemyAttackAnimStopped(object sender, System.EventArgs e) {
+        transform.position = _positionBeforeAttacking;
+        SetTouchAttackTrigger(true);
+        CanIWalk(true);
+        SetAttackTrigger(false);
+        SetPlayerRadiusCheckTrigger(true);
     }
 
     private void _myRadiusScript_OnPlayerMissing(object sender, System.EventArgs e) {
@@ -41,6 +65,7 @@ public class FlyScript : EnemyBaseScript
     protected override void CheckToFlipIfIsEdgeOrHasWall() {
         if (Physics2D.OverlapCircle(_wallCheck.position, _checkRadius, _layerIsGrounded) || transform.position.x <= _maxLeftDistanceICanGo || transform.position.x >= _maxRightDistanceICanGo) {
             _isFacingRight = !_isFacingRight;
+            _myVisual.Flip();
         };
     }
 
@@ -53,7 +78,7 @@ public class FlyScript : EnemyBaseScript
         return _myRadiusScript.PlayersCurrentXPosition();
     }
 
-    public override void SetPlayerRadiusCheckTrigger(bool isActive) {
+    protected override void SetPlayerRadiusCheckTrigger(bool isActive) {
         _myRadiusScript.gameObject.SetActive(isActive);
     }
 }

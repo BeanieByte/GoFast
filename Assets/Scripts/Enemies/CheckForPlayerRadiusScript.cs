@@ -16,8 +16,6 @@ public class CheckForPlayerRadiusScript : MonoBehaviour {
         PlayerScript player = collision.GetComponent<PlayerScript>();
 
         if (player == null) { 
-            
-            //OnPlayerMissing?.Invoke(this, EventArgs.Empty);
             return;
         }
 
@@ -30,7 +28,6 @@ public class CheckForPlayerRadiusScript : MonoBehaviour {
         PlayerScript player = collision.GetComponent<PlayerScript>();
 
         if (player == null) {
-
             return;
         }
 

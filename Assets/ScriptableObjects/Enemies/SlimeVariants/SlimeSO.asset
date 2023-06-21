@@ -16,9 +16,11 @@ MonoBehaviour:
   prefab: {fileID: 4787343910479774887, guid: c4710f6d2f8b7214c884021e81629cd4, type: 3}
   material: {fileID: 2100000, guid: 19b1cc87d76fafd41b2b04447e11a28f, type: 2}
   enemyName: Slime
+  isWalker: 1
   health: 5
   touchPower: 5
   speed: 1.2
+  isAttacker: 0
   attackPower: 0
   attackCooldownTime: 0
   canBurn: 0
@@ -26,4 +28,5 @@ MonoBehaviour:
   canFreeze: 0
   canPoison: 0
   canSlime: 1
+  isBounceable: 0
   bounceOffMultiplier: 0

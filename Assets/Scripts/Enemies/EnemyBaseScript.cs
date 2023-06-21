@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class EnemyBaseScript : MonoBehaviour, IDamageable
 {
+    #region Variables
+
     [SerializeField] protected EnemySO _mySO;
     [SerializeField] protected EnemyVisualBaseScript _myVisual;
     [SerializeField] private Collider2D _touchAttackTrigger;
@@ -31,18 +33,28 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     protected bool _isEnemyWalking;
 
     protected bool _canAttack;
-    protected float _attackCooldownTime = 3f;
+    protected float _attackCooldownTime;
     protected float _currentAttackCooldownTime;
 
+    #endregion
+
+    #region ConstantEnemyMethods
 
     protected virtual void Awake() {
         _myRigidBody = GetComponent<Rigidbody2D>();
-        _canAttack = true;
     }
 
     protected virtual void Start() {
-        
+
+        if (_mySO.isWalker) { 
+            CanIWalk(true); 
+        } else CanIWalk(false);
+
+        _canAttack = true;
         _currentHealth = _mySO.health;
+
+        _attackCooldownTime = _mySO.attackCooldownTime;
+        _currentAttackCooldownTime = 0f;
 
         if (!_isOriginallyFacingRight) {
             _myVisual.Flip();
@@ -52,69 +64,80 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
             _myVisual.Flip();
         }
 
-        CanIWalk(true);
+        _myVisual.OnEnemyHitAnimStarted += _myVisual_OnEnemyHitAnimStarted;
+        _myVisual.OnEnemyHitAnimStopped += _myVisual_OnEnemyHitAnimStopped;
+    }
+
+    private void _myVisual_OnEnemyHitAnimStopped(object sender, EventArgs e) {
+        if (_mySO.isAttacker) {
+            SetAttackTrigger(true);
+        }
+        SetTouchAttackTrigger(true);
+        if (_mySO.isWalker) {
+            CanIWalk(true);
+        }
+    }
+
+    protected virtual void _myVisual_OnEnemyHitAnimStarted(object sender, EventArgs e) {
+        if (_mySO.isAttacker) {
+            SetAttackTrigger(false);
+        }
+        SetTouchAttackTrigger(false);
+        if (_mySO.isWalker) {
+            CanIWalk(false);
+        }
     }
 
     protected virtual void FixedUpdate() {
         if (!GameManager.Instance.IsGamePlaying()) return;
 
-        //if (_isFacingRight && _moveDir.x <= 0) {
-        //    _moveDir = new Vector2(1f, 0f);
-        //    _myVisual.Flip();
-        //} else if (!_isFacingRight && _moveDir.x >= 0) {
-        //    _moveDir = new Vector2(-1f, 0f);
-        //    _myVisual.Flip();
-        //}
+        if (_mySO.isAttacker) {
 
-        if (_currentAttackCooldownTime >= _attackCooldownTime) {
-            _canAttack = true;
+            if (_currentAttackCooldownTime <= 0) {
+                _canAttack = true;
+            }
+
+            if (!_canAttack) {
+                _currentAttackCooldownTime -= Time.deltaTime;
+            }
+
         }
-
-
-        if (!_canAttack) {
-            _currentAttackCooldownTime += Time.deltaTime;
-        }
-
-
-        if (!_canIWalk) {
-            return;
-        }
-
-        if (_moveDir.x == 0f) {
-            _isEnemyWalking = false;
-        } else _isEnemyWalking = true;
 
         Walk();
-        
-        
     }
-
 
     protected virtual void Walk()
     {
-        if (!_isFacingRight && _moveDir.x <= 0) {
-            _moveDir = new Vector2(1f, 0f);
-            _myVisual.Flip();
-        } else if (_isFacingRight && _moveDir.x >= 0) {
-            _moveDir = new Vector2(-1f, 0f);
-            _myVisual.Flip();
+        if (_canIWalk) {
+
+            if (_moveDir.x == 0f) {
+                _isEnemyWalking = false;
+            } else _isEnemyWalking = true;
+
+            CheckToFlipIfIsEdgeOrHasWall();
+
+            if (_isFacingRight) {
+                _moveDir = new Vector2(1f, 0f);
+            } else if (!_isFacingRight) {
+                _moveDir = new Vector2(-1f, 0f);
+            }
+
+            transform.position = (Vector2)transform.position + _mySO.speed * Time.deltaTime * _moveDir;
         }
-
-        transform.position = (Vector2)transform.position + _mySO.speed * Time.deltaTime * _moveDir;
-
-        CheckToFlipIfIsEdgeOrHasWall();
     }
 
     protected virtual void CheckToFlipIfIsEdgeOrHasWall() {
         if (!Physics2D.OverlapCircle(_edgeCheck.position, _checkRadius, _layerIsGrounded) || Physics2D.OverlapCircle(_wallCheck.position, _checkRadius, _layerIsGrounded)) {
             _isFacingRight = !_isFacingRight;
+            _myVisual.Flip();
         };
     }
 
     protected virtual void Attack() {
+        if (!_mySO.isAttacker) { return; }
         if (!_canAttack) { return; }
         _myVisual.Attack();
-        _currentAttackCooldownTime = 0f;
+        _currentAttackCooldownTime = _attackCooldownTime;
         _canAttack = false;
     }
 
@@ -131,21 +154,32 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
             return false;
         }
         _myRigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
-        EnemyManager.Instance.IncreaseKilledEnemiesCounter();
+
+        if (_mySO.isAttacker && _attackTrigger != null) {
+            SetAttackTrigger(false);
+        }
+        SetTouchAttackTrigger(false);
+        if (_mySO.isWalker) {
+            CanIWalk(false);
+        }
 
         _myVisual.PlayDeadAnim();
         return true;
     }
 
-    public void CanIWalk(bool canIWalk) {
+    #endregion
+
+    #region SpecificEnemyMethods
+
+    protected void CanIWalk(bool canIWalk) {
         _canIWalk = canIWalk;
     }
 
-    public void SetTouchAttackTrigger(bool isActive) {
+    protected void SetTouchAttackTrigger(bool isActive) {
         _touchAttackTrigger.gameObject.SetActive(isActive);
     }
 
-    public void SetAttackTrigger(bool isActive) {
+    protected void SetAttackTrigger(bool isActive) {
         _attackTrigger.gameObject.SetActive(isActive);
     }
 
@@ -192,10 +226,12 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
         return transform.position.x;
     }
 
-    public virtual void SetPlayerRadiusCheckTrigger(bool isActive) {
+    protected virtual void SetPlayerRadiusCheckTrigger(bool isActive) {
     }
 
     public virtual bool IsEnemyWalking() {
         return _isEnemyWalking;
     }
+
+    #endregion
 }

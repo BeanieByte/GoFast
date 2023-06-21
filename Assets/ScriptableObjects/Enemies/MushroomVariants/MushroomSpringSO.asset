@@ -16,9 +16,11 @@ MonoBehaviour:
   prefab: {fileID: 0}
   material: {fileID: 2100000, guid: f8bbc6e602b195746b050dd33d8e4430, type: 2}
   enemyName: Spring Mushroom
+  isWalker: 1
   health: 50
   touchPower: 5
   speed: 0.8
+  isAttacker: 0
   attackPower: 0
   attackCooldownTime: 0
   canBurn: 0
@@ -26,4 +28,5 @@ MonoBehaviour:
   canFreeze: 0
   canPoison: 0
   canSlime: 0
+  isBounceable: 1
   bounceOffMultiplier: 5

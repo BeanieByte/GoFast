@@ -184,6 +184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c27d948e853dab4791a2800f4fa5d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _numberOfTimesHitAnimCanLoop: 3
 --- !u!114 &690705707355921681
 MonoBehaviour:
   m_ObjectHideFlags: 0

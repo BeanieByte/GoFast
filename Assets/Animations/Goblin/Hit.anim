@@ -20,10 +20,6 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: -1873889528, guid: 828a00f85cc9a8447808dc57b09afb4a, type: 3}
-    - time: 0.083333336
-      value: {fileID: 136086687, guid: 828a00f85cc9a8447808dc57b09afb4a, type: 3}
-    - time: 0.16666667
       value: {fileID: -1189481797, guid: 828a00f85cc9a8447808dc57b09afb4a, type: 3}
     - time: 0.25
       value: {fileID: -1189481797, guid: 828a00f85cc9a8447808dc57b09afb4a, type: 3}
@@ -46,8 +42,6 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: -1873889528, guid: 828a00f85cc9a8447808dc57b09afb4a, type: 3}
-    - {fileID: 136086687, guid: 828a00f85cc9a8447808dc57b09afb4a, type: 3}
     - {fileID: -1189481797, guid: 828a00f85cc9a8447808dc57b09afb4a, type: 3}
     - {fileID: -1189481797, guid: 828a00f85cc9a8447808dc57b09afb4a, type: 3}
   m_AnimationClipSettings:
@@ -75,15 +69,8 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0
-    functionName: DisableTouchAttackTrigger
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0
-    functionName: DisableAttackTrigger
+  - time: 0.25
+    functionName: StopHitAnim
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

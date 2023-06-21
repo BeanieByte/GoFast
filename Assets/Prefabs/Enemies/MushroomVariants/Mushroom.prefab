@@ -185,7 +185,8 @@ MonoBehaviour:
   _mySO: {fileID: 11400000, guid: 298f18271cadc104ab6c95348acea528, type: 2}
   _myVisual: {fileID: 3594700256780348411}
   _touchAttackTrigger: {fileID: 4298186999492676514}
-  _isFacingRight: 1
+  _attackTrigger: {fileID: 0}
+  _isFacingRight: 0
   _wallCheck: {fileID: 2767439066754580494}
   _edgeCheck: {fileID: 5014093605941489882}
   _layerIsGrounded:

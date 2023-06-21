@@ -16,6 +16,9 @@ public class EnemyVisualBaseScript : MonoBehaviour
     public event EventHandler OnEnemyHitAnimStarted;
     public event EventHandler OnEnemyHitAnimStopped;
 
+    [SerializeField] private int _numberOfTimesHitAnimCanLoop = 3;
+    private int _numberOfTimesHitAnimHasLooped;
+
     private void Awake() {
         _myLogicScript = GetComponentInParent<EnemyBaseScript>();
         _myAnimator = GetComponent<Animator>();
@@ -33,16 +36,19 @@ public class EnemyVisualBaseScript : MonoBehaviour
         transform.Rotate(0f, 180f, 0f);
     }
 
-    public void Attack() {
+    public virtual void Attack() {
         _myAnimator.SetTrigger(attack_CONST);
     }
 
     public void PlayHitAnim() {
+        _numberOfTimesHitAnimHasLooped = 0;
         _myAnimator.SetTrigger(hit_CONST);
         OnEnemyHitAnimStarted?.Invoke(this, EventArgs.Empty);
     }
 
-    protected void StopHitAnim() {
+    public void StopHitAnim() {
+        _numberOfTimesHitAnimHasLooped++;
+        if (_numberOfTimesHitAnimHasLooped < _numberOfTimesHitAnimCanLoop) { return; }
         OnEnemyHitAnimStopped?.Invoke(this, EventArgs.Empty);
     }
 
@@ -51,35 +57,10 @@ public class EnemyVisualBaseScript : MonoBehaviour
     }
 
     public void Die() {
-        EnemyManager.Instance.IncreaseKilledEnemiesCounter();
         Destroy(_myLogicScript.gameObject);
     }
 
-    public virtual void DisableTouchAttackTrigger() {
-        _myLogicScript.CanIWalk(false);
-        _myLogicScript.SetTouchAttackTrigger(false);
-    }
-
-    public virtual void EnableTouchAttackTrigger() {
-        _myLogicScript.CanIWalk(true);
-        _myLogicScript.SetTouchAttackTrigger(true);
-        StopHitAnim();
-    }
-
-    public void EnableAttackTrigger() {
-        _myLogicScript.SetAttackTrigger(true);
-    }
-
-    public void DisableAttackTrigger() {
-        _myLogicScript.SetAttackTrigger(false);
-    }
-
     public virtual void Crushed() {
-    }
-
-    public virtual void DisableAllCollidersOnDeath() {
-        DisableTouchAttackTrigger();
-        DisableAttackTrigger();
     }
 
     public void SetIsWalkingBoolTrue() {
@@ -89,5 +70,4 @@ public class EnemyVisualBaseScript : MonoBehaviour
     public void SetIsWalkingBoolFalse() {
         _myAnimator.SetBool(isRunning_CONST, false);
     }
-
 }

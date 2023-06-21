@@ -16,14 +16,17 @@ MonoBehaviour:
   prefab: {fileID: 4787343910479774887, guid: 010c47aa142818448988a28a04563957, type: 3}
   material: {fileID: 2100000, guid: 0093419fbf4817c45ac9f81bb73bbefb, type: 2}
   enemyName: Worm
+  isWalker: 1
   health: 10
-  attackPower: 0
-  attackCooldownTime: 0
   touchPower: 5
   speed: 0.5
-  bounceOffMultiplier: 0
+  isAttacker: 0
+  attackPower: 0
+  attackCooldownTime: 0
   canBurn: 0
   canParalyze: 0
   canFreeze: 0
   canPoison: 0
   canSlime: 0
+  isBounceable: 0
+  bounceOffMultiplier: 0

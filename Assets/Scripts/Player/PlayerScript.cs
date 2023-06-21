@@ -236,6 +236,7 @@ public class PlayerScript : MonoBehaviour {
     }
 
     private void _playerAttack_OnKillingEnemy(object sender, EventArgs e) {
+        EnemyManager.Instance.IncreaseKilledEnemiesCounter();
         RecoverTurboSpeedInstantly();
     }
 
@@ -476,6 +477,7 @@ public class PlayerScript : MonoBehaviour {
     }
 
     public void BounceOffCrush(float jumpBoostMultiplier) {
+        EnemyManager.Instance.IncreaseKilledEnemiesCounter();
         RecoverTurboSpeedInstantly();
         RecoverAirJumpsInstantly();
         _currentPlayerVelocity.y = _lowestJumpForce * jumpBoostMultiplier;

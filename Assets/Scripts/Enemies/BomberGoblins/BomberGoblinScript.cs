@@ -4,27 +4,18 @@ using UnityEngine;
 
 public class BomberGoblinScript : EnemyBaseScript
 {
-
     private CheckForPlayerRadiusScript _myRadiusScript;
 
     private bool _isPlayerWithinRange;
 
-    [SerializeField] private float _myPersonalAttackCooldownTime = 6f;
-
     protected override void Awake() {
         base.Awake();
-        _isOriginallyFacingRight = true;
         _myRadiusScript = GetComponentInChildren<CheckForPlayerRadiusScript>();
     }
 
     protected override void Start() {
-        _currentHealth = _mySO.health;
-        _canIWalk = false;
-        _attackCooldownTime = _myPersonalAttackCooldownTime;
-
-        if (!_isFacingRight) {
-            _myVisual.Flip();
-        }
+        _isOriginallyFacingRight = true;
+        base.Start();
 
         _isPlayerWithinRange = false;
 
@@ -53,12 +44,13 @@ public class BomberGoblinScript : EnemyBaseScript
         }
     }
 
-    protected override void Walk() {
-        
+    protected override void CheckToFlipIfIsEdgeOrHasWall() {
     }
 
     protected override void Attack() {
         if (!_isPlayerWithinRange) { return; }
         base.Attack();
+        _myRadiusScript.gameObject.SetActive(false);
+        _myRadiusScript.gameObject.SetActive(true);
     }
 }

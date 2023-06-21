@@ -27,6 +27,9 @@ public class EnemySO : ScriptableObject
     public string enemyName;
 
     [BoxGroup("Enemy/Split/Right/Stats and Values")]
+    public bool isWalker;
+
+    [BoxGroup("Enemy/Split/Right/Stats and Values")]
     [Required]
     public int health;
 
@@ -37,6 +40,9 @@ public class EnemySO : ScriptableObject
     [BoxGroup("Enemy/Split/Right/Stats and Values")]
     [Required]
     public float speed;
+
+    [BoxGroup("Enemy/Split/Right/Stats and Values")]
+    public bool isAttacker;
 
     [BoxGroup("Enemy/Split/Right/Stats and Values")]
     public int attackPower;
@@ -58,6 +64,9 @@ public class EnemySO : ScriptableObject
 
     [BoxGroup("Enemy/Split/Right/Stats and Values")]
     public bool canSlime;
+
+    [BoxGroup("Enemy/Split/Right/Stats and Values")]
+    public bool isBounceable;
 
     [BoxGroup("Enemy/Split/Right/Stats and Values")]
     public float bounceOffMultiplier;

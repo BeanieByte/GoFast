@@ -13,15 +13,14 @@ public class SlimeScript : EnemyBaseScript
     private float _maxWalkingTime = 4f;
     private float _currentWalkTime;
 
-
-    protected override void Awake() {
-        base.Awake();
+    protected override void Start() {
         _isOriginallyFacingRight = false;
         _currentWalkCooldown = 0f;
+        CanIWalk(true);
+        base.Start();
     }
 
-    protected override void FixedUpdate() {
-        if (!GameManager.Instance.IsGamePlaying()) return;
+    protected override void Walk() {
 
         if (_currentWalkTime <= 0f) {
             _currentWalkCooldown -= Time.deltaTime;
@@ -45,28 +44,6 @@ public class SlimeScript : EnemyBaseScript
             CanIWalk(false);
         }
 
-        Walk();
-
-    }
-
-    protected override void Attack() {
-
-    }
-
-    public override void Damage(int attackPower) {
-        _currentHealth -= attackPower;
-        DeadCheck();
-    }
-
-    public override bool DeadCheck() {
-        if (_currentHealth > 0) {
-            _myVisual.PlayHitAnim();
-            return false;
-        }
-
-        _myRigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
-
-        _myVisual.PlayDeadAnim();
-        return true;
+        base.Walk();
     }
 }

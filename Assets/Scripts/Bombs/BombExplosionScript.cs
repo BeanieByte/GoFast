@@ -31,8 +31,6 @@ public class BombExplosionScript : MonoBehaviour
             }
         }
 
-        if (damageable != null) {
-            damageable.Damage(_mySO.attackPower);
-        }
+        damageable?.Damage(_mySO.attackPower);
     }
 }
