@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class PlayerVisualScript : MonoBehaviour
 {
+    #region Variables
+
     private PlayerScript _playerLogicScript;
     private PlayerVisualShaderScript _playerShaderScript;
 
     private Animator _playerAnimator;
-
-    private static readonly int Idle = Animator.StringToHash("Idle");
 
     private const string isRunning_CONST = "isRunning";
     private const string runAnimSpeed_CONST = "runAnimSpeed";
@@ -53,6 +53,8 @@ public class PlayerVisualScript : MonoBehaviour
 
     private AnimAirState _animAirState;
 
+    #endregion
+
     private void Awake()
     {
         _playerLogicScript = GetComponentInParent<PlayerScript>();
@@ -71,6 +73,8 @@ public class PlayerVisualScript : MonoBehaviour
         _playerLogicScript.OnPlayerJumped += _playerLogicScript_OnPlayerJumped;
         _playerLogicScript.OnPlayerAirJumped += _playerLogicScript_OnPlayerAirJumped;
     }
+
+    #region EventReceiverFunctions
 
     private void _playerLogicScript_OnRunAnimSpeedChange(object sender, PlayerScript.OnRunAnimSpeedChangeEventArgs e) {
         _playerAnimator.SetFloat(runAnimSpeed_CONST, e.runAnimSpeedMultiplier);
@@ -91,9 +95,7 @@ public class PlayerVisualScript : MonoBehaviour
         _playerAnimator.SetTrigger(attack_CONST);
     }
 
-    public void Flip() {
-        transform.Rotate(0f, 180f, 0f);
-    }
+    #endregion
 
     private void FixedUpdate()
     {
@@ -116,6 +118,11 @@ public class PlayerVisualScript : MonoBehaviour
             _animAirState = AnimAirState.Falling;
         }
 
+        AnimAirStateMachine();
+    }
+
+    private void AnimAirStateMachine() {
+
         switch (_animAirState) {
             case AnimAirState.Grounded:
                 _playerAnimator.SetBool(isGrounded_CONST, true);
@@ -133,6 +140,13 @@ public class PlayerVisualScript : MonoBehaviour
                 _playerAnimator.SetBool(isFalling_CONST, true);
                 break;
         }
+
+    }
+
+    #region FunctionsCalledByLogicScript
+
+    public void Flip() {
+        transform.Rotate(0f, 180f, 0f);
     }
 
     public void SetIsAttackingToTrue() {
@@ -210,5 +224,7 @@ public class PlayerVisualScript : MonoBehaviour
     public void SlimePlayerStop() { 
         OnPlayerSlimedAnimStopped?.Invoke(this, EventArgs.Empty);
     }
+
+    #endregion
 }
 

@@ -12,7 +12,6 @@ Material:
   m_ValidKeywords:
   - GREYSCALEOUTLINE_ON
   - GREYSCALE_ON
-  - TWISTUV_ON
   m_InvalidKeywords:
   - _GREYSCALEOUTLINE_ON
   m_LightmapFlags: 4
@@ -147,7 +146,7 @@ Material:
     - _HologramUnmodAmount: 0
     - _HsvBright: 1
     - _HsvSaturation: 1
-    - _HsvShift: 0
+    - _HsvShift: 129
     - _InnerOutlineAlpha: 1
     - _InnerOutlineGlow: 4
     - _InnerOutlineThickness: 1
@@ -192,7 +191,7 @@ Material:
     - _ShakeUvX: 1.5
     - _ShakeUvY: 1
     - _ShineGlow: 33.1
-    - _ShineLocation: 0.14
+    - _ShineLocation: 0.361
     - _ShineRotate: 2.84
     - _ShineWidth: 0.1
     - _TextureScrollXSpeed: 1
@@ -212,10 +211,10 @@ Material:
     m_Colors:
     - _AlphaOutlineColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ColorChangeNewCol: {r: 1, g: 1, b: 0, a: 1}
+    - _ColorChangeNewCol: {r: 0, g: 0.10250354, b: 1, a: 1}
     - _ColorChangeNewCol2: {r: 1, g: 1, b: 0, a: 1}
     - _ColorChangeNewCol3: {r: 1, g: 1, b: 0, a: 1}
-    - _ColorChangeTarget: {r: 1, g: 0, b: 0, a: 1}
+    - _ColorChangeTarget: {r: 1, g: 0.30945963, b: 0, a: 1}
     - _ColorChangeTarget2: {r: 1, g: 0, b: 0, a: 1}
     - _ColorChangeTarget3: {r: 1, g: 0, b: 0, a: 1}
     - _ColorSwapBlue: {r: 1, g: 1, b: 1, a: 1}

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayerVisualShaderScript : MonoBehaviour {
 
+    #region Variables
 
     private Renderer _playerRenderer;
     private Material _playerMaterial;
@@ -31,6 +32,7 @@ public class PlayerVisualShaderScript : MonoBehaviour {
     private float _burningAnimationMaxValue = 1.5f;
 
     private bool _isPlayerParalyzed;
+    [SerializeField] private Material _playerParalyzedMaterial;
 
     private bool _isPlayerFrozen;
     [SerializeField] private Material _playerFrozenMaterial;
@@ -43,6 +45,7 @@ public class PlayerVisualShaderScript : MonoBehaviour {
     private bool _isPlayerPoisoned;
     private bool _isPlayerSlimed;
 
+    #endregion
 
     private void Awake() {
         _playerRenderer = GetComponent<Renderer>();
@@ -85,6 +88,8 @@ public class PlayerVisualShaderScript : MonoBehaviour {
         _playerVisualScript.OnPlayerSlimedAnimStarted += _playerVisualScript_OnPlayerSlimedAnimStarted;
         _playerVisualScript.OnPlayerSlimedAnimStopped += _playerVisualScript_OnPlayerSlimedAnimStopped;
     }
+
+    #region EventReceiverFunctions
 
     private void _playerVisualScript_OnPlayerHitAnimStarted(object sender, System.EventArgs e) {
         _playerRenderer.material.EnableKeyword("HITEFFECT_ON");
@@ -135,7 +140,7 @@ public class PlayerVisualShaderScript : MonoBehaviour {
     }
 
     private void _playerVisualScript_OnPlayerParalyzedAnimStarted(object sender, System.EventArgs e) {
-        throw new System.NotImplementedException();
+        //_playerRenderer.material = _playerParalyzedMaterial;
     }
 
     private void _playerVisualScript_OnPlayerParalyzedAnimStopped(object sender, System.EventArgs e) {
@@ -174,6 +179,8 @@ public class PlayerVisualShaderScript : MonoBehaviour {
         throw new System.NotImplementedException();
     }
 
+    #endregion
+
     private void FixedUpdate() {
 
         if (_isPlayerHit) {
@@ -190,6 +197,8 @@ public class PlayerVisualShaderScript : MonoBehaviour {
 
         //
     }
+
+    #region ShaderAnimations
 
     private void HitShaderAnimation() {
         float t = Mathf.PingPong(Time.time * _hitWhiteBlendAnimationSpeed, 1f);
@@ -238,4 +247,6 @@ public class PlayerVisualShaderScript : MonoBehaviour {
             return;
         }
     }
+
+    #endregion
 }

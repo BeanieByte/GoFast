@@ -225,7 +225,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &50364046
 Transform:
   m_ObjectHideFlags: 0
@@ -305,7 +305,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 272ec733a8ff24945bd865e0aedf7306, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _parallaxEffectMultiplier: {x: 0.4, y: 0.8}
+  _parallaxEffectMultiplier: {x: 0.4, y: 0.1}
   _infiniteHorizontal: 1
   _infiniteVertical: 0
 --- !u!1 &51792382
@@ -1243,7 +1243,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &482922795
 Transform:
   m_ObjectHideFlags: 0
@@ -1323,7 +1323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 272ec733a8ff24945bd865e0aedf7306, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _parallaxEffectMultiplier: {x: 0.06, y: 0.1}
+  _parallaxEffectMultiplier: {x: 0.6, y: 0.3}
   _infiniteHorizontal: 1
   _infiniteVertical: 0
 --- !u!1 &506896371

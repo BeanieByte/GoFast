@@ -6,6 +6,9 @@ using UnityEditor;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour {
+
+    #region Variables
+
     [Header("Player Elements")]
 
     [SerializeField] private PlayerVisualScript _playerVisual;
@@ -166,6 +169,8 @@ public class PlayerScript : MonoBehaviour {
 
     private StatusState _statusState;
 
+    #endregion
+
     private void Awake() {
         _playerRigidBody = GetComponent<Rigidbody2D>(); 
         _isDead = false;
@@ -192,11 +197,11 @@ public class PlayerScript : MonoBehaviour {
 
         _isPlayerAfflictedWithStatus = false;
         _statusTimer = 0f;
-        //_isBurned = false;
-        //_isParalyzed = false;
-        //_isFrozen = false;
-        //_isPoisoned = false;
-        //_isSlimed = false;
+        _isBurned = false;
+        _isParalyzed = false;
+        _isFrozen = false;
+        _isPoisoned = false;
+        _isSlimed = false;
 
         _currentPlayerVelocity = _playerRigidBody.velocity;
         _maxHealth = _maxHealthDefault;
@@ -234,6 +239,8 @@ public class PlayerScript : MonoBehaviour {
 
         _currentPoisonTimer = _defaultPoisonTimer;
     }
+
+    #region EventReceiverFunctions
 
     private void _playerAttack_OnKillingEnemy(object sender, EventArgs e) {
         EnemyManager.Instance.IncreaseKilledEnemiesCounter();
@@ -288,6 +295,8 @@ public class PlayerScript : MonoBehaviour {
             Attack();
         }
     }
+
+    #endregion
 
     private void OnDrawGizmos() {
         Gizmos.DrawSphere(_playerFeetPos.position, _checkFeetRadius);
@@ -349,15 +358,30 @@ public class PlayerScript : MonoBehaviour {
 
         StatusStateMachine();
 
+
         //DEBUG ONLY, DELETE LATER
         if (Input.GetKeyDown(KeyCode.Q)) {
             PlayerWasBurned();
         }
 
+        if (Input.GetKeyDown(KeyCode.W)) {
+            PlayerWasParalyzed();
+        }
+
         if (Input.GetKeyDown(KeyCode.E)) {
             PlayerWasFrozen();
         }
+
+        if (Input.GetKeyDown(KeyCode.R)) {
+            PlayerWasPoisoned();
+        }
+
+        if (Input.GetKeyDown(KeyCode.T)) {
+            PlayerWasSlimed();
+        }
     }
+
+    #region StateMachines
 
     private void SpeedStateMachine() {
 
@@ -430,7 +454,7 @@ public class PlayerScript : MonoBehaviour {
                 break;
             case StatusState.Burned:
                 _statusTimer -= Time.deltaTime;
-                if (_statusTimer > 0) { return; }
+                if (_statusTimer > 0 || !_isInvincible) { return; }
                 _currentAttackPower = _maxAttackPower;
                 _playerVisual.BurnPlayerStop();
                 StopStatusConditions();
@@ -438,7 +462,7 @@ public class PlayerScript : MonoBehaviour {
             case StatusState.Paralyzed:
                 _canTurbo = false;
                 _statusTimer -= Time.deltaTime;
-                if (_statusTimer > 0) { return; }
+                if (_statusTimer > 0 || !_isInvincible) { return; }
                 _speedState = SpeedState.Regular;
                 _playerVisual.ParalyzePlayerStop();
                 StopStatusConditions();
@@ -448,7 +472,7 @@ public class PlayerScript : MonoBehaviour {
                 _canJump = false;
                 _canTurbo = false;
                 _statusTimer -= Time.deltaTime;
-                if (_statusTimer > 0) { return; }
+                if (_statusTimer > 0 || !_isInvincible) { return; }
                 _playerVisual.FreezePlayerStop();
                 _isFrozen = false;
                 _canJump = true;
@@ -457,7 +481,7 @@ public class PlayerScript : MonoBehaviour {
             case StatusState.Poisoned:
                 _statusTimer -= Time.deltaTime;
                 WhilePlayerIsPoisoned();
-                if (_statusTimer > 0) { return; }
+                if (_statusTimer > 0 || !_isInvincible) { return; }
                 _playerVisual.PoisonPlayerStop();
                 _currentPoisonTimer = _defaultPoisonTimer;
                 StopStatusConditions();
@@ -466,7 +490,7 @@ public class PlayerScript : MonoBehaviour {
                 _canTurbo = false;
                 _canJump = false;
                 _statusTimer -= Time.deltaTime;
-                if (_statusTimer > 0) { return; }
+                if (_statusTimer > 0 || !_isInvincible) { return; }
                 _speedState = SpeedState.Regular;
                 _canJump = true;
                 _playerVisual.SlimePlayerStop();
@@ -475,6 +499,10 @@ public class PlayerScript : MonoBehaviour {
         }
 
     }
+
+    #endregion
+
+    #region PublicFunctions
 
     public void BounceOffCrush(float jumpBoostMultiplier) {
         EnemyManager.Instance.IncreaseKilledEnemiesCounter();
@@ -486,10 +514,60 @@ public class PlayerScript : MonoBehaviour {
         SetPlayerRigidBodyVelocity(_currentPlayerVelocity);
     }
 
-    public void UpdateDecreaseSpeedModifier(float newDecreaseSpeedModifier) {
-        _decreasedSpeedModifier = newDecreaseSpeedModifier;
-        _speedState = SpeedState.Decreased;
+    public void Damage(int enemyAttackPower) {
+        if (!GameManager.Instance.IsGamePlaying()) return;
+
+
+        if (_isInvincible) {
+            return;
+        }
+
+        _currentHealth -= enemyAttackPower;
+
+        if (_currentHealth <= 0) {
+            _currentHealth = 0;
+            OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
+                health = _currentHealth
+            });
+            Die();
+            return;
+        }
+
+        OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
+            health = _currentHealth
+        });
+
+        StartInvincibleTime();
     }
+
+    #endregion
+
+    #region PublicPowerUpFunctions
+
+    public void PowerUpHealthRegen(int increaseMaxHealthBy) {
+        IncrementMaxHealth(increaseMaxHealthBy);
+        RecoverHealthInstantly();
+    }
+
+    public void PowerUpTurboTimeDuplication(float multiplyTimeBy) {
+        MultiplyTurboTime(multiplyTimeBy);
+        RecoverTurboSpeedInstantly();
+    }
+
+    public void PowerUpExtraAirJump(int increaseMaxAirJumpsBy) {
+        IncrementMaxAvailableAirJumps(increaseMaxAirJumpsBy);
+        RecoverAirJumpsInstantly();
+    }
+
+    public void PowerUpInvincibility(float changeTimerTo) {
+        _gotInvinciblePowerUp = true;
+        ModifyInvincibleTime(changeTimerTo);
+        StartInvincibleTime();
+    }
+
+    #endregion
+
+    #region JumpRelatedFunctions
 
     private void IncrementMaxAvailableAirJumps(int incrementBy) {
         _maxAvailableAirJumps += incrementBy;
@@ -500,27 +578,6 @@ public class PlayerScript : MonoBehaviour {
             _currentAvailableAirJumps = _maxAvailableAirJumps;
             OnAirJumpCounterChanged?.Invoke(this, new OnAirJumpCounterChangedEventArgs {
                 airJumps = _currentAvailableAirJumps
-            });
-        }
-    }
-
-    private void IncrementMaxHealth(int incrementAmount) {
-        if (_maxHealth == _totalMaxHealth) {
-            return;
-        }
-        
-        _maxHealth += incrementAmount;
-
-        if (_maxHealth > _totalMaxHealth) {
-            _maxHealth = _totalMaxHealth;
-        }
-    }
-
-    private void RecoverHealthInstantly() {
-        if (_currentHealth != _maxHealth) {
-            _currentHealth = _maxHealth;
-            OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
-                health = _currentHealth
             });
         }
     }
@@ -538,6 +595,15 @@ public class PlayerScript : MonoBehaviour {
         SetPlayerRigidBodyVelocity(_currentPlayerVelocity);
     }
 
+    #endregion
+
+    #region SpeedRelatedFunctions
+
+    private void UpdateDecreaseSpeedModifier(float newDecreaseSpeedModifier) {
+        _decreasedSpeedModifier = newDecreaseSpeedModifier;
+        _speedState = SpeedState.Decreased;
+    }
+
     private void SetPlayerRigidBodyVelocity(Vector2 newPlayerVelocity) {
         _playerRigidBody.velocity = newPlayerVelocity;
     }
@@ -546,7 +612,7 @@ public class PlayerScript : MonoBehaviour {
         _playerMoveSpeedMultiplier = speedMultiplier;
         OnRunAnimSpeedChange?.Invoke(this, new OnRunAnimSpeedChangeEventArgs {
             runAnimSpeedMultiplier = speedMultiplier
-        }) ;
+        });
         if (speedMultiplier != _playerMoveSpeedMultiplierDefault) {
             _maxUntilCanAttackCooldown /= speedMultiplier;
         } else _maxUntilCanAttackCooldown = _playerMoveSpeedMultiplierDefault;
@@ -577,8 +643,8 @@ public class PlayerScript : MonoBehaviour {
                 turboTime = _currentTurboTime
             });
         }
-        
-        
+
+
     }
 
     private void RecoverTurboSpeedInstantly() {
@@ -590,69 +656,7 @@ public class PlayerScript : MonoBehaviour {
         }
     }
 
-    private void Attack() {
-        _playerAttack.SetAttackPower(_maxAttackPower);
-        OnPlayerAttacked?.Invoke(this, EventArgs.Empty);
-        _currentCanAttackCooldown = 0f;
-        _canAttack = false;
-    }
-    
-
-    public void Damage(int enemyAttackPower) {
-        if (!GameManager.Instance.IsGamePlaying()) return;
-
-
-        if (_isInvincible) {
-            return;
-        }
-        
-        _currentHealth -= enemyAttackPower;
-
-        if (_currentHealth <= 0) {
-            _currentHealth = 0;
-            OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
-                health = _currentHealth
-            });
-            Die();
-            return;
-        }
-
-        OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
-            health = _currentHealth
-        });
-
-        StartInvincibleTime();
-    }
-
-    private void Die() {
-        _playerVisual.PlayDeathAnim();
-        StopPlayer();
-    }
-
-    private void StartInvincibleTime() {
-        SetInvincibleBool(true);
-        if (_gotInvinciblePowerUp) {
-            _playerVisual.PlayInvincibleAnim();
-            return;
-        }
-        _playerVisual.PlayHitAnim();
-    }
-
-    private void StopInvincibleTime() {
-        SetInvincibleBool(false);
-        _currentInvincibleTime = 0f;
-        _maxInvincibleTime = _maxInvicibleTimeDefault;
-        if (_gotInvinciblePowerUp) {
-            _playerVisual.StopInvincibleAnim();
-            _gotInvinciblePowerUp = false;
-            return;
-        }
-        _playerVisual.StopHitAnim();
-        
-    }
-
-    public float PlayersYVelocity()
-    {
+    public float PlayersYVelocity() {
         return _playerRigidBody.velocity.y;
     }
 
@@ -660,8 +664,7 @@ public class PlayerScript : MonoBehaviour {
         return transform.position.y;
     }
 
-    public bool IsPlayerRunning()
-    {
+    public bool IsPlayerRunning() {
         if (!_isPlayerRunning) {
             return false;
         }
@@ -673,12 +676,37 @@ public class PlayerScript : MonoBehaviour {
         return _maxTurboTime;
     }
 
-    private void ModifyInvincibleTime(float modifyTo) {
-        _maxInvincibleTime = modifyTo;
+    #endregion
+
+    #region HealthRelatedFunctions
+
+    private void IncrementMaxHealth(int incrementAmount) {
+        if (_maxHealth == _totalMaxHealth) {
+            return;
+        }
+
+        _maxHealth += incrementAmount;
+
+        if (_maxHealth > _totalMaxHealth) {
+            _maxHealth = _totalMaxHealth;
+        }
     }
 
-    public void SetInvincibleBool(bool isInvincible) {
-        _isInvincible = isInvincible;
+    private void RecoverHealthInstantly() {
+        if (_currentHealth != _maxHealth) {
+            _currentHealth = _maxHealth;
+            OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
+                health = _currentHealth
+            });
+        }
+    }
+
+    private void Die() {
+        if (_isPlayerAfflictedWithStatus) {
+            StopStatusConditions();
+        }
+        _playerVisual.PlayDeathAnim();
+        StopPlayer();
     }
 
     private void StopPlayer() {
@@ -686,42 +714,60 @@ public class PlayerScript : MonoBehaviour {
         _playerRigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
     }
 
-    public void PowerUpHealthRegen(int increaseMaxHealthBy) {
-        IncrementMaxHealth(increaseMaxHealthBy);
-        RecoverHealthInstantly();
-    }
+    #endregion
 
-    public void PowerUpTurboTimeDuplication(float multiplyTimeBy) {
-        MultiplyTurboTime(multiplyTimeBy);
-        RecoverTurboSpeedInstantly();
-    }
+    #region AttackRelatedFunctions
 
-    public void PowerUpExtraAirJump(int increaseMaxAirJumpsBy) {
-        IncrementMaxAvailableAirJumps(increaseMaxAirJumpsBy);
-        RecoverAirJumpsInstantly();
-    }
-
-    public void PowerUpInvincibility(float changeTimerTo) {
-        _gotInvinciblePowerUp = true;
-        ModifyInvincibleTime(changeTimerTo);
-        StartInvincibleTime();
+    private void Attack() {
+        _playerAttack.SetAttackPower(_maxAttackPower);
+        OnPlayerAttacked?.Invoke(this, EventArgs.Empty);
+        _currentCanAttackCooldown = 0f;
+        _canAttack = false;
     }
 
     private void ChangeAttackPower(float attackMultiplier) {
         _currentAttackPower = (int)(_maxAttackPower * attackMultiplier);
     }
 
-    private void StopStatusConditions()
-    {
+    #endregion
+
+    #region StatusFunctions
+
+    private void StopInvincibleTime() {
+        SetInvincibleBool(false);
+        _currentInvincibleTime = 0f;
+        _maxInvincibleTime = _maxInvicibleTimeDefault;
+        if (_gotInvinciblePowerUp) {
+            _playerVisual.StopInvincibleAnim();
+            _gotInvinciblePowerUp = false;
+            return;
+        }
+        _playerVisual.StopHitAnim();
+
+    }
+
+    private void StartInvincibleTime() {
+        SetInvincibleBool(true);
+        if (_gotInvinciblePowerUp) {
+            _playerVisual.PlayInvincibleAnim();
+            return;
+        }
+        _playerVisual.PlayHitAnim();
+    }
+
+    private void ModifyInvincibleTime(float modifyTo) {
+        _maxInvincibleTime = modifyTo;
+    }
+
+    private void SetInvincibleBool(bool isInvincible) {
+        _isInvincible = isInvincible;
+    }
+
+    private void StopStatusConditions() {
         _isPlayerAfflictedWithStatus = false;
         _statusTimer = 0f;
         _statusState = StatusState.Unafflicted;
     }
-
-    //public bool DoesPlayerHaveStatus()
-    //{
-    //    return _isPlayerAfflictedWithStatus;
-    //}
 
     public void PlayerWasBurned() {
         if (_statusState != StatusState.Unafflicted || _isInvincible) { return; }
@@ -732,13 +778,7 @@ public class PlayerScript : MonoBehaviour {
         _statusState = StatusState.Burned;
     }
 
-    //public bool IsPlayerBurned()
-    //{
-    //    return _isBurned;
-    //}
-
-    public void PlayerWasParalyzed()
-    {
+    public void PlayerWasParalyzed() {
         if (_statusState != StatusState.Unafflicted || _isInvincible) { return; }
         _playerVisual.ParalyzePlayerStart();
         _statusTimer = _maxParalyzedTime;
@@ -747,13 +787,7 @@ public class PlayerScript : MonoBehaviour {
         _statusState = StatusState.Paralyzed;
     }
 
-    //public bool IsPlayerParalyzed()
-    //{
-    //    return _isParalyzed;
-    //}
-
-    public void PlayerWasFrozen()
-    {
+    public void PlayerWasFrozen() {
         if (_statusState != StatusState.Unafflicted || _isInvincible) { return; }
         _playerVisual.FreezePlayerStart();
         _statusTimer = _maxFrozenTime;
@@ -761,12 +795,7 @@ public class PlayerScript : MonoBehaviour {
         _statusState = StatusState.Frozen;
     }
 
-    //public bool IsPlayerFrozen() {
-    //    return _isFrozen;
-    //}
-
-    public void PlayerWasPoisoned()
-    {
+    public void PlayerWasPoisoned() {
         if (_statusState != StatusState.Unafflicted || _isInvincible) { return; }
         _playerVisual.PoisonPlayerStart();
         _statusTimer = _maxPoisonedTime;
@@ -786,12 +815,7 @@ public class PlayerScript : MonoBehaviour {
 
     }
 
-    //public bool IsPlayerPoisoned() {
-    //    return _isPoisoned;
-    //}  
-
-    public void PlayerWasSlimed()
-    {
+    public void PlayerWasSlimed() {
         if (_statusState != StatusState.Unafflicted || _isInvincible) { return; }
         _playerVisual.SlimePlayerStart();
         _statusTimer = _maxSlimedTime;
@@ -800,8 +824,6 @@ public class PlayerScript : MonoBehaviour {
         _statusState = StatusState.Slimed;
     }
 
-    //public bool IsPlayerSlimed()
-    //{
-    //    return _isSlimed;
-    //}
+    #endregion
+
 }
