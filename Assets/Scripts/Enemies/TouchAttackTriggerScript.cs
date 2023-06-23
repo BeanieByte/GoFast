@@ -14,32 +14,28 @@ public class TouchAttackTriggerScript : MonoBehaviour
 
         PlayerScript player = collision.GetComponent<PlayerScript>();
         if (player != null) {
-            player.Damage(_myEnemyBaseGameObject.TouchAttackPower());
 
             if (_myEnemyBaseGameObject.CanBurn()) {
                 player.PlayerWasBurned();
-                return;
             }
 
-            if (_myEnemyBaseGameObject.CanParalyze()) {
+            else if (_myEnemyBaseGameObject.CanParalyze()) {
                 player.PlayerWasParalyzed();
-                return;
             }
 
-            if (_myEnemyBaseGameObject.CanFreeze()) {
+            else if (_myEnemyBaseGameObject.CanFreeze()) {
                 player.PlayerWasFrozen();
-                return;
             }
 
-            if (_myEnemyBaseGameObject.CanPoison()) {
+            else if (_myEnemyBaseGameObject.CanPoison()) {
                 player.PlayerWasPoisoned();
-                return;
             }
 
-            if (_myEnemyBaseGameObject.CanSlime()) {
+            else if (_myEnemyBaseGameObject.CanSlime()) {
                 player.PlayerWasSlimed();
-                return;
             }
+
+            player.Damage(_myEnemyBaseGameObject.TouchAttackPower());
         }
     }
 }

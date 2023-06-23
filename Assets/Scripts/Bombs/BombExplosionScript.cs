@@ -12,7 +12,7 @@ public class BombExplosionScript : MonoBehaviour
         IDamageable damageable = collision.GetComponent<IDamageable>();
 
         if (player != null) {
-            player.Damage(_mySO.attackPower);
+            
 
             if (_mySO.canBurn) {
                 player.PlayerWasBurned();
@@ -29,6 +29,8 @@ public class BombExplosionScript : MonoBehaviour
             if (_mySO.canSlime) {
                 player.PlayerWasSlimed();
             }
+
+            player.Damage(_mySO.attackPower);
         }
 
         damageable?.Damage(_mySO.attackPower);

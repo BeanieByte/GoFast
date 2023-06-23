@@ -26,8 +26,8 @@ public class EnemyCrush : MonoBehaviour
             }
 
             if (_myEnemyBaseGameObject.CanBurn()) {
-                player.Damage(_myEnemyBaseGameObject.TouchAttackPower());
                 player.PlayerWasBurned();
+                player.Damage(_myEnemyBaseGameObject.TouchAttackPower());
                 return;
             }
 
