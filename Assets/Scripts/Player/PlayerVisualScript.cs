@@ -28,6 +28,7 @@ public class PlayerVisualScript : MonoBehaviour
     public event EventHandler OnPlayerHitAnimStopped;
 
     public event EventHandler OnPlayerInvincibleAnimStarted;
+    public event EventHandler OnPlayerInvincibleAnimAlmostOver;
     public event EventHandler OnPlayerInvincibleAnimStopped;
 
     public event EventHandler OnPlayerBurnAnimStarted;
@@ -167,6 +168,10 @@ public class PlayerVisualScript : MonoBehaviour
 
     public void PlayInvincibleAnim() {
         OnPlayerInvincibleAnimStarted?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void PlayInvincibleAnimAlmostOver() {
+        OnPlayerInvincibleAnimAlmostOver?.Invoke(this, EventArgs.Empty);
     }
 
     public void StopInvincibleAnim() {

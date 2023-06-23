@@ -32,7 +32,7 @@ Transform:
   m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 367380254931803529}
+  - {fileID: 8552674221509792000}
   - {fileID: 6313184442828671763}
   - {fileID: 2204005531895419713}
   m_Father: {fileID: 0}
@@ -84,7 +84,7 @@ SortingGroup:
   m_GameObject: {fileID: 1731944372156082104}
   m_Enabled: 1
   m_SortingLayerID: 1561608559
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 20
 --- !u!114 &4835780347069366458
 MonoBehaviour:
@@ -99,16 +99,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mySO: {fileID: 11400000, guid: e42acb58fe2b1b5418c181963b145b5d, type: 2}
-  _myVisual: {fileID: 4356787379421481225}
+  _myVisual: {fileID: 5755154536714601856}
   _touchAttackTrigger: {fileID: 8551576845787069730}
-  _attackTrigger: {fileID: 8757538731724809658}
+  _attackTrigger: {fileID: 729871853629614387}
   _isFacingRight: 0
-  _wallCheck: {fileID: 7349662667685162917}
-  _edgeCheck: {fileID: 5611422687300739476}
+  _wallCheck: {fileID: 1609824417340875564}
+  _edgeCheck: {fileID: 4501284823962774813}
   _layerIsGrounded:
     serializedVersion: 2
     m_Bits: 64
-  _checkIfCanAttackRadiusOrigin: {fileID: 3314720873011624111}
+  _checkIfCanAttackRadiusOrigin: {fileID: 6748715048856106022}
   _layerPlayer:
     serializedVersion: 2
     m_Bits: 256
@@ -257,7 +257,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1001 &2554115071558708316
+--- !u!1001 &5825981879302676693
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -314,20 +314,25 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54f1f2b3016f1884d91b2ddaf018f03e, type: 3}
---- !u!4 &367380254931803529 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2768368265675256277, guid: 54f1f2b3016f1884d91b2ddaf018f03e, type: 3}
-  m_PrefabInstance: {fileID: 2554115071558708316}
+--- !u!70 &729871853629614387 stripped
+CapsuleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 6555848198090705382, guid: 54f1f2b3016f1884d91b2ddaf018f03e, type: 3}
+  m_PrefabInstance: {fileID: 5825981879302676693}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &3314720873011624111 stripped
+--- !u!4 &1609824417340875564 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 968919549952152819, guid: 54f1f2b3016f1884d91b2ddaf018f03e, type: 3}
-  m_PrefabInstance: {fileID: 2554115071558708316}
+  m_CorrespondingSourceObject: {fileID: 5083778247748518905, guid: 54f1f2b3016f1884d91b2ddaf018f03e, type: 3}
+  m_PrefabInstance: {fileID: 5825981879302676693}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4356787379421481225 stripped
+--- !u!4 &4501284823962774813 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7975256001103957448, guid: 54f1f2b3016f1884d91b2ddaf018f03e, type: 3}
+  m_PrefabInstance: {fileID: 5825981879302676693}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5755154536714601856 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2235018147090982229, guid: 54f1f2b3016f1884d91b2ddaf018f03e, type: 3}
-  m_PrefabInstance: {fileID: 2554115071558708316}
+  m_PrefabInstance: {fileID: 5825981879302676693}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -335,18 +340,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f60e673e1c7e354aa1a6586935c6793, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &5611422687300739476 stripped
+--- !u!4 &6748715048856106022 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 7975256001103957448, guid: 54f1f2b3016f1884d91b2ddaf018f03e, type: 3}
-  m_PrefabInstance: {fileID: 2554115071558708316}
+  m_CorrespondingSourceObject: {fileID: 968919549952152819, guid: 54f1f2b3016f1884d91b2ddaf018f03e, type: 3}
+  m_PrefabInstance: {fileID: 5825981879302676693}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &7349662667685162917 stripped
+--- !u!4 &8552674221509792000 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 5083778247748518905, guid: 54f1f2b3016f1884d91b2ddaf018f03e, type: 3}
-  m_PrefabInstance: {fileID: 2554115071558708316}
-  m_PrefabAsset: {fileID: 0}
---- !u!70 &8757538731724809658 stripped
-CapsuleCollider2D:
-  m_CorrespondingSourceObject: {fileID: 6555848198090705382, guid: 54f1f2b3016f1884d91b2ddaf018f03e, type: 3}
-  m_PrefabInstance: {fileID: 2554115071558708316}
+  m_CorrespondingSourceObject: {fileID: 2768368265675256277, guid: 54f1f2b3016f1884d91b2ddaf018f03e, type: 3}
+  m_PrefabInstance: {fileID: 5825981879302676693}
   m_PrefabAsset: {fileID: 0}

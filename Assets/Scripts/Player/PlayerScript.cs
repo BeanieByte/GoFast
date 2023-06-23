@@ -47,6 +47,9 @@ public class PlayerScript : MonoBehaviour {
     private bool _canAttack = true;
 
     private bool _isInvincible = false;
+    [SerializeField] private GameObject _invincibleTouchAttackTrigger;
+    private float _checkForInvinciblePowerUpAlmostOver;
+    private bool _invincibleAlmostOverHasStarted;
     private float _maxInvincibleTime = 1.5f;
     private float _maxInvincibleTimeDefault = 1.5f;
     private float _currentInvincibleTime = 0f;
@@ -66,7 +69,7 @@ public class PlayerScript : MonoBehaviour {
     [SerializeField] private Transform _playerFeetPos;
     [SerializeField] private LayerMask _layerIsGrounded;
     private float _checkFeetRadius;
-    private float _checkFeetRadiusDivider = 13.3f;
+    private float _checkFeetRadiusDivider = 17.5f; //13.3f;
     private bool _isGrounded;
 
     private bool _canJump = true;
@@ -113,6 +116,7 @@ public class PlayerScript : MonoBehaviour {
 
     [field: Header("Attack Elements")]
     [SerializeField] private PlayerAttackScript _playerAttack;
+    [SerializeField] private PlayerTouchAttackScript _playerTouchAttack;
 
 
     [field: Header("Status Effects")]
@@ -120,19 +124,16 @@ public class PlayerScript : MonoBehaviour {
     private bool _isPlayerAfflictedWithStatus = false;
     private float _statusTimer = 0f;
 
-    private bool _isBurned = false;
     private float _maxBurnedTime = 5f;
     private float _burnedAttackMultiplier = 0.5f;
     private float _burnedSpeedMultiplier = 1.5f;
 
-    private bool _isParalyzed = false;
     private float _maxParalyzedTime = 5f;
     private float _paralyzedSpeedMultiplier = 0.5f;
 
     private bool _isFrozen = false;
     private float _maxFrozenTime = 3f;
 
-    private bool _isPoisoned = false;
     private float _maxPoisonedTime = 10f;
     private float _defaultPoisonTimer = 2f;
     private float _currentPoisonTimer;
@@ -140,7 +141,6 @@ public class PlayerScript : MonoBehaviour {
     private int _healthToDecreaseMultiplier = 2;
     private int _poisonHealthDivider = 20;
 
-    private bool _isSlimed = false;
     private float _maxSlimedTime = 5f;
     private float _slimedSpeedMultiplier = 0.8f;
 
@@ -184,6 +184,7 @@ public class PlayerScript : MonoBehaviour {
         GameInput.Instance.OnAttackPressed += Instance_OnAttackPressed;
 
         _playerAttack.OnKillingEnemy += _playerAttack_OnKillingEnemy;
+        _playerTouchAttack.OnInvincibleTouchKillingEnemy += _playerTouchAttack_OnInvincibleTouchKillingEnemy;
 
         _checkFeetRadius = transform.localScale.x / _checkFeetRadiusDivider;
 
@@ -192,14 +193,12 @@ public class PlayerScript : MonoBehaviour {
         }
 
         _isInvincible = false;
+        _invincibleAlmostOverHasStarted = false;
+        _invincibleTouchAttackTrigger.SetActive(false);
 
         _isPlayerAfflictedWithStatus = false;
         _statusTimer = 0f;
-        _isBurned = false;
-        _isParalyzed = false;
         _isFrozen = false;
-        _isPoisoned = false;
-        _isSlimed = false;
 
         _currentPlayerVelocity = _playerRigidBody.velocity;
         _maxHealth = _maxHealthDefault;
@@ -241,8 +240,12 @@ public class PlayerScript : MonoBehaviour {
     #region EventReceiverFunctions
 
     private void _playerAttack_OnKillingEnemy(object sender, EventArgs e) {
-        EnemyManager.Instance.IncreaseKilledEnemiesCounter();
-        RecoverTurboSpeedInstantly();
+        PlayerKilledEnemy();
+    }
+
+    private void _playerTouchAttack_OnInvincibleTouchKillingEnemy(object sender, EventArgs e)
+    {
+        PlayerKilledEnemy();
     }
 
     private void Instance_OnJumpStarted(object sender, System.EventArgs e) {
@@ -316,7 +319,6 @@ public class PlayerScript : MonoBehaviour {
 
         if (!_isFrozen) {
             transform.position = (Vector2)transform.position + _playerMoveSpeed * Time.deltaTime * moveDir * _playerMoveSpeedMultiplier * _turboSpeedMultiplier;
-            Debug.Log("Player's speed is " + _playerMoveSpeed * Time.deltaTime);
         }
 
         _isGrounded = Physics2D.OverlapCircle(_playerFeetPos.position, _checkFeetRadius, _layerIsGrounded);
@@ -344,6 +346,10 @@ public class PlayerScript : MonoBehaviour {
 
         if (_isInvincible) {
             _currentInvincibleTime += Time.deltaTime;
+            if (!_invincibleAlmostOverHasStarted && _gotInvinciblePowerUp && _checkForInvinciblePowerUpAlmostOver <= _currentInvincibleTime)
+            {
+                StartInvinciblePowerUpAlmostOverAnim();
+            }
             if (_currentInvincibleTime >= _maxInvincibleTime) {
                 StopInvincibleTime();
             }
@@ -515,6 +521,7 @@ public class PlayerScript : MonoBehaviour {
 
     public void PowerUpInvincibility(float changeTimerTo) {
         ModifyInvincibleTime(changeTimerTo);
+        _checkForInvinciblePowerUpAlmostOver = changeTimerTo - 3f;
         StartInvinciblePowerUpTime();
     }
 
@@ -719,6 +726,11 @@ public class PlayerScript : MonoBehaviour {
         _currentAttackPower = (int)(_maxAttackPower * attackMultiplier);
     }
 
+    private void PlayerKilledEnemy() {
+        EnemyManager.Instance.IncreaseKilledEnemiesCounter();
+        RecoverTurboSpeedInstantly();
+    }
+
     #endregion
 
     #region StatusFunctions
@@ -727,8 +739,14 @@ public class PlayerScript : MonoBehaviour {
         _gotInvinciblePowerUp = true;
         StopStatusConditions();
         SetInvincibleBool(true);
-        _playerVisual.PlayInvincibleAnim();
+        _invincibleTouchAttackTrigger.SetActive(true);
         SetPlayerMovementVelocity(_invinciblePowerUpSpeedMultiplier);
+        _playerVisual.PlayInvincibleAnim();
+    }
+
+    private void StartInvinciblePowerUpAlmostOverAnim() {
+        _playerVisual.PlayInvincibleAnimAlmostOver();
+        _invincibleAlmostOverHasStarted = true;
     }
 
     private void StartHitInvincibleTime()
@@ -744,7 +762,9 @@ public class PlayerScript : MonoBehaviour {
         if (_gotInvinciblePowerUp) {
             _playerVisual.StopInvincibleAnim();
             SetPlayerMovementVelocity(_playerMoveSpeedMultiplierDefault);
+            _invincibleTouchAttackTrigger.SetActive(false);
             _gotInvinciblePowerUp = false;
+            _invincibleAlmostOverHasStarted = false;
             return;
         }
         _playerVisual.StopHitAnim();

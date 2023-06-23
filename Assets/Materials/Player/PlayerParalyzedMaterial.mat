@@ -154,7 +154,7 @@ Material:
     - _InnerOutlineAlpha: 0.635
     - _InnerOutlineGlow: 9.7
     - _InnerOutlineThickness: 2.73
-    - _MaxXUV: 0.16666667
+    - _MaxXUV: 0.33333334
     - _MaxYUV: 1
     - _MinXUV: 0
     - _MinYUV: 0

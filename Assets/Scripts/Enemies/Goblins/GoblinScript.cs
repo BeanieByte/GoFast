@@ -37,14 +37,12 @@ public class GoblinScript : EnemyBaseScript
 
     private void GoblinScript_OnEnemyAttackAnimStarted(object sender, System.EventArgs e) {
         SetTouchAttackTrigger(false);
-        SetAttackTrigger(true);
         CanIWalk(false);
     }
 
     private void GoblinScript_OnEnemyAttackAnimStopped(object sender, System.EventArgs e) {
         SetTouchAttackTrigger(true);
         CanIWalk(true);
-        SetAttackTrigger(false);
     }
 
 

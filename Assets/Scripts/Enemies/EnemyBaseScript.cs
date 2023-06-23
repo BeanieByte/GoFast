@@ -13,7 +13,6 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     [SerializeField] private Collider2D _touchAttackTrigger;
     [SerializeField] private Collider2D _attackTrigger;
 
-
     protected Rigidbody2D _myRigidBody;
     protected Collider2D _myCollider;
 
@@ -36,6 +35,13 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     protected float _attackCooldownTime;
     protected float _currentAttackCooldownTime;
 
+    [SerializeField] private bool _isEnemyRespawnable;
+    private bool _wasIRespawnedOnce = false;
+    private Transform _myOriginalPosition;
+    private float _currentTimeUntilRespawn;
+    private float _maxTimeUntilRespawn;
+    private int _mandatoryDamageForProperRespawn = 0;
+
     #endregion
 
     #region ConstantEnemyMethods
@@ -46,26 +52,22 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
 
     protected virtual void Start() {
 
-        if (_mySO.isWalker) { 
-            CanIWalk(true); 
-        } else CanIWalk(false);
-
-        _canAttack = true;
-        _currentHealth = _mySO.health;
-
-        _attackCooldownTime = _mySO.attackCooldownTime;
-        _currentAttackCooldownTime = 0f;
-
-        if (!_isOriginallyFacingRight) {
+        if (!_isOriginallyFacingRight)
+        {
             _myVisual.Flip();
         }
 
-        if (!_isFacingRight) {
-            _myVisual.Flip();
+        if (_isEnemyRespawnable && !_wasIRespawnedOnce)
+        {
+            _myOriginalPosition = transform;
         }
+
+        SpawnEnemy();
 
         _myVisual.OnEnemyHitAnimStarted += _myVisual_OnEnemyHitAnimStarted;
         _myVisual.OnEnemyHitAnimStopped += _myVisual_OnEnemyHitAnimStopped;
+
+        _myVisual.OnEnemyRespawnStarted += _myVisual_OnEnemyRespawnStarted;
     }
 
     private void _myVisual_OnEnemyHitAnimStopped(object sender, EventArgs e) {
@@ -88,8 +90,23 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
         }
     }
 
+    private void _myVisual_OnEnemyRespawnStarted(object sender, EventArgs e)
+    {
+        _myVisual.gameObject.SetActive(false);
+    }
+
     protected virtual void FixedUpdate() {
         if (!GameManager.Instance.IsGamePlaying()) return;
+
+        if(DeadCheck() && _isEnemyRespawnable)
+        {
+            _currentTimeUntilRespawn -= Time.deltaTime;
+            if(_currentTimeUntilRespawn <= 0)
+            {
+                RespawnEnemy();
+                _currentTimeUntilRespawn = 1000f;
+            }
+        }
 
         if (_mySO.isAttacker) {
 
@@ -153,14 +170,24 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
             _myVisual.PlayHitAnim();
             return false;
         }
+
+        if (_mySO.isWalker)
+        {
+            CanIWalk(false);
+        }
+
         _myRigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
 
         if (_mySO.isAttacker && _attackTrigger != null) {
             SetAttackTrigger(false);
         }
         SetTouchAttackTrigger(false);
-        if (_mySO.isWalker) {
-            CanIWalk(false);
+        
+        if(_isEnemyRespawnable)
+        {
+            _myVisual.PlayDeadAnim();
+            _currentTimeUntilRespawn = _maxTimeUntilRespawn;
+            return true;
         }
 
         _myVisual.PlayDeadAnim();
@@ -218,6 +245,10 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
         return _mySO.attackPower;
     }
 
+    public int MyMaxHealth() {
+        return _mySO.health;
+    }
+
     public bool IsFacingRight() {
         return _isFacingRight;
     }
@@ -234,4 +265,58 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     }
 
     #endregion
+
+    private void SpawnEnemy()
+    {
+        if (_mySO.isWalker)
+        {
+            CanIWalk(true);
+        }
+        else CanIWalk(false);
+
+        _canAttack = true;
+        _currentHealth = _mySO.health;
+
+        _attackCooldownTime = _mySO.attackCooldownTime;
+        _currentAttackCooldownTime = 0f;
+
+        if (!_isFacingRight)
+        {
+            _myVisual.Flip();
+        }
+    }
+
+    private void RespawnEnemy()
+    {
+        transform.SetPositionAndRotation(_myOriginalPosition.position, _myOriginalPosition.rotation);
+        if (!_wasIRespawnedOnce)
+        {
+            _wasIRespawnedOnce = true;
+        }
+
+        _myRigidBody.constraints = RigidbodyConstraints2D.None;
+
+        _myVisual.gameObject.SetActive(true);
+        Damage(_mandatoryDamageForProperRespawn);
+
+        if (_mySO.isAttacker && _attackTrigger != null)
+        {
+            SetAttackTrigger(true);
+        }
+
+        SetTouchAttackTrigger(true);
+        
+
+        SpawnEnemy();
+    }
+
+    public bool IsEnemyRespawnable()
+    {
+        return _isEnemyRespawnable;
+    }
+
+    public bool WasEnemyRespawnedBefore()
+    {
+        return _wasIRespawnedOnce;
+    }
 }

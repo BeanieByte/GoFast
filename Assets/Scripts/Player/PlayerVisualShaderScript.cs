@@ -20,6 +20,7 @@ public class PlayerVisualShaderScript : MonoBehaviour {
 
 
     private bool _isPlayerInvincible;
+    private bool _isPlayerInvincibleAlmostOver;
     [SerializeField] private Texture _invincibilityTexture;
     private float _invincibleAnimationMinValue = -0.52f;
     private float _invincibleAnimationMaxValue = 0.52f;
@@ -33,11 +34,9 @@ public class PlayerVisualShaderScript : MonoBehaviour {
     private float _burningAnimationMinValue = 0.3f;
     private float _burningAnimationMaxValue = 1.5f;
 
-    private bool _isPlayerParalyzed;
     [SerializeField] private Material _playerParalyzedMaterial;
     [SerializeField] private GameObject _paralyzedAnimationParticleSystemGameObject;
 
-    private bool _isPlayerFrozen;
     [SerializeField] private Material _playerFrozenMaterial;
     [SerializeField] private GameObject _frozenAnimationParticleSystemGameObject;
     private float _freezeAnimationSpeed = 2f;
@@ -52,7 +51,6 @@ public class PlayerVisualShaderScript : MonoBehaviour {
     private float _poisonedAnimationMinValue = 0.8f;
     private float _poisonedAnimationMaxValue = 2.5f;
 
-    private bool _isPlayerSlimed;
     [SerializeField] private Material _playerSlimedMaterial;
     [SerializeField] private GameObject _slimedAnimationParticleSystemGameObject;
 
@@ -66,12 +64,10 @@ public class PlayerVisualShaderScript : MonoBehaviour {
     private void Start() {
 
         _isPlayerInvincible = false;
+        _isPlayerInvincibleAlmostOver = false;
 
         _isPlayerBurning = false;
-        _isPlayerParalyzed = false;
-        _isPlayerFrozen = false;
         _isPlayerPoisoned = false;
-        _isPlayerSlimed = false;
 
         _playerRenderer.material.SetFloat("_HsvShift", (int)Random.Range(0f, 360f));
         _playerRenderer.material.SetFloat("_HsvSaturation", Random.Range(0.5f, 1.5f));
@@ -82,6 +78,7 @@ public class PlayerVisualShaderScript : MonoBehaviour {
         _playerVisualScript.OnPlayerHitAnimStopped += _playerVisualScript_OnPlayerHitAnimStopped;
 
         _playerVisualScript.OnPlayerInvincibleAnimStarted += _playerVisualScript_OnPlayerInvincibleAnimStarted;
+        _playerVisualScript.OnPlayerInvincibleAnimAlmostOver += _playerVisualScript_OnPlayerInvincibleAnimAlmostOver;
         _playerVisualScript.OnPlayerInvincibleAnimStopped += _playerVisualScript_OnPlayerInvincibleAnimStopped;
 
         _playerVisualScript.OnPlayerBurnAnimStarted += _playerVisualScript_OnPlayerBurnAnimStarted;
@@ -113,7 +110,8 @@ public class PlayerVisualShaderScript : MonoBehaviour {
     }
 
     private void _playerVisualScript_OnPlayerInvincibleAnimStarted(object sender, System.EventArgs e) {
-        _playerRenderer.material = _playerDefaultMaterial;
+        _isPlayerInvincible = true;
+        OnMaterialChange(_playerDefaultMaterial);
         _playerDefaultMaterial.EnableKeyword("INNEROUTLINE_ON");
         _playerDefaultMaterial.SetColor("_InnerOutlineColor", UnityEngine.Color.black);
         _playerDefaultMaterial.SetFloat("_InnerOutlineThickness", 3f);
@@ -123,11 +121,18 @@ public class PlayerVisualShaderScript : MonoBehaviour {
         _playerDefaultMaterial.SetTexture("_ColorRampTex", _invincibilityTexture);
         _playerDefaultMaterial.SetFloat("_ColorRampBlend", 1f);
         _playerDefaultMaterial.DisableKeyword("HSV_ON");
-        _isPlayerInvincible = true;
+    }
+
+    private void _playerVisualScript_OnPlayerInvincibleAnimAlmostOver(object sender, System.EventArgs e)
+    {
+        EnableHitEffect();
+        _isPlayerInvincibleAlmostOver = true;
     }
 
     private void _playerVisualScript_OnPlayerInvincibleAnimStopped(object sender, System.EventArgs e) {
+        DisableHitEffect();
         _isPlayerInvincible = false;
+        _isPlayerInvincibleAlmostOver = false;
         _playerDefaultMaterial.EnableKeyword("HSV_ON");
         _playerDefaultMaterial.DisableKeyword("INNEROUTLINE_ON");
         _playerDefaultMaterial.DisableKeyword("COLORRAMP_ON");
@@ -148,13 +153,11 @@ public class PlayerVisualShaderScript : MonoBehaviour {
     private void _playerVisualScript_OnPlayerParalyzedAnimStarted(object sender, System.EventArgs e) {
         OnMaterialChange(_playerParalyzedMaterial);
         _paralyzedAnimationParticleSystemGameObject.SetActive(true);
-        _isPlayerParalyzed = true;
     }
 
     private void _playerVisualScript_OnPlayerParalyzedAnimStopped(object sender, System.EventArgs e) {
         _paralyzedAnimationParticleSystemGameObject.SetActive(false);
         OnMaterialChange(_playerDefaultMaterial);
-        _isPlayerParalyzed = false;
 
     }
 
@@ -163,11 +166,9 @@ public class PlayerVisualShaderScript : MonoBehaviour {
         _frozenAnimationParticleSystemGameObject.SetActive(true);
         _freezeAnimationCurrentValue = _freezeAnimationMinValue;
         PlayerFrozenShaderAnimationStarted();
-        _isPlayerFrozen = true;
     }
 
     private void _playerVisualScript_OnPlayerFreezeAnimStopped(object sender, System.EventArgs e) {
-        _isPlayerFrozen = false;
         _freezeAnimationCurrentValue = _freezeAnimationMaxValue;
         PlayerFrozenShaderAnimationEnded();
         _frozenAnimationParticleSystemGameObject.SetActive(false);
@@ -190,13 +191,11 @@ public class PlayerVisualShaderScript : MonoBehaviour {
     private void _playerVisualScript_OnPlayerSlimedAnimStarted(object sender, System.EventArgs e) {
         OnMaterialChange(_playerSlimedMaterial);
         _slimedAnimationParticleSystemGameObject.SetActive(true);
-        _isPlayerSlimed = true;
     }
 
     private void _playerVisualScript_OnPlayerSlimedAnimStopped(object sender, System.EventArgs e) {
         _slimedAnimationParticleSystemGameObject.SetActive(false);
         OnMaterialChange(_playerDefaultMaterial);
-        _isPlayerSlimed = false;
     }
 
     #endregion
@@ -208,6 +207,9 @@ public class PlayerVisualShaderScript : MonoBehaviour {
         }
 
         if (_isPlayerInvincible) {
+            if (_isPlayerInvincibleAlmostOver) {
+                HitShaderAnimation();
+            } 
             InvincibleShaderAnimation();
         }
 
@@ -229,7 +231,7 @@ public class PlayerVisualShaderScript : MonoBehaviour {
 
         _playerRenderer.material = newMaterial;
 
-        if (_isPlayerHit)
+        if (_isPlayerHit && !_isPlayerInvincible)
         {
             EnableHitEffect();
         }

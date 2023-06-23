@@ -16,6 +16,8 @@ public class EnemyVisualBaseScript : MonoBehaviour
     public event EventHandler OnEnemyHitAnimStarted;
     public event EventHandler OnEnemyHitAnimStopped;
 
+    public event EventHandler OnEnemyRespawnStarted;
+
     [SerializeField] private int _numberOfTimesHitAnimCanLoop = 3;
     private int _numberOfTimesHitAnimHasLooped;
 
@@ -57,6 +59,11 @@ public class EnemyVisualBaseScript : MonoBehaviour
     }
 
     public void Die() {
+        if (_myLogicScript.IsEnemyRespawnable())
+        {
+            OnEnemyRespawnStarted?.Invoke(this, EventArgs.Empty);
+            return;
+        }
         Destroy(_myLogicScript.gameObject);
     }
 
