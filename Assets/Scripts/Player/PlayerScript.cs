@@ -34,6 +34,10 @@ public class PlayerScript : MonoBehaviour {
     private float _playerMoveSpeedMultiplierDefault = 1f;
     [SerializeField] private bool _playerFacingRight;
 
+    [SerializeField] private Transform _playerWallCheck;
+    private float _wallIsInFrontSpeedMultiplier = 1f;
+    private float _wallCheckRayOffset = 0.005f;
+
     [SerializeField] private float _highestJumpForce = 7f;
     [SerializeField] private float _lowestJumpForce = 9f;
     private float _currentJumpForce;
@@ -69,7 +73,7 @@ public class PlayerScript : MonoBehaviour {
     [SerializeField] private Transform _playerFeetPos;
     [SerializeField] private LayerMask _layerIsGrounded;
     private float _checkFeetRadius;
-    private float _checkFeetRadiusDivider = 17.5f; //13.3f;
+    private float _checkFeetRadiusDivider = 19f; //13.3f;
     private bool _isGrounded;
 
     private bool _canJump = true;
@@ -201,6 +205,8 @@ public class PlayerScript : MonoBehaviour {
         _isFrozen = false;
 
         _currentPlayerVelocity = _playerRigidBody.velocity;
+        _wallIsInFrontSpeedMultiplier = 1f;
+
         _maxHealth = _maxHealthDefault;
         _currentHealth = _maxHealth;
 
@@ -317,8 +323,10 @@ public class PlayerScript : MonoBehaviour {
 
         Vector2 moveDir = new Vector2(inputVector.x, 0);
 
+        CheckIfWallIsRightInFront();
+
         if (!_isFrozen) {
-            transform.position = (Vector2)transform.position + _playerMoveSpeed * Time.deltaTime * moveDir * _playerMoveSpeedMultiplier * _turboSpeedMultiplier;
+            transform.position = (Vector2)transform.position + _playerMoveSpeed * Time.deltaTime * moveDir * _playerMoveSpeedMultiplier * _turboSpeedMultiplier * _wallIsInFrontSpeedMultiplier;
         }
 
         _isGrounded = Physics2D.OverlapCircle(_playerFeetPos.position, _checkFeetRadius, _layerIsGrounded);
@@ -379,6 +387,27 @@ public class PlayerScript : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.T)) {
             PlayerWasSlimed();
+        }
+    }
+
+    private void CheckIfWallIsRightInFront() {
+        Vector2 rayOrigin = _playerWallCheck.transform.position;
+
+        Vector2 rayEnd = new Vector2(rayOrigin.x + _wallCheckRayOffset, _playerWallCheck.transform.position.y);
+        if (_playerFacingRight) {
+            rayEnd.x = rayOrigin.x + _wallCheckRayOffset;
+        } else {
+            rayEnd.x = rayOrigin.x - _wallCheckRayOffset;
+        }
+
+        LayerMask rayLayerMask = _layerIsGrounded;
+
+        RaycastHit2D hit = Physics2D.Linecast(rayOrigin, rayEnd, rayLayerMask);
+
+        if (hit) {
+            _wallIsInFrontSpeedMultiplier = 0f;
+        } else {
+            _wallIsInFrontSpeedMultiplier = 1f;
         }
     }
 

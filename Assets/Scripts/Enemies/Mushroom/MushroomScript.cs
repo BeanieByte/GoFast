@@ -18,4 +18,9 @@ public class MushroomScript : EnemyBaseScript {
         _mushroomEnemyCrushScript.gameObject.SetActive(false);
         Damage(_mySO.health);
     }
+
+    protected override void RespawnEnemy() {
+        base.RespawnEnemy();
+        _mushroomEnemyCrushScript.gameObject.SetActive(true);
+    }
 }

@@ -59,8 +59,7 @@ public class EnemyVisualBaseScript : MonoBehaviour
     }
 
     public void Die() {
-        if (_myLogicScript.IsEnemyRespawnable())
-        {
+        if (_myLogicScript.IsEnemyRespawnable()) {
             OnEnemyRespawnStarted?.Invoke(this, EventArgs.Empty);
             return;
         }

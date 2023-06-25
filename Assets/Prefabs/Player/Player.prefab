@@ -138,7 +138,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 4
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: c8faa53e68655bd4a9f4b7f513240560, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
@@ -197,6 +197,7 @@ MonoBehaviour:
   _maxAttackPower: 20
   _playerMoveSpeed: 8
   _playerFacingRight: 1
+  _playerWallCheck: {fileID: 779736305171969743}
   _highestJumpForce: 7
   _lowestJumpForce: 9
   _maxAvailableAirJumps: 1
@@ -340,6 +341,11 @@ MonoBehaviour:
 --- !u!4 &15246342360144118 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1874267610912069843, guid: 72e85cd9eff8c2a45b39ff1c1335fcf0, type: 3}
+  m_PrefabInstance: {fileID: 1888299077212241957}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &779736305171969743 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1217863095338088170, guid: 72e85cd9eff8c2a45b39ff1c1335fcf0, type: 3}
   m_PrefabInstance: {fileID: 1888299077212241957}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1717275117007412350 stripped

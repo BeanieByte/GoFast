@@ -32,18 +32,18 @@ public class ParallaxBackground : MonoBehaviour
         transform.position += new Vector3(deltaMovement.x * _parallaxEffectMultiplier.x, deltaMovement.y * _parallaxEffectMultiplier.y);
         _lastCameraPosition = _cameraTransform.position;
 
-        if (_infiniteHorizontal) {
-            if (Mathf.Abs(_cameraTransform.position.x - transform.position.x) >= _textureUniteSizeX) {
-                float offsetPositionX = (_cameraTransform.position.x - transform.position.x) % _textureUniteSizeX;
-                transform.position = new Vector3(_cameraTransform.position.x + offsetPositionX, transform.position.y);
-            }
-        }
+        //if (_infiniteHorizontal) {
+        //    if (Mathf.Abs(_cameraTransform.position.x - transform.position.x) >= _textureUniteSizeX) {
+        //        float offsetPositionX = (_cameraTransform.position.x - transform.position.x) % _textureUniteSizeX;
+        //        transform.position = new Vector3(_cameraTransform.position.x + offsetPositionX, transform.position.y);
+        //    }
+        //}
 
-        if (_infiniteVertical) {
-            if (Mathf.Abs(_cameraTransform.position.y - transform.position.y) >= _textureUniteSizeY) {
-                float offsetPositionY = (_cameraTransform.position.y - transform.position.y) % _textureUniteSizeY;
-                transform.position = new Vector3(transform.position.x, _cameraTransform.position.y + offsetPositionY);
-            }
-        }
+        //if (_infiniteVertical) {
+        //    if (Mathf.Abs(_cameraTransform.position.y - transform.position.y) >= _textureUniteSizeY) {
+        //        float offsetPositionY = (_cameraTransform.position.y - transform.position.y) % _textureUniteSizeY;
+        //        transform.position = new Vector3(transform.position.x, _cameraTransform.position.y + offsetPositionY);
+        //    }
+        //}
     }
 }

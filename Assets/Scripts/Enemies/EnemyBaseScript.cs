@@ -21,6 +21,7 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     protected Vector2 _moveDir;
 
     protected int _currentHealth;
+    private bool _isDead;
 
     protected bool _canIWalk;
 
@@ -39,7 +40,7 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     private bool _wasIRespawnedOnce = false;
     private Transform _myOriginalPosition;
     private float _currentTimeUntilRespawn;
-    private float _maxTimeUntilRespawn;
+    private float _maxTimeUntilRespawn = 3f;
     private int _mandatoryDamageForProperRespawn = 0;
 
     #endregion
@@ -52,17 +53,21 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
 
     protected virtual void Start() {
 
-        if (!_isOriginallyFacingRight)
+        if (_isEnemyRespawnable)
         {
-            _myVisual.Flip();
-        }
+            _currentTimeUntilRespawn = _maxTimeUntilRespawn;
 
-        if (_isEnemyRespawnable && !_wasIRespawnedOnce)
-        {
-            _myOriginalPosition = transform;
+            if (!_wasIRespawnedOnce) {
+                _myOriginalPosition = transform;
+            }
+
         }
 
         SpawnEnemy();
+
+        if (!_isFacingRight) {
+            _myVisual.Flip();
+        }
 
         _myVisual.OnEnemyHitAnimStarted += _myVisual_OnEnemyHitAnimStarted;
         _myVisual.OnEnemyHitAnimStopped += _myVisual_OnEnemyHitAnimStopped;
@@ -98,7 +103,7 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     protected virtual void FixedUpdate() {
         if (!GameManager.Instance.IsGamePlaying()) return;
 
-        if(DeadCheck() && _isEnemyRespawnable)
+        if(_isDead && _isEnemyRespawnable)
         {
             _currentTimeUntilRespawn -= Time.deltaTime;
             if(_currentTimeUntilRespawn <= 0)
@@ -165,10 +170,11 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     }
 
     public virtual bool DeadCheck() {
-        
+
         if (_currentHealth > 0) {
             _myVisual.PlayHitAnim();
-            return false;
+            _isDead = false;
+            return _isDead;
         }
 
         if (_mySO.isWalker)
@@ -187,11 +193,13 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
         {
             _myVisual.PlayDeadAnim();
             _currentTimeUntilRespawn = _maxTimeUntilRespawn;
-            return true;
+            _isDead = true;
+            return _isDead;
         }
 
         _myVisual.PlayDeadAnim();
-        return true;
+        _isDead = true;
+        return _isDead;
     }
 
     #endregion
@@ -268,6 +276,8 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
 
     private void SpawnEnemy()
     {
+        _isDead = false;
+
         if (_mySO.isWalker)
         {
             CanIWalk(true);
@@ -280,24 +290,26 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
         _attackCooldownTime = _mySO.attackCooldownTime;
         _currentAttackCooldownTime = 0f;
 
-        if (!_isFacingRight)
-        {
+        if (!_myVisual.isActiveAndEnabled) {
+            _myVisual.gameObject.SetActive(true);
+            transform.SetPositionAndRotation(_myOriginalPosition.position, _myOriginalPosition.rotation);
+
+            _myRigidBody.constraints = RigidbodyConstraints2D.None;
+            _myRigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+
+        if (!_isOriginallyFacingRight) {
             _myVisual.Flip();
         }
     }
 
-    private void RespawnEnemy()
+    protected virtual void RespawnEnemy()
     {
-        transform.SetPositionAndRotation(_myOriginalPosition.position, _myOriginalPosition.rotation);
+        
         if (!_wasIRespawnedOnce)
         {
             _wasIRespawnedOnce = true;
         }
-
-        _myRigidBody.constraints = RigidbodyConstraints2D.None;
-
-        _myVisual.gameObject.SetActive(true);
-        Damage(_mandatoryDamageForProperRespawn);
 
         if (_mySO.isAttacker && _attackTrigger != null)
         {
@@ -305,9 +317,10 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
         }
 
         SetTouchAttackTrigger(true);
-        
 
         SpawnEnemy();
+
+        Damage(_mandatoryDamageForProperRespawn);
     }
 
     public bool IsEnemyRespawnable()
