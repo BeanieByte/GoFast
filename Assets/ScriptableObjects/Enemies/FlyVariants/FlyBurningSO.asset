@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b0f8fa96bb6a7a4cb3ee95c2622c1f4, type: 3}
+  m_Name: FlyBurningSO
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 146095358, guid: 17dc2b60ce4d92a4a86a9877bc93f733, type: 3}
+  prefab: {fileID: 4277998302816545478, guid: 0fa25a50176bd0c4eb58ac0657cc1d8d, type: 3}
+  material: {fileID: 2100000, guid: e7cc3c287a373d345a339d0654ac9845, type: 2}
+  enemyName: Burning Fly
+  isWalker: 1
+  health: 10
+  touchPower: 5
+  speed: 2.5
+  isAttacker: 1
+  attackPower: 5
+  attackCooldownTime: 1.5
+  canBurn: 1
+  canParalyze: 0
+  canFreeze: 0
+  canPoison: 0
+  canSlime: 0
+  isBounceable: 0
+  bounceOffMultiplier: 0

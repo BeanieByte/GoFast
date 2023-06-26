@@ -6,7 +6,6 @@ public class ParallaxBackground : MonoBehaviour
 {
     [SerializeField] private Vector2 _parallaxEffectMultiplier;
 
-    [SerializeField] private Camera _parallaxCamera;
     private Transform _cameraTransform;
     private Vector3 _lastCameraPosition;
 
@@ -17,7 +16,7 @@ public class ParallaxBackground : MonoBehaviour
     [SerializeField] private bool _infiniteVertical;
 
     private void Start() {
-        _cameraTransform = Camera.main.transform;  //_parallaxCamera.transform;
+        _cameraTransform = Camera.main.transform;
         _lastCameraPosition = _cameraTransform.position;
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.drawMode = SpriteDrawMode.Tiled;

@@ -29,4 +29,4 @@ MonoBehaviour:
   canPoison: 0
   canSlime: 0
   isBounceable: 1
-  bounceOffMultiplier: 2
+  bounceOffMultiplier: 3
