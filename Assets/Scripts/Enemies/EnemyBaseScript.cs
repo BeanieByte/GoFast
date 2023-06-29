@@ -28,6 +28,7 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     [SerializeField] protected Transform _wallCheck;
     [SerializeField] protected Transform _edgeCheck;
     [SerializeField] protected LayerMask _layerIsGrounded;
+    [SerializeField] protected LayerMask _layerPlatforms;
     protected float _checkRadius = 0.1f;
 
     protected bool _isEnemyWalking;
@@ -149,7 +150,7 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     }
 
     protected virtual void CheckToFlipIfIsEdgeOrHasWall() {
-        if (!Physics2D.OverlapCircle(_edgeCheck.position, _checkRadius, _layerIsGrounded) || Physics2D.OverlapCircle(_wallCheck.position, _checkRadius, _layerIsGrounded)) {
+        if ((!Physics2D.OverlapCircle(_edgeCheck.position, _checkRadius, _layerIsGrounded) && !Physics2D.OverlapCircle(_edgeCheck.position, _checkRadius, _layerPlatforms)) || Physics2D.OverlapCircle(_wallCheck.position, _checkRadius, _layerIsGrounded)) {
             _isFacingRight = !_isFacingRight;
             _myVisual.Flip();
         };
@@ -181,8 +182,6 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
         {
             CanIWalk(false);
         }
-
-        _myRigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
 
         if (_mySO.isAttacker && _attackTrigger != null) {
             SetAttackTrigger(false);
@@ -293,9 +292,6 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
         if (!_myVisual.isActiveAndEnabled) {
             _myVisual.gameObject.SetActive(true);
             transform.SetPositionAndRotation(_myOriginalPosition.position, _myOriginalPosition.rotation);
-
-            _myRigidBody.constraints = RigidbodyConstraints2D.None;
-            _myRigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
 
         if (!_isOriginallyFacingRight) {

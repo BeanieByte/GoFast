@@ -168,7 +168,7 @@ SortingGroup:
   m_GameObject: {fileID: 4787343910479774886}
   m_Enabled: 1
   m_SortingLayerID: 1561608559
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
 --- !u!114 &5172144180028975521
 MonoBehaviour:
@@ -192,6 +192,10 @@ MonoBehaviour:
   _layerIsGrounded:
     serializedVersion: 2
     m_Bits: 64
+  _layerPlatforms:
+    serializedVersion: 2
+    m_Bits: 2048
+  _isEnemyRespawnable: 0
   _mushroomEnemyCrushScript: {fileID: 8000647360800695305}
 --- !u!1 &6837528678293200868
 GameObject:

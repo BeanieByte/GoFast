@@ -36,4 +36,13 @@ public class BomberGoblinVisualScript : EnemyVisualBaseScript
 
         myBomb.GetComponent<Rigidbody2D>().AddForce(new Vector2(_throwVectorX, _throwVectorY) * _throwForce, ForceMode2D.Impulse);
     }
+
+    public override void Die()
+    {
+        if(_bombHolder.childCount > 0)
+        {
+            _bombHolder.DetachChildren();
+        }
+        base.Die();
+    }
 }

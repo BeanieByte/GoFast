@@ -58,7 +58,7 @@ public class EnemyVisualBaseScript : MonoBehaviour
         _myAnimator.SetTrigger(die_CONST);
     }
 
-    public void Die() {
+    public virtual void Die() {
         if (_myLogicScript.IsEnemyRespawnable()) {
             OnEnemyRespawnStarted?.Invoke(this, EventArgs.Empty);
             return;

@@ -666,8 +666,8 @@ TextureImporter:
       name: tileset_64x64(new)_26
       rect:
         serializedVersion: 2
-        x: 258
-        y: 195
+        x: 256
+        y: 192
         width: 64
         height: 64
       alignment: 0
@@ -1326,7 +1326,7 @@ TextureImporter:
     nameFileIdTable:
       tileset_64x64(new)_2: 1607732358
       tileset_64x64(new)_10: -578768256
-      tileset_64x64(new)_46: 664912259
+      tileset_64x64(new)_30: 351084169
       tileset_64x64(new)_21: -2133205574
       tileset_64x64(new)_44: -1411683648
       tileset_64x64(new)_19: 1608113404
@@ -1380,7 +1380,7 @@ TextureImporter:
       tileset_64x64(new)_47: 687150832
       tileset_64x64(new)_33: -646170911
       tileset_64x64(new)_8: -74718901
-      tileset_64x64(new)_30: 351084169
+      tileset_64x64(new)_46: 664912259
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

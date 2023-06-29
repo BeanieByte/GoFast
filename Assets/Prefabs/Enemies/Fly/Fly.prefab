@@ -85,7 +85,7 @@ SortingGroup:
   m_GameObject: {fileID: 1731944372156082104}
   m_Enabled: 1
   m_SortingLayerID: -1168732107
-  m_SortingLayer: 5
+  m_SortingLayer: 6
   m_SortingOrder: 0
 --- !u!114 &4330301794628337279
 MonoBehaviour:
@@ -109,6 +109,10 @@ MonoBehaviour:
   _layerIsGrounded:
     serializedVersion: 2
     m_Bits: 64
+  _layerPlatforms:
+    serializedVersion: 2
+    m_Bits: 2048
+  _isEnemyRespawnable: 0
 --- !u!1 &2165802840558805138
 GameObject:
   m_ObjectHideFlags: 0

@@ -206,6 +206,9 @@ MonoBehaviour:
   _layerIsGrounded:
     serializedVersion: 2
     m_Bits: 64
+  _layerPlatforms:
+    serializedVersion: 2
+    m_Bits: 2048
   _maxTurboTime: 3
   _playerAttack: {fileID: 3685798512984509814}
   _playerTouchAttack: {fileID: 7081032649619152409}

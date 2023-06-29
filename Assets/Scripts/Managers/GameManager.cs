@@ -1,13 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
     [SerializeField] private CountdownTimerUI _countdownTimerUIScript;
+
+    public event EventHandler OnGameWon;
+    public event EventHandler OnGameLost;
 
     public enum State { 
         WaitingToStart,
@@ -76,9 +82,11 @@ public class GameManager : MonoBehaviour
 
     public void SetGameOver() {
         _state = State.GameOver;
+        OnGameLost?.Invoke(this, EventArgs.Empty);
     }
 
     public void SetGameWon() {
         _state = State.GameWon;
+        OnGameWon?.Invoke(this, EventArgs.Empty);
     }
 }

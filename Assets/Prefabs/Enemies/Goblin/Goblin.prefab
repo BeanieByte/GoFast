@@ -108,6 +108,10 @@ MonoBehaviour:
   _layerIsGrounded:
     serializedVersion: 2
     m_Bits: 64
+  _layerPlatforms:
+    serializedVersion: 2
+    m_Bits: 2048
+  _isEnemyRespawnable: 0
   _checkIfCanAttackRadiusOrigin: {fileID: 6748715048856106022}
   _layerPlayer:
     serializedVersion: 2

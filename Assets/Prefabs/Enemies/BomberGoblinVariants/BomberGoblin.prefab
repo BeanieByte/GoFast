@@ -86,7 +86,7 @@ SortingGroup:
   m_GameObject: {fileID: 1731944372156082104}
   m_Enabled: 1
   m_SortingLayerID: 1561608559
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: -1
 --- !u!114 &1731944372156082117
 MonoBehaviour:
@@ -103,13 +103,17 @@ MonoBehaviour:
   _mySO: {fileID: 11400000, guid: 702e754b196691c4eb896ac2866c24a2, type: 2}
   _myVisual: {fileID: 6351418446318249045}
   _touchAttackTrigger: {fileID: 8551576845787069730}
+  _attackTrigger: {fileID: 0}
   _isFacingRight: 1
   _wallCheck: {fileID: 0}
   _edgeCheck: {fileID: 0}
   _layerIsGrounded:
     serializedVersion: 2
     m_Bits: 64
-  _myPersonalAttackCooldownTime: 3
+  _layerPlatforms:
+    serializedVersion: 2
+    m_Bits: 2048
+  _isEnemyRespawnable: 0
 --- !u!1 &2165802840558805138
 GameObject:
   m_ObjectHideFlags: 0

@@ -72,6 +72,7 @@ public class PlayerScript : MonoBehaviour {
 
     [SerializeField] private Transform _playerFeetPos;
     [SerializeField] private LayerMask _layerIsGrounded;
+    [SerializeField] private LayerMask _layerPlatforms;
     private float _checkFeetRadius;
     private float _checkFeetRadiusDivider = 19f; //13.3f;
     private bool _isGrounded;
@@ -329,7 +330,7 @@ public class PlayerScript : MonoBehaviour {
             transform.position = (Vector2)transform.position + _playerMoveSpeed * Time.deltaTime * moveDir * _playerMoveSpeedMultiplier * _turboSpeedMultiplier * _wallIsInFrontSpeedMultiplier;
         }
 
-        _isGrounded = Physics2D.OverlapCircle(_playerFeetPos.position, _checkFeetRadius, _layerIsGrounded);
+        IsGroundedCheck();
 
         if (!_isGrounded && !_isTryingToJump) {
             _jumpState = JumpState.Falling;
@@ -558,6 +559,20 @@ public class PlayerScript : MonoBehaviour {
 
     #region JumpRelatedFunctions
 
+    private void IsGroundedCheck() {
+        if (Physics2D.OverlapCircle(_playerFeetPos.position, _checkFeetRadius, _layerIsGrounded))
+        {
+            _isGrounded = true;
+        }
+        else if (Physics2D.OverlapCircle(_playerFeetPos.position, _checkFeetRadius, _layerPlatforms))
+        {
+            _isGrounded = true;
+        }
+        else {
+            _isGrounded = false;
+        }
+    }
+
     private void IncrementMaxAvailableAirJumps(int incrementBy) {
         _maxAvailableAirJumps += incrementBy;
     }
@@ -624,7 +639,7 @@ public class PlayerScript : MonoBehaviour {
         if (!_canTurbo || !_isTryingToTurbo)
         {
             RecoverTurboSpeedOverTime();
-            if (_currentTurboTime > 0)
+            if (_currentTurboTime > 0 && _statusState != StatusState.Paralyzed && _statusState != StatusState.Frozen && _statusState != StatusState.Slimed)
             {
                 _canTurbo = true;
             }

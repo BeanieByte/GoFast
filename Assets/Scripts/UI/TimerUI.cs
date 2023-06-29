@@ -5,17 +5,31 @@ using UnityEngine;
 
 public class TimerUI : MonoBehaviour
 {
-    private TextMeshProUGUI _myText;
+    [SerializeField] private TextMeshProUGUI _activeTimerText;
+
+    [SerializeField] private TextMeshProUGUI _recommendedTimeText;
 
     private void Awake() {
-        _myText = GetComponentInChildren<TextMeshProUGUI>();
+        _activeTimerText = GetComponentInChildren<TextMeshProUGUI>();
     }
 
     private void Start() {
         TimerManager.Instance.OnTimerChanged += Instance_OnTimerChanged;
+
+        TimerManager.Instance.OnRecommendedTimeChanged += Instance_OnRecommendedTimeChanged;
+    }
+
+    private void Instance_OnRecommendedTimeChanged(object sender, TimerManager.OnRecommendedTimeChangedEventArgs e)
+    {
+        string temp = e.recommendedTimeText.Replace(",", ":");
+        //temp = e.recommendedTimeText.Replace(".", ":");
+        _recommendedTimeText.text = temp;
     }
 
     private void Instance_OnTimerChanged(object sender, TimerManager.OnTimerChangedEventArgs e) {
-        _myText.text = e.currentTimeText.Replace("," , ":");
+        
+        string temp = e.currentTimeText.Replace(",", ":");
+        //temp = e.currentTimeText.Replace(".", ":");
+        _activeTimerText.text = temp;
     }
 }

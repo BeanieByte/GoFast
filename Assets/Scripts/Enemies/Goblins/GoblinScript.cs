@@ -60,7 +60,10 @@ public class GoblinScript : EnemyBaseScript
 
     protected override void Walk() {
 
-        CanIWalk(true);
+        if(_currentHealth > 0)
+        {
+            CanIWalk(true);
+        }
 
         if (!_isPlayerWithinRange) {
             CanIWalk(false);
@@ -104,7 +107,7 @@ public class GoblinScript : EnemyBaseScript
 
 
     protected override void CheckToFlipIfIsEdgeOrHasWall() {
-        if (!Physics2D.OverlapCircle(_edgeCheck.position, _checkRadius, _layerIsGrounded) || Physics2D.OverlapCircle(_wallCheck.position, _checkRadius, _layerIsGrounded)) {
+        if ((!Physics2D.OverlapCircle(_edgeCheck.position, _checkRadius, _layerIsGrounded) && !Physics2D.OverlapCircle(_edgeCheck.position, _checkRadius, _layerPlatforms)) || Physics2D.OverlapCircle(_wallCheck.position, _checkRadius, _layerIsGrounded)) {
             CanIWalk(false);
             _myVisual.SetIsWalkingBoolFalse();
         };
