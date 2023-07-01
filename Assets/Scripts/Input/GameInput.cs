@@ -22,7 +22,8 @@ public class GameInput : MonoBehaviour
     public event EventHandler OnTurboPressed;
     public event EventHandler OnTurboCanceled;
 
-    public event EventHandler OnAttackPressed;
+    public event EventHandler OnAttackHeld;
+    public event EventHandler OnAttackReleased;
 
     private KeyCode _leftKey01;
     private KeyCode _leftKey02;
@@ -30,9 +31,6 @@ public class GameInput : MonoBehaviour
     private KeyCode _rightKey02;
 
     private bool _gameMoveInputIsTryingToGoRight;
-
-    public event EventHandler OnMovePerformed;
-    public event EventHandler OnMoveCancelled;
 
     private void Awake() {
         if (Instance != null && Instance != this) 
@@ -54,16 +52,7 @@ public class GameInput : MonoBehaviour
         _gameInputActions.Player.Turbo.canceled += Turbo_canceled;
 
         _gameInputActions.Player.Attack.performed += Attack_performed;
-    }
-
-    private void Move_performed(InputAction.CallbackContext obj) {
-        if (!GameManager.Instance.IsGamePlaying()) return;
-        OnMovePerformed?.Invoke(this, EventArgs.Empty);
-    }
-
-    private void Move_canceled(InputAction.CallbackContext obj) {
-        if (!GameManager.Instance.IsGamePlaying()) return;
-        OnMoveCancelled?.Invoke(this, EventArgs.Empty);
+        _gameInputActions.Player.Attack.canceled += Attack_canceled;
     }
 
     private void Jump_started(InputAction.CallbackContext obj) {
@@ -93,7 +82,13 @@ public class GameInput : MonoBehaviour
 
     private void Attack_performed(InputAction.CallbackContext obj) {
         if (!GameManager.Instance.IsGamePlaying()) return;
-        OnAttackPressed?.Invoke(this, EventArgs.Empty);
+        OnAttackHeld?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void Attack_canceled(InputAction.CallbackContext obj)
+    {
+        if (!GameManager.Instance.IsGamePlaying()) return;
+        OnAttackReleased?.Invoke(this, EventArgs.Empty);
     }
 
     private void Start() {

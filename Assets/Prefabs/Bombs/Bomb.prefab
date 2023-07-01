@@ -83,7 +83,7 @@ SortingGroup:
   m_GameObject: {fileID: 2991688596676834060}
   m_Enabled: 1
   m_SortingLayerID: 1561608559
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 10
 --- !u!114 &2991688596676834063
 MonoBehaviour:

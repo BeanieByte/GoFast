@@ -40,6 +40,7 @@ public class PlayerScript : MonoBehaviour {
 
     [SerializeField] private float _highestJumpForce = 7f;
     [SerializeField] private float _lowestJumpForce = 9f;
+    private float _lowestJumpForceDefault = 9f;
     private float _currentJumpForce;
 
     [SerializeField] private int _maxAvailableAirJumps = 1;
@@ -49,6 +50,7 @@ public class PlayerScript : MonoBehaviour {
     private float _maxUntilCanAttackCooldown = 1f;
     private float _currentCanAttackCooldown = 0f;
     private bool _canAttack = true;
+    private bool _isTryingToAttack = false;
 
     private bool _isInvincible = false;
     [SerializeField] private GameObject _invincibleTouchAttackTrigger;
@@ -81,6 +83,18 @@ public class PlayerScript : MonoBehaviour {
     private bool _isTryingToJump = false;
     private float _maxJumpTime = 0.3f;
     private float _jumpTime = 0f;
+
+    private bool _jumpedOnBounceable;
+
+    private float _jumpApexModifierMaxTime = 0.15f;
+    private float _jumpApexModifierCurrentTime;
+    private float _jumpApexModifierMaxPlayerForce = 1.5f;
+    private float _jumpApexModifierDefaultPlayerForce = 1.2f;
+    private float _jumpApexModifierCurrentPlayerForce;
+    private bool _jumpApexModifierPlayed;
+
+    private float _jumpApexModifierMinimumTimeToEnable = 0.1f;
+    private float _jumpApexModifierCurrentTimeToEnable;
 
     public event EventHandler OnPlayerJumped;
     public event EventHandler OnPlayerAirJumped;
@@ -186,7 +200,8 @@ public class PlayerScript : MonoBehaviour {
         GameInput.Instance.OnTurboPressed += Instance_OnTurboPressed;
         GameInput.Instance.OnTurboCanceled += Instance_OnTurboCanceled;
 
-        GameInput.Instance.OnAttackPressed += Instance_OnAttackPressed;
+        GameInput.Instance.OnAttackHeld += Instance_OnAttackPressed;
+        GameInput.Instance.OnAttackReleased += Instance_OnAttackReleased;
 
         _playerAttack.OnKillingEnemy += _playerAttack_OnKillingEnemy;
         _playerTouchAttack.OnInvincibleTouchKillingEnemy += _playerTouchAttack_OnInvincibleTouchKillingEnemy;
@@ -215,6 +230,14 @@ public class PlayerScript : MonoBehaviour {
 
         _canJump = true;
 
+        _jumpedOnBounceable = false;
+
+        _jumpApexModifierCurrentTime = _jumpApexModifierMaxTime;
+        _jumpApexModifierCurrentPlayerForce = _jumpApexModifierDefaultPlayerForce;
+        _jumpApexModifierPlayed = false;
+
+        _jumpApexModifierCurrentTimeToEnable = 0f;
+
         OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
             health = _currentHealth
         });
@@ -240,6 +263,7 @@ public class PlayerScript : MonoBehaviour {
         }) ;
 
         _canAttack = true;
+        _isTryingToAttack = false;
 
         _currentPoisonTimer = _defaultPoisonTimer;
     }
@@ -257,31 +281,18 @@ public class PlayerScript : MonoBehaviour {
 
     private void Instance_OnJumpStarted(object sender, System.EventArgs e) {
         if (!_canJump) { return; }
-        if (_jumpState == JumpState.Grounded) {
-            _jumpState = JumpState.Jumping;
-            OnPlayerJumped?.Invoke(this, EventArgs.Empty);
-        } else if (_jumpState == JumpState.Falling && _currentAvailableAirJumps > 0) {
-            StopYVelocity();
-            _jumpState = JumpState.AirJumping;
-            _currentAvailableAirJumps--;
-            OnPlayerAirJumped?.Invoke(this, EventArgs.Empty);
-            OnAirJumpCounterChanged?.Invoke(this, new OnAirJumpCounterChangedEventArgs {
-                airJumps = _currentAvailableAirJumps
-            });
-        }
+        Jump();
     }
 
     private void Instance_OnJumpPressed(object sender, System.EventArgs e) {
         if (!_isTryingToJump && _canJump) {
             _isTryingToJump = true;
-            _jumpTime = 0f;
         }
     }
 
     private void Instance_OnJumpCanceled(object sender, System.EventArgs e) {
         if (_isTryingToJump) {
             _isTryingToJump = false;
-            _jumpTime = 0f;
         }
     }
 
@@ -300,8 +311,17 @@ public class PlayerScript : MonoBehaviour {
     }
 
     private void Instance_OnAttackPressed(object sender, System.EventArgs e) {
-        if (_canAttack) {
-            Attack();
+        if(!_isTryingToAttack)
+        {
+            _isTryingToAttack = true;
+        }
+    }
+
+    private void Instance_OnAttackReleased(object sender, EventArgs e)
+    {
+        if (_isTryingToAttack)
+        {
+            _isTryingToAttack = false;
         }
     }
 
@@ -327,14 +347,10 @@ public class PlayerScript : MonoBehaviour {
         CheckIfWallIsRightInFront();
 
         if (!_isFrozen) {
-            transform.position = (Vector2)transform.position + _playerMoveSpeed * Time.deltaTime * moveDir * _playerMoveSpeedMultiplier * _turboSpeedMultiplier * _wallIsInFrontSpeedMultiplier;
+            transform.position = (Vector2)transform.position + _playerMoveSpeed * Time.deltaTime * moveDir * _playerMoveSpeedMultiplier * _turboSpeedMultiplier * _wallIsInFrontSpeedMultiplier * _jumpApexModifierCurrentPlayerForce;
         }
 
         IsGroundedCheck();
-
-        if (!_isGrounded && !_isTryingToJump) {
-            _jumpState = JumpState.Falling;
-        }
 
         if (moveDir.x < 0 && _playerFacingRight && !_isFrozen) {
             _playerVisual.Flip();
@@ -346,7 +362,12 @@ public class PlayerScript : MonoBehaviour {
 
         TurboHandler();
 
-        if (!_canAttack && _statusState != StatusState.Paralyzed || _statusState != StatusState.Frozen) {
+        if (_canAttack && _isTryingToAttack)
+        {
+            Attack();
+        }
+
+        if (!_canAttack && (_statusState != StatusState.Paralyzed || _statusState != StatusState.Frozen)) {
             _currentCanAttackCooldown += Time.deltaTime;
             if (_currentCanAttackCooldown >= _maxUntilCanAttackCooldown) {
                 _canAttack = true;
@@ -419,23 +440,43 @@ public class PlayerScript : MonoBehaviour {
         switch (_jumpState) {
             case JumpState.Grounded:
                 RecoverAirJumpsInstantly();
+                if (!_isGrounded && !_jumpedOnBounceable) {
+                    _jumpState = JumpState.Falling;
+                }
                 break;
             case JumpState.Jumping:
-                _jumpTime += Time.deltaTime;
-                if (_jumpTime <= _maxJumpTime) {
-                    HandleJumpPressingOverTime();
-                } else _jumpState = JumpState.Falling;
-
+                HandleJumping();
+                if(PlayersYVelocity() < 0)
+                {
+                    if (_jumpedOnBounceable)
+                    {
+                        _jumpedOnBounceable = false;
+                    }
+                    if (_lowestJumpForce != _lowestJumpForceDefault)
+                    {
+                        _lowestJumpForce = _lowestJumpForceDefault;
+                    }
+                    _jumpState = JumpState.Falling;
+                }
                 break;
             case JumpState.AirJumping:
-                _jumpTime += Time.deltaTime;
-                if (_jumpTime <= _maxJumpTime) {
-                    HandleJumpPressingOverTime();
-                } else
+                HandleJumping();
+                if (PlayersYVelocity() < 0)
+                {
                     _jumpState = JumpState.Falling;
+                }
                 break;
             case JumpState.Falling:
-                if (_isGrounded) {
+                if(_jumpApexModifierCurrentTimeToEnable >= _jumpApexModifierMinimumTimeToEnable)
+                {
+                    HandleJumpApexModifiers();
+                }
+                if (_jumpTime != 0f)
+                {
+                    _jumpTime = 0f;
+                }
+                if (_isGrounded)
+                {
                     _jumpState = JumpState.Grounded;
                 }
                 break;
@@ -487,7 +528,6 @@ public class PlayerScript : MonoBehaviour {
                 StopPlayerWasSlimed();
                 break;
         }
-
     }
 
     #endregion
@@ -495,13 +535,13 @@ public class PlayerScript : MonoBehaviour {
     #region PublicFunctions
 
     public void BounceOffCrush(float jumpBoostMultiplier) {
+        _jumpedOnBounceable = true;
+        _jumpState = JumpState.Grounded;
         EnemyManager.Instance.IncreaseKilledEnemiesCounter();
         RecoverTurboSpeedInstantly();
         RecoverAirJumpsInstantly();
-        _currentPlayerVelocity.y = _lowestJumpForce * jumpBoostMultiplier;
-        _jumpState = JumpState.Jumping;
-        OnPlayerJumped?.Invoke(this, EventArgs.Empty);
-        SetPlayerRigidBodyVelocity(_currentPlayerVelocity);
+        _lowestJumpForce = _lowestJumpForceDefault * jumpBoostMultiplier;
+        Jump();
     }
 
     public void Damage(int enemyAttackPower) {
@@ -559,6 +599,39 @@ public class PlayerScript : MonoBehaviour {
 
     #region JumpRelatedFunctions
 
+    private void Jump() {
+        if (_jumpState == JumpState.Grounded)
+        {
+            _jumpApexModifierCurrentTimeToEnable = 0f;
+            _jumpState = JumpState.Jumping;
+            OnPlayerJumped?.Invoke(this, EventArgs.Empty);
+        }
+        else if ((_jumpState == JumpState.Falling || _jumpState == JumpState.Jumping) && _currentAvailableAirJumps > 0)
+        {
+            if (_jumpedOnBounceable)
+            {
+                _jumpedOnBounceable = false;
+            }
+            if(_lowestJumpForce != _lowestJumpForceDefault)
+            {
+                _lowestJumpForce = _lowestJumpForceDefault;
+            }
+            if (_jumpTime != 0f)
+            {
+                _jumpTime = 0f;
+            }
+            _jumpApexModifierCurrentTimeToEnable = 0f;
+            _currentAvailableAirJumps--;
+            OnPlayerAirJumped?.Invoke(this, EventArgs.Empty);
+            OnAirJumpCounterChanged?.Invoke(this, new OnAirJumpCounterChangedEventArgs
+            {
+                airJumps = _currentAvailableAirJumps
+            });
+            _jumpState = JumpState.AirJumping;
+        }
+        else return;
+    }
+
     private void IsGroundedCheck() {
         if (Physics2D.OverlapCircle(_playerFeetPos.position, _checkFeetRadius, _layerIsGrounded))
         {
@@ -568,9 +641,69 @@ public class PlayerScript : MonoBehaviour {
         {
             _isGrounded = true;
         }
-        else {
+        else 
+        {
             _isGrounded = false;
         }
+    }
+
+    private void HandleJumping()
+    {
+
+        if (_jumpApexModifierPlayed)
+        {
+            _jumpApexModifierPlayed = false;
+        }
+        if (_jumpApexModifierCurrentPlayerForce > _jumpApexModifierDefaultPlayerForce)
+        {
+            _jumpApexModifierCurrentPlayerForce = _jumpApexModifierDefaultPlayerForce;
+        }
+        if (_jumpApexModifierCurrentTime <= 0)
+        {
+            _jumpApexModifierCurrentTime = _jumpApexModifierMaxTime;
+        }
+
+        if (_isTryingToJump)
+        {
+            _jumpApexModifierCurrentTimeToEnable += Time.deltaTime;
+        }
+
+        _jumpTime += Time.deltaTime;
+
+        if (_jumpedOnBounceable)
+        {
+            HandleInstantJump();
+        }
+
+        if (_jumpTime <= _maxJumpTime && _isTryingToJump && !_jumpedOnBounceable)
+        {
+            HandleJumpPressingOverTime();
+        }
+    }
+
+    private void HandleJumpApexModifiers()
+    {
+        if (_jumpApexModifierPlayed)
+        {
+            _jumpApexModifierCurrentTimeToEnable = 0f;
+            return;
+        }
+
+        _jumpApexModifierCurrentTime -= Time.deltaTime;
+
+        if (_jumpApexModifierCurrentTime > 0)
+        {
+            StopYVelocity();
+
+            if (_jumpApexModifierCurrentPlayerForce != _jumpApexModifierMaxPlayerForce)
+            {
+                _jumpApexModifierCurrentPlayerForce = _jumpApexModifierMaxPlayerForce;
+            }
+
+            return;
+        }
+        _jumpApexModifierCurrentPlayerForce = _jumpApexModifierDefaultPlayerForce;
+        _jumpApexModifierPlayed = true;
     }
 
     private void IncrementMaxAvailableAirJumps(int incrementBy) {
@@ -586,7 +719,28 @@ public class PlayerScript : MonoBehaviour {
         }
     }
 
-    private void HandleJumpPressingOverTime() {
+    private void HandleInstantJump()
+    {
+        float normalizedJumpTime = Mathf.Clamp01(_jumpTime / _maxJumpTime);
+        _currentJumpForce = Mathf.Lerp(_lowestJumpForce, _highestJumpForce, normalizedJumpTime);
+
+        _currentPlayerVelocity.y = _currentJumpForce;
+        SetPlayerRigidBodyVelocity(_currentPlayerVelocity);
+
+        if (_jumpTime <= _maxJumpTime) 
+        { 
+            return; 
+        }
+
+        if (_jumpedOnBounceable)
+        {
+            _jumpApexModifierCurrentTimeToEnable = _jumpApexModifierMinimumTimeToEnable;
+            _jumpedOnBounceable = false;
+        }
+    }
+
+    private void HandleJumpPressingOverTime()
+    {
         float normalizedJumpTime = Mathf.Clamp01(_jumpTime / _maxJumpTime);
         _currentJumpForce = Mathf.Lerp(_lowestJumpForce, _highestJumpForce, normalizedJumpTime);
 

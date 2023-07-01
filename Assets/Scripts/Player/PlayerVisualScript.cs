@@ -181,10 +181,10 @@ public class PlayerVisualScript : MonoBehaviour
     public void PlayDeathAnim() {
         _playerAnimator.SetBool(isAlive_CONST, false);
         _playerAnimator.SetTrigger(die_CONST);
-        GameManager.Instance.SetGameOver();
     }
 
     public void Die() {
+        GameManager.Instance.SetGameOver();
         Destroy(_playerLogicScript.gameObject);
     }
 
