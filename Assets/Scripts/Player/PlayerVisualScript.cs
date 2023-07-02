@@ -65,6 +65,7 @@ public class PlayerVisualScript : MonoBehaviour
 
     private void Start()
     {
+        _animAirState = AnimAirState.Grounded;
         _playerAnimator.SetBool(isAlive_CONST, true);
         
         _playerLogicScript.OnRunAnimSpeedChange += _playerLogicScript_OnRunAnimSpeedChange;
@@ -110,11 +111,11 @@ public class PlayerVisualScript : MonoBehaviour
         {
             _animAirState = AnimAirState.Grounded;
         }
-        else if (_playerLogicScript.PlayersYVelocity() > 0)
+        if (_playerLogicScript.PlayersYVelocity() > 0)
         {
             _animAirState = AnimAirState.Jumping;
         }
-        else if (_playerLogicScript.PlayersYVelocity() < 0)
+        if (_playerLogicScript.PlayersYVelocity() < 0)
         {
             _animAirState = AnimAirState.Falling;
         }

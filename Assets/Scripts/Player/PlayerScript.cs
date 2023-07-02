@@ -96,6 +96,11 @@ public class PlayerScript : MonoBehaviour {
     private float _jumpApexModifierMinimumTimeToEnable = 0.1f;
     private float _jumpApexModifierCurrentTimeToEnable;
 
+    private float _jumpBufferingMaxTime = 0.2f;
+    private float _jumpBufferingCurrentTime;
+    private bool _isBufferingJump;
+    private bool _canBufferedJumpBeUsed;
+
     public event EventHandler OnPlayerJumped;
     public event EventHandler OnPlayerAirJumped;
 
@@ -237,6 +242,10 @@ public class PlayerScript : MonoBehaviour {
         _jumpApexModifierPlayed = false;
 
         _jumpApexModifierCurrentTimeToEnable = 0f;
+
+        _jumpBufferingCurrentTime = 0f;
+        _isBufferingJump = false;
+        _canBufferedJumpBeUsed = false;
 
         OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
             health = _currentHealth
@@ -385,6 +394,8 @@ public class PlayerScript : MonoBehaviour {
             }
         }
 
+        
+
         JumpStateMachine();
 
         StatusStateMachine();
@@ -439,15 +450,26 @@ public class PlayerScript : MonoBehaviour {
 
         switch (_jumpState) {
             case JumpState.Grounded:
+
                 RecoverAirJumpsInstantly();
+
+                if(_isTryingToJump && _canBufferedJumpBeUsed && _canJump)
+                {
+                    Jump();
+                }
+
                 if (!_isGrounded && !_jumpedOnBounceable) {
                     _jumpState = JumpState.Falling;
                 }
+
                 break;
             case JumpState.Jumping:
+
                 HandleJumping();
-                if(PlayersYVelocity() < 0)
+
+                if (PlayersYVelocity() <= 0)
                 {
+
                     if (_jumpedOnBounceable)
                     {
                         _jumpedOnBounceable = false;
@@ -458,27 +480,55 @@ public class PlayerScript : MonoBehaviour {
                     }
                     _jumpState = JumpState.Falling;
                 }
+
                 break;
             case JumpState.AirJumping:
+
                 HandleJumping();
-                if (PlayersYVelocity() < 0)
+
+                if (PlayersYVelocity() <= 0)
                 {
                     _jumpState = JumpState.Falling;
                 }
+
                 break;
             case JumpState.Falling:
+
                 if(_jumpApexModifierCurrentTimeToEnable >= _jumpApexModifierMinimumTimeToEnable)
                 {
                     HandleJumpApexModifiers();
                 }
+
                 if (_jumpTime != 0f)
                 {
                     _jumpTime = 0f;
                 }
+
+                if (_isTryingToJump && _jumpBufferingCurrentTime <= _jumpBufferingMaxTime)
+                {
+                    _isBufferingJump = true;
+                }
+
+                if (_isBufferingJump)
+                {
+                    if (_jumpBufferingCurrentTime <= _jumpBufferingMaxTime)
+                    {
+                        _canBufferedJumpBeUsed = true;
+                        _jumpBufferingCurrentTime += Time.deltaTime;
+                    }
+                    else if (_jumpBufferingCurrentTime > _jumpBufferingMaxTime)
+                    {
+                        _canBufferedJumpBeUsed = false;
+                        _isBufferingJump = false;
+                    }
+                }
+
                 if (_isGrounded)
                 {
+                    StopYVelocity();
                     _jumpState = JumpState.Grounded;
                 }
+
                 break;
         }
 
@@ -599,13 +649,16 @@ public class PlayerScript : MonoBehaviour {
 
     #region JumpRelatedFunctions
 
-    private void Jump() {
+    private void Jump()
+    {
+
         if (_jumpState == JumpState.Grounded)
         {
             _jumpApexModifierCurrentTimeToEnable = 0f;
-            _jumpState = JumpState.Jumping;
             OnPlayerJumped?.Invoke(this, EventArgs.Empty);
+            _jumpState = JumpState.Jumping;
         }
+
         else if ((_jumpState == JumpState.Falling || _jumpState == JumpState.Jumping) && _currentAvailableAirJumps > 0)
         {
             if (_jumpedOnBounceable)
@@ -629,7 +682,14 @@ public class PlayerScript : MonoBehaviour {
             });
             _jumpState = JumpState.AirJumping;
         }
-        else return;
+
+        if (_jumpBufferingCurrentTime != _jumpBufferingMaxTime)
+        {
+            _canBufferedJumpBeUsed = false;
+            _isBufferingJump = false;
+            _jumpBufferingCurrentTime = 0f;
+        }
+
     }
 
     private void IsGroundedCheck() {
@@ -721,22 +781,33 @@ public class PlayerScript : MonoBehaviour {
 
     private void HandleInstantJump()
     {
-        float normalizedJumpTime = Mathf.Clamp01(_jumpTime / _maxJumpTime);
-        _currentJumpForce = Mathf.Lerp(_lowestJumpForce, _highestJumpForce, normalizedJumpTime);
+        _currentJumpForce = _lowestJumpForce;
 
         _currentPlayerVelocity.y = _currentJumpForce;
         SetPlayerRigidBodyVelocity(_currentPlayerVelocity);
-
-        if (_jumpTime <= _maxJumpTime) 
-        { 
-            return; 
-        }
 
         if (_jumpedOnBounceable)
         {
             _jumpApexModifierCurrentTimeToEnable = _jumpApexModifierMinimumTimeToEnable;
             _jumpedOnBounceable = false;
         }
+
+        //float normalizedJumpTime = Mathf.Clamp01(_jumpTime / _maxJumpTime);
+        //_currentJumpForce = Mathf.Lerp(_lowestJumpForce, _highestJumpForce, normalizedJumpTime);
+
+        //_currentPlayerVelocity.y = _currentJumpForce;
+        //SetPlayerRigidBodyVelocity(_currentPlayerVelocity);
+
+        //if (_jumpTime <= _maxJumpTime)
+        //{
+        //    return;
+        //}
+
+        //if (_jumpedOnBounceable)
+        //{
+        //    _jumpApexModifierCurrentTimeToEnable = _jumpApexModifierMinimumTimeToEnable;
+        //    _jumpedOnBounceable = false;
+        //}
     }
 
     private void HandleJumpPressingOverTime()
