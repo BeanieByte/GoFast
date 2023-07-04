@@ -101,6 +101,11 @@ public class PlayerScript : MonoBehaviour {
     private bool _isBufferingJump;
     private bool _canBufferedJumpBeUsed;
 
+    private float _jumpCoyoteMaxTime = 0.15f;
+    private float _jumpCoyoteCurrentTime;
+    private bool _canStartJumpCoyoteTime;
+    private bool _isWithinJumpCoyoteTime;
+
     public event EventHandler OnPlayerJumped;
     public event EventHandler OnPlayerAirJumped;
 
@@ -246,6 +251,10 @@ public class PlayerScript : MonoBehaviour {
         _jumpBufferingCurrentTime = 0f;
         _isBufferingJump = false;
         _canBufferedJumpBeUsed = false;
+
+        _jumpCoyoteCurrentTime = _jumpCoyoteMaxTime;
+        _canStartJumpCoyoteTime = false;
+        _isWithinJumpCoyoteTime = false;
 
         OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
             health = _currentHealth
@@ -394,7 +403,19 @@ public class PlayerScript : MonoBehaviour {
             }
         }
 
-        
+        if(_canStartJumpCoyoteTime)
+        {
+            _jumpCoyoteCurrentTime -= Time.deltaTime;
+            if(_jumpCoyoteCurrentTime < 0)
+            {
+                _isWithinJumpCoyoteTime = false;
+                _canStartJumpCoyoteTime = false;
+            }
+            else
+            {
+                _isWithinJumpCoyoteTime = true;
+            }
+        }
 
         JumpStateMachine();
 
@@ -459,6 +480,7 @@ public class PlayerScript : MonoBehaviour {
                 }
 
                 if (!_isGrounded && !_jumpedOnBounceable) {
+                    _canStartJumpCoyoteTime = true;
                     _jumpState = JumpState.Falling;
                 }
 
@@ -467,7 +489,7 @@ public class PlayerScript : MonoBehaviour {
 
                 HandleJumping();
 
-                if (PlayersYVelocity() <= 0)
+                if (PlayersYVelocity() <= 0 && !_isWithinJumpCoyoteTime)
                 {
 
                     if (_jumpedOnBounceable)
@@ -526,6 +548,12 @@ public class PlayerScript : MonoBehaviour {
                 if (_isGrounded)
                 {
                     StopYVelocity();
+
+
+                    if (_jumpCoyoteCurrentTime != _jumpCoyoteMaxTime)
+                    {
+                        _jumpCoyoteCurrentTime = _jumpCoyoteMaxTime;
+                    }
                     _jumpState = JumpState.Grounded;
                 }
 
@@ -652,7 +680,7 @@ public class PlayerScript : MonoBehaviour {
     private void Jump()
     {
 
-        if (_jumpState == JumpState.Grounded)
+        if (_jumpState == JumpState.Grounded || (_jumpState == JumpState.Falling && _isWithinJumpCoyoteTime))
         {
             _jumpApexModifierCurrentTimeToEnable = 0f;
             OnPlayerJumped?.Invoke(this, EventArgs.Empty);
