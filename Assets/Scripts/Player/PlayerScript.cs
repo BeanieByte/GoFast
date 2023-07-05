@@ -37,6 +37,7 @@ public class PlayerScript : MonoBehaviour {
     [SerializeField] private Transform _playerWallCheck;
     private float _wallIsInFrontSpeedMultiplier = 1f;
     private float _wallCheckRayOffset = 0.005f;
+    private bool _isWallRightInFrontOfPlayer;
 
     [SerializeField] private float _highestJumpForce = 7f;
     [SerializeField] private float _lowestJumpForce = 9f;
@@ -105,6 +106,17 @@ public class PlayerScript : MonoBehaviour {
     private float _jumpCoyoteCurrentTime;
     private bool _canStartJumpCoyoteTime;
     private bool _isWithinJumpCoyoteTime;
+
+    private float _minFallingYVelocity = -18f;
+
+    [SerializeField] private Transform _playerSideEdgeDetectionCheck;
+    [SerializeField] private Transform _playerUpperEdgeDetectionRightCheck;
+    [SerializeField] private Transform _playerUpperEdgeDetectionLeftCheck;
+    private float _jumpNudgeSpeed = 0.05f;
+    private bool _isNudgingOfUpperEdges;
+    private bool _startedUpperEdgeNudging;
+    private float _jumpUpperEdgeDetectionRadius;
+    private float _jumpUpperEdgeDetectionRadiusDivider = 50f;
 
     public event EventHandler OnPlayerJumped;
     public event EventHandler OnPlayerAirJumped;
@@ -217,6 +229,7 @@ public class PlayerScript : MonoBehaviour {
         _playerTouchAttack.OnInvincibleTouchKillingEnemy += _playerTouchAttack_OnInvincibleTouchKillingEnemy;
 
         _checkFeetRadius = transform.localScale.x / _checkFeetRadiusDivider;
+        _jumpUpperEdgeDetectionRadius = transform.localScale.x / _jumpUpperEdgeDetectionRadiusDivider;
 
         if (!_playerFacingRight) {
             _playerVisual.Flip();
@@ -232,6 +245,7 @@ public class PlayerScript : MonoBehaviour {
 
         _currentPlayerVelocity = _playerRigidBody.velocity;
         _wallIsInFrontSpeedMultiplier = 1f;
+        _isWallRightInFrontOfPlayer = false;
 
         _maxHealth = _maxHealthDefault;
         _currentHealth = _maxHealth;
@@ -255,6 +269,9 @@ public class PlayerScript : MonoBehaviour {
         _jumpCoyoteCurrentTime = _jumpCoyoteMaxTime;
         _canStartJumpCoyoteTime = false;
         _isWithinJumpCoyoteTime = false;
+
+        _isNudgingOfUpperEdges = false;
+        _startedUpperEdgeNudging = false;
 
         OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
             health = _currentHealth
@@ -347,6 +364,8 @@ public class PlayerScript : MonoBehaviour {
 
     private void OnDrawGizmos() {
         Gizmos.DrawSphere(_playerFeetPos.position, _checkFeetRadius);
+        Gizmos.DrawSphere(_playerUpperEdgeDetectionLeftCheck.position, _jumpUpperEdgeDetectionRadius);
+        Gizmos.DrawSphere(_playerUpperEdgeDetectionRightCheck.position, _jumpUpperEdgeDetectionRadius);
     }
 
     private void FixedUpdate() {
@@ -364,6 +383,10 @@ public class PlayerScript : MonoBehaviour {
 
         CheckIfWallIsRightInFront();
 
+        if (_isWallRightInFrontOfPlayer) {
+            JumpSideEdgeDetection();
+        }
+
         if (!_isFrozen) {
             transform.position = (Vector2)transform.position + _playerMoveSpeed * Time.deltaTime * moveDir * _playerMoveSpeedMultiplier * _turboSpeedMultiplier * _wallIsInFrontSpeedMultiplier * _jumpApexModifierCurrentPlayerForce;
         }
@@ -380,12 +403,12 @@ public class PlayerScript : MonoBehaviour {
 
         TurboHandler();
 
-        if (_canAttack && _isTryingToAttack)
+        if (_canAttack && _isTryingToAttack && _statusState != StatusState.Paralyzed && _statusState != StatusState.Frozen)
         {
             Attack();
         }
 
-        if (!_canAttack && (_statusState != StatusState.Paralyzed || _statusState != StatusState.Frozen)) {
+        if (!_canAttack && _statusState != StatusState.Paralyzed && _statusState != StatusState.Frozen) {
             _currentCanAttackCooldown += Time.deltaTime;
             if (_currentCanAttackCooldown >= _maxUntilCanAttackCooldown) {
                 _canAttack = true;
@@ -459,9 +482,20 @@ public class PlayerScript : MonoBehaviour {
         RaycastHit2D hit = Physics2D.Linecast(rayOrigin, rayEnd, rayLayerMask);
 
         if (hit) {
-            _wallIsInFrontSpeedMultiplier = 0f;
+            PlatformEffector2D isNotAWall = hit.transform.gameObject.GetComponent<PlatformEffector2D>();
+
+            if (isNotAWall) {
+                _wallIsInFrontSpeedMultiplier = 1f;
+                _isWallRightInFrontOfPlayer = false;
+            } 
+            else {
+                _wallIsInFrontSpeedMultiplier = 0f;
+                _isWallRightInFrontOfPlayer = true;
+            }
+
         } else {
             _wallIsInFrontSpeedMultiplier = 1f;
+            _isWallRightInFrontOfPlayer = false;
         }
     }
 
@@ -487,9 +521,11 @@ public class PlayerScript : MonoBehaviour {
                 break;
             case JumpState.Jumping:
 
+                JumpUpperEdgeDetection();
+
                 HandleJumping();
 
-                if (PlayersYVelocity() <= 0 && !_isWithinJumpCoyoteTime)
+                if (PlayersYVelocity() <= 0 && !_isWithinJumpCoyoteTime && !_isNudgingOfUpperEdges)
                 {
 
                     if (_jumpedOnBounceable)
@@ -500,25 +536,41 @@ public class PlayerScript : MonoBehaviour {
                     {
                         _lowestJumpForce = _lowestJumpForceDefault;
                     }
+
+                    if (_startedUpperEdgeNudging) {
+                        _startedUpperEdgeNudging = false;
+                    }
+
                     _jumpState = JumpState.Falling;
                 }
 
                 break;
             case JumpState.AirJumping:
 
+                JumpUpperEdgeDetection();
+
                 HandleJumping();
 
-                if (PlayersYVelocity() <= 0)
+                if (PlayersYVelocity() <= 0 && !_isNudgingOfUpperEdges)
                 {
+                    if (_startedUpperEdgeNudging) {
+                        _startedUpperEdgeNudging = false;
+                    }
+
                     _jumpState = JumpState.Falling;
                 }
 
                 break;
             case JumpState.Falling:
 
-                if(_jumpApexModifierCurrentTimeToEnable >= _jumpApexModifierMinimumTimeToEnable)
+                if (_jumpApexModifierCurrentTimeToEnable >= _jumpApexModifierMinimumTimeToEnable)
                 {
                     HandleJumpApexModifiers();
+                }
+
+                if (_playerRigidBody.velocity.y <= _minFallingYVelocity) {
+                    _currentPlayerVelocity.y = _minFallingYVelocity;
+                    SetPlayerRigidBodyVelocity(_currentPlayerVelocity);
                 }
 
                 if (_jumpTime != 0f)
@@ -549,11 +601,21 @@ public class PlayerScript : MonoBehaviour {
                 {
                     StopYVelocity();
 
+                    if (_jumpApexModifierPlayed) {
+                        _jumpApexModifierPlayed = false;
+                    }
+                    if (_jumpApexModifierCurrentPlayerForce > _jumpApexModifierDefaultPlayerForce) {
+                        _jumpApexModifierCurrentPlayerForce = _jumpApexModifierDefaultPlayerForce;
+                    }
+                    if (_jumpApexModifierCurrentTime <= 0) {
+                        _jumpApexModifierCurrentTime = _jumpApexModifierMaxTime;
+                    }
 
                     if (_jumpCoyoteCurrentTime != _jumpCoyoteMaxTime)
                     {
                         _jumpCoyoteCurrentTime = _jumpCoyoteMaxTime;
                     }
+
                     _jumpState = JumpState.Grounded;
                 }
 
@@ -578,14 +640,12 @@ public class PlayerScript : MonoBehaviour {
                 break;
             case StatusState.Paralyzed:
                 _canTurbo = false;
-                _canAttack = false;
                 _statusTimer -= Time.deltaTime;
                 if (_statusTimer > 0) { return; }
                 StopPlayerWasParalyzed();
                 break;
             case StatusState.Frozen:
                 _isFrozen = true;
-                _canAttack = false;
                 _canJump = false;
                 _canTurbo = false;
                 _statusTimer -= Time.deltaTime;
@@ -756,7 +816,9 @@ public class PlayerScript : MonoBehaviour {
             _jumpApexModifierCurrentTimeToEnable += Time.deltaTime;
         }
 
-        _jumpTime += Time.deltaTime;
+        if (!_isNudgingOfUpperEdges) {
+            _jumpTime += Time.deltaTime;
+        }
 
         if (_jumpedOnBounceable)
         {
@@ -819,23 +881,6 @@ public class PlayerScript : MonoBehaviour {
             _jumpApexModifierCurrentTimeToEnable = _jumpApexModifierMinimumTimeToEnable;
             _jumpedOnBounceable = false;
         }
-
-        //float normalizedJumpTime = Mathf.Clamp01(_jumpTime / _maxJumpTime);
-        //_currentJumpForce = Mathf.Lerp(_lowestJumpForce, _highestJumpForce, normalizedJumpTime);
-
-        //_currentPlayerVelocity.y = _currentJumpForce;
-        //SetPlayerRigidBodyVelocity(_currentPlayerVelocity);
-
-        //if (_jumpTime <= _maxJumpTime)
-        //{
-        //    return;
-        //}
-
-        //if (_jumpedOnBounceable)
-        //{
-        //    _jumpApexModifierCurrentTimeToEnable = _jumpApexModifierMinimumTimeToEnable;
-        //    _jumpedOnBounceable = false;
-        //}
     }
 
     private void HandleJumpPressingOverTime()
@@ -845,6 +890,127 @@ public class PlayerScript : MonoBehaviour {
 
         _currentPlayerVelocity.y = _currentJumpForce;
         SetPlayerRigidBodyVelocity(_currentPlayerVelocity);
+    }
+
+    private void JumpSideEdgeDetection() {
+        Vector2 rayOrigin = _playerSideEdgeDetectionCheck.transform.position;
+
+        Vector2 rayEnd = new Vector2(rayOrigin.x + _wallCheckRayOffset, _playerSideEdgeDetectionCheck.transform.position.y);
+        if (_playerFacingRight) {
+            rayEnd.x = rayOrigin.x + _wallCheckRayOffset;
+        } else {
+            rayEnd.x = rayOrigin.x - _wallCheckRayOffset;
+        }
+
+        LayerMask rayLayerMask = _layerIsGrounded;
+
+        RaycastHit2D hit = Physics2D.Linecast(rayOrigin, rayEnd, rayLayerMask);
+
+        if (!hit && _jumpState == JumpState.Falling) {
+            StopYVelocity();
+            JumpSideEdgeNudge();
+        }
+    }
+
+    private void JumpSideEdgeNudge() {
+        transform.Translate(Vector2.up * _jumpNudgeSpeed);
+        if (!_isPlayerRunning) {
+            if (_playerFacingRight) {
+                transform.Translate(Vector2.right * _jumpNudgeSpeed);
+            }
+            else if (!_playerFacingRight) {
+                transform.Translate(Vector2.left * _jumpNudgeSpeed);
+            }
+        }
+    }
+
+    private void JumpUpperEdgeDetection() {
+
+        bool leftHit;
+        bool rightHit;
+
+        if (Physics2D.OverlapCircle(_playerUpperEdgeDetectionLeftCheck.position, _jumpUpperEdgeDetectionRadius, _layerIsGrounded)) {
+            leftHit = true;
+        } else {
+            leftHit = false;
+        }
+
+        if (Physics2D.OverlapCircle(_playerUpperEdgeDetectionRightCheck.position, _jumpUpperEdgeDetectionRadius, _layerIsGrounded)) {
+            rightHit = true;
+        } else {
+            rightHit = false;
+        }
+
+        if (leftHit && !rightHit) {
+
+            PlatformEffector2D leftIsAPlatform = Physics2D.OverlapCircle(_playerUpperEdgeDetectionLeftCheck.position, _jumpUpperEdgeDetectionRadius, _layerIsGrounded).transform.gameObject.GetComponent<PlatformEffector2D>();
+
+            if (leftIsAPlatform == null && !_playerFacingRight) {
+                JumpUpperEdgeLeftNudge();
+            }
+            if (leftIsAPlatform == null && _playerFacingRight) {
+                JumpUpperEdgeRightNudge();
+            }
+            if (leftIsAPlatform != null) {
+                if (_startedUpperEdgeNudging) {
+                    _startedUpperEdgeNudging = false;
+                }
+                _isNudgingOfUpperEdges = false;
+            }
+
+        }
+        if (!leftHit && rightHit) {
+
+            PlatformEffector2D rightIsAPlatform = Physics2D.OverlapCircle(_playerUpperEdgeDetectionRightCheck.position, _jumpUpperEdgeDetectionRadius, _layerIsGrounded).transform.gameObject.GetComponent<PlatformEffector2D>();
+
+            if (rightIsAPlatform == null && !_playerFacingRight) {
+                JumpUpperEdgeRightNudge();
+            }
+            if (rightIsAPlatform == null && _playerFacingRight) {
+                JumpUpperEdgeLeftNudge();
+            }
+            if (rightIsAPlatform != null) {
+                if (_startedUpperEdgeNudging) {
+                    _startedUpperEdgeNudging = false;
+                }
+                _isNudgingOfUpperEdges = false;
+            }
+
+        }
+        if ((!leftHit && !rightHit) || (leftHit && rightHit)) {
+            if (_startedUpperEdgeNudging) {
+                _startedUpperEdgeNudging = false;
+            }
+            _isNudgingOfUpperEdges = false;
+        }
+
+    }
+
+    private void JumpUpperEdgeLeftNudge() {
+        if (!_startedUpperEdgeNudging) {
+
+            _currentPlayerVelocity.y = _playerRigidBody.velocity.y;
+            _startedUpperEdgeNudging = true;
+        }
+        _isNudgingOfUpperEdges = true;
+        SetPlayerRigidBodyVelocity(_currentPlayerVelocity);
+        if (!_isPlayerRunning) {
+            transform.Translate(Vector2.left * _jumpNudgeSpeed);
+        }
+        
+    }
+
+    private void JumpUpperEdgeRightNudge() {
+        if (!_startedUpperEdgeNudging) {
+
+            _currentPlayerVelocity.y = _playerRigidBody.velocity.y;
+            _startedUpperEdgeNudging = true;
+        }
+        _isNudgingOfUpperEdges = true;
+        SetPlayerRigidBodyVelocity(_currentPlayerVelocity);
+        if (!_isPlayerRunning) {
+            transform.Translate(Vector2.right * _jumpNudgeSpeed);
+        }
     }
 
     private void StopYVelocity() {
@@ -1078,7 +1244,6 @@ public class PlayerScript : MonoBehaviour {
 
     private void StopStatusConditions() {
         _statusTimer = 0f;
-        if (!_isPlayerAfflictedWithStatus && _statusState == StatusState.Unafflicted) { return; }
         
         if (_statusState == StatusState.Burned)
         {
@@ -1100,8 +1265,6 @@ public class PlayerScript : MonoBehaviour {
         {
             StopPlayerWasSlimed();
         }
-        _isPlayerAfflictedWithStatus = false;
-        _statusState = StatusState.Unafflicted;
     }
 
     public void PlayerWasBurned() {
@@ -1121,6 +1284,7 @@ public class PlayerScript : MonoBehaviour {
         _maxAttackPower = _maxAttackPowerDefault;
         ChangeAttackPower(1);
         _playerVisual.BurnPlayerStop();
+        _isPlayerAfflictedWithStatus = false;
     }
 
     public void PlayerWasParalyzed() {
@@ -1137,9 +1301,9 @@ public class PlayerScript : MonoBehaviour {
     {
         SetPlayerMovementVelocity(_playerMoveSpeedMultiplierDefault);
         _maxTurboTime = _maxTurboTimeDefault;
-        _canAttack = true;
         _canTurbo = true;
         _playerVisual.ParalyzePlayerStop();
+        _isPlayerAfflictedWithStatus = false;
     }
 
     public void PlayerWasFrozen() {
@@ -1155,9 +1319,9 @@ public class PlayerScript : MonoBehaviour {
     {
         _playerVisual.FreezePlayerStop();
         _isFrozen = false;
-        _canAttack = true;
         _canJump = true;
         _canTurbo = true;
+        _isPlayerAfflictedWithStatus = false;
     }
 
     public void PlayerWasPoisoned() {
@@ -1207,6 +1371,7 @@ public class PlayerScript : MonoBehaviour {
     {
         _playerVisual.PoisonPlayerStop();
         _currentPoisonTimer = _defaultPoisonTimer;
+        _isPlayerAfflictedWithStatus = false;
     }
 
     public void PlayerWasSlimed() {
@@ -1226,6 +1391,7 @@ public class PlayerScript : MonoBehaviour {
         _maxTurboTime = _maxTurboTimeDefault;
         _canTurbo = true;
         _playerVisual.SlimePlayerStop();
+        _isPlayerAfflictedWithStatus = false;
     }
 
     #endregion
