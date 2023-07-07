@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MushroomSpringSO
   m_EditorClassIdentifier: 
   sprite: {fileID: -28054898, guid: a48b97781b4adf2459375aa310cf1233, type: 3}
-  prefab: {fileID: 0}
+  prefab: {fileID: 4183940530320859894, guid: 54aef85dda834d1468cc3dd50d5eb92f, type: 3}
   material: {fileID: 2100000, guid: f8bbc6e602b195746b050dd33d8e4430, type: 2}
   enemyName: Spring Mushroom
   isWalker: 1

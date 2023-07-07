@@ -968,7 +968,11 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-      physicsShape: []
+      physicsShape:
+      - - {x: -32, y: 14}
+        - {x: -32, y: 32}
+        - {x: 32, y: 32}
+        - {x: 32, y: 14}
       tessellationDetail: 0
       bones: []
       spriteID: eb436ca272ce57b43a67c3db6d18ba88
@@ -989,7 +993,11 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-      physicsShape: []
+      physicsShape:
+      - - {x: -32, y: 14}
+        - {x: -32, y: 32}
+        - {x: 32, y: 32}
+        - {x: 32, y: 14}
       tessellationDetail: 0
       bones: []
       spriteID: 7f1873e9e2acbd741868c9ffbf7ce1fe
@@ -1010,7 +1018,11 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-      physicsShape: []
+      physicsShape:
+      - - {x: -32, y: 14}
+        - {x: -32, y: 32}
+        - {x: 32, y: 32}
+        - {x: 32, y: 14}
       tessellationDetail: 0
       bones: []
       spriteID: a6270a9bcb7a1ed4aa27e154e1c74307
@@ -1136,7 +1148,11 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-      physicsShape: []
+      physicsShape:
+      - - {x: -32, y: 14}
+        - {x: -32, y: 32}
+        - {x: 32, y: 32}
+        - {x: 32, y: 14}
       tessellationDetail: 0
       bones: []
       spriteID: 12ad17371a3bfcb4a83a212e07c4bfaf
@@ -1157,7 +1173,11 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-      physicsShape: []
+      physicsShape:
+      - - {x: -32, y: 14}
+        - {x: -32, y: 32}
+        - {x: 32, y: 32}
+        - {x: 32, y: 14}
       tessellationDetail: 0
       bones: []
       spriteID: 00aeecc727a267c4d8a1682e60b17de5
@@ -1178,7 +1198,11 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-      physicsShape: []
+      physicsShape:
+      - - {x: -32, y: 14}
+        - {x: -32, y: 32}
+        - {x: 32, y: 32}
+        - {x: 32, y: 14}
       tessellationDetail: 0
       bones: []
       spriteID: 4b1e3fff243b0194fb960ee83d347bd2
@@ -1326,7 +1350,7 @@ TextureImporter:
     nameFileIdTable:
       tileset_64x64(new)_2: 1607732358
       tileset_64x64(new)_10: -578768256
-      tileset_64x64(new)_30: 351084169
+      tileset_64x64(new)_46: 664912259
       tileset_64x64(new)_21: -2133205574
       tileset_64x64(new)_44: -1411683648
       tileset_64x64(new)_19: 1608113404
@@ -1380,7 +1404,7 @@ TextureImporter:
       tileset_64x64(new)_47: 687150832
       tileset_64x64(new)_33: -646170911
       tileset_64x64(new)_8: -74718901
-      tileset_64x64(new)_46: 664912259
+      tileset_64x64(new)_30: 351084169
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

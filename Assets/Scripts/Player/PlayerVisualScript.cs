@@ -232,5 +232,16 @@ public class PlayerVisualScript : MonoBehaviour
     }
 
     #endregion
+
+    private void OnDestroy() {
+
+        _playerLogicScript.OnRunAnimSpeedChange -= _playerLogicScript_OnRunAnimSpeedChange;
+
+        _playerLogicScript.OnPlayerAttacked -= _playerLogicScript_OnPlayerAttacked;
+
+        _playerLogicScript.OnPlayerJumped -= _playerLogicScript_OnPlayerJumped;
+        _playerLogicScript.OnPlayerAirJumped -= _playerLogicScript_OnPlayerAirJumped;
+
+    }
 }
 

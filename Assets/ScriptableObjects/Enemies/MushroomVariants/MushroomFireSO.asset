@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: -28054898, guid: a48b97781b4adf2459375aa310cf1233, type: 3}
   prefab: {fileID: 6544517686958218581, guid: a028f1a4ef421564bb451086ccaf75dd, type: 3}
-  material: {fileID: 2100000, guid: 96d7165b0f52fb64c8011de479d84435, type: 2}
+  material: {fileID: 2100000, guid: af58fab9e4f4d1e4bb48a42b374f3a22, type: 2}
   enemyName: Fire Mushroom
   isWalker: 1
   health: 30

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7ce830c3c0507d4aacdb00d2911d86e, type: 3}
+  m_Name: BombFireSO
+  m_EditorClassIdentifier: 
+  sprite: {fileID: -1226725279, guid: 158e0f4d8cbf88542b6f8b73fc24757d, type: 3}
+  prefab: {fileID: 9026652012475900728, guid: 11b269ad67427e846ac7e77e414d0afb, type: 3}
+  material: {fileID: 2100000, guid: 434ae79fa54fb5a4ba23f1bdba626175, type: 2}
+  bombName: Fire Bomb
+  attackPower: 50
+  explosionTimer: 4
+  canBurn: 1
+  canParalyze: 0
+  canFreeze: 0
+  canPoison: 0
+  canSlime: 0

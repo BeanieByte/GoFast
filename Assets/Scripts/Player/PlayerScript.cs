@@ -443,28 +443,6 @@ public class PlayerScript : MonoBehaviour {
         JumpStateMachine();
 
         StatusStateMachine();
-
-
-        //DEBUG ONLY, DELETE LATER
-        if (Input.GetKeyDown(KeyCode.Q)) {
-            PlayerWasBurned();
-        }
-
-        if (Input.GetKeyDown(KeyCode.W)) {
-            PlayerWasParalyzed();
-        }
-
-        if (Input.GetKeyDown(KeyCode.E)) {
-            PlayerWasFrozen();
-        }
-
-        if (Input.GetKeyDown(KeyCode.R)) {
-            PlayerWasPoisoned();
-        }
-
-        if (Input.GetKeyDown(KeyCode.T)) {
-            PlayerWasSlimed();
-        }
     }
 
     private void CheckIfWallIsRightInFront() {
@@ -747,8 +725,10 @@ public class PlayerScript : MonoBehaviour {
             _jumpState = JumpState.Jumping;
         }
 
-        else if ((_jumpState == JumpState.Falling || _jumpState == JumpState.Jumping) && _currentAvailableAirJumps > 0)
+        //else if ((_jumpState == JumpState.Falling || _jumpState == JumpState.Jumping) && _currentAvailableAirJumps > 0)
+        else if (_jumpState != JumpState.Grounded && _currentAvailableAirJumps > 0) 
         {
+            _currentAvailableAirJumps--;
             if (_jumpedOnBounceable)
             {
                 _jumpedOnBounceable = false;
@@ -762,7 +742,6 @@ public class PlayerScript : MonoBehaviour {
                 _jumpTime = 0f;
             }
             _jumpApexModifierCurrentTimeToEnable = 0f;
-            _currentAvailableAirJumps--;
             OnPlayerAirJumped?.Invoke(this, EventArgs.Empty);
             OnAirJumpCounterChanged?.Invoke(this, new OnAirJumpCounterChangedEventArgs
             {
@@ -1395,5 +1374,22 @@ public class PlayerScript : MonoBehaviour {
     }
 
     #endregion
+
+    private void OnDestroy() {
+
+        GameInput.Instance.OnJumpStarted -= Instance_OnJumpStarted;
+        GameInput.Instance.OnJumpPerformed -= Instance_OnJumpPressed;
+        GameInput.Instance.OnJumpCanceled -= Instance_OnJumpCanceled;
+
+        GameInput.Instance.OnTurboPressed -= Instance_OnTurboPressed;
+        GameInput.Instance.OnTurboCanceled -= Instance_OnTurboCanceled;
+
+        GameInput.Instance.OnAttackHeld -= Instance_OnAttackPressed;
+        GameInput.Instance.OnAttackReleased -= Instance_OnAttackReleased;
+
+        _playerAttack.OnKillingEnemy -= _playerAttack_OnKillingEnemy;
+        _playerTouchAttack.OnInvincibleTouchKillingEnemy -= _playerTouchAttack_OnInvincibleTouchKillingEnemy;
+
+    }
 
 }

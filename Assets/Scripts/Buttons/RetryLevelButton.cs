@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class RetryLevelButton : MonoBehaviour
 {
-    public void RetryLevel() { 
+    public void RetryLevel() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

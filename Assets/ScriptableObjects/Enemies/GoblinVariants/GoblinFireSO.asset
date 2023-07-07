@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b0f8fa96bb6a7a4cb3ee95c2622c1f4, type: 3}
+  m_Name: GoblinFireSO
+  m_EditorClassIdentifier: 
+  sprite: {fileID: -540200352, guid: 0c23164d765e77f45b089e4fa30f8be1, type: 3}
+  prefab: {fileID: 4546836529662100051, guid: 75df636a189063d46b2dfd1e583ca709, type: 3}
+  material: {fileID: 2100000, guid: 1715df752234f684fbbe400f38dafedc, type: 2}
+  enemyName: Fire Goblin
+  isWalker: 1
+  health: 30
+  touchPower: 20
+  speed: 5
+  isAttacker: 1
+  attackPower: 20
+  attackCooldownTime: 2
+  canBurn: 1
+  canParalyze: 0
+  canFreeze: 0
+  canPoison: 0
+  canSlime: 0
+  isBounceable: 0
+  bounceOffMultiplier: 0

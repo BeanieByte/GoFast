@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b0f8fa96bb6a7a4cb3ee95c2622c1f4, type: 3}
+  m_Name: BomberGoblinParalysisSO
+  m_EditorClassIdentifier: 
+  sprite: {fileID: -1073376163, guid: 1807b0a670765d340b858cd1cd405987, type: 3}
+  prefab: {fileID: 8954142693017101669, guid: 506aced4356819f48bcf109fcdd3611d, type: 3}
+  material: {fileID: 2100000, guid: 37ca76a25111f514380c965a48b0edcd, type: 2}
+  enemyName: Paralysis Bomber Goblin
+  isWalker: 0
+  health: 20
+  touchPower: 10
+  speed: 1
+  isAttacker: 1
+  attackPower: 0
+  attackCooldownTime: 5
+  canBurn: 0
+  canParalyze: 1
+  canFreeze: 0
+  canPoison: 0
+  canSlime: 0
+  isBounceable: 0
+  bounceOffMultiplier: 0
