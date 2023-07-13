@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class WinScreenUIScript : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class WinScreenUIScript : MonoBehaviour
     [SerializeField] private Transform _speedRunTimeTextGameObject;
     private TextMeshProUGUI _speedrunTimeText;
     private int _finalScore;
+    [SerializeField] private GameObject _winScreenFirstButton;
 
     private void Awake()
     {
@@ -95,5 +97,8 @@ public class WinScreenUIScript : MonoBehaviour
         _finalScoreText.text = _finalScore.ToString();
 
         _speedrunTimeText.text = _timeTakenText;
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(_winScreenFirstButton);
     }
 }

@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class LoseScreenUIScript : MonoBehaviour
 {
     [SerializeField] private Transform _loseScreen;
+    [SerializeField] private GameObject _loseScreenFirstButton;
 
     private void Start()
     {
@@ -27,5 +29,8 @@ public class LoseScreenUIScript : MonoBehaviour
         if(!_loseScreen.gameObject.activeInHierarchy) {
             _loseScreen.gameObject.SetActive(true);
         }
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(_loseScreenFirstButton);
     }
 }

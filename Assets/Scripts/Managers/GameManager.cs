@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -43,6 +44,7 @@ public class GameManager : MonoBehaviour
     }
 
     private void Instance_OnGameStart(object sender, EventArgs e) {
+        MusicManagerScript.Instance.PlayMusic();
         _state = State.GamePlaying;
     }
 
@@ -52,6 +54,7 @@ public class GameManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.G))
         {
             _countdownTimerUIScript.gameObject.SetActive(false);
+            MusicManagerScript.Instance.PlayMusic();
             _state = State.GamePlaying;
         }
 
@@ -82,11 +85,13 @@ public class GameManager : MonoBehaviour
 
     public void SetGameOver() {
         _state = State.GameOver;
+        MusicManagerScript.Instance.PauseMusic();
         OnGameLost?.Invoke(this, EventArgs.Empty);
     }
 
     public void SetGameWon() {
         _state = State.GameWon;
+        MusicManagerScript.Instance.PauseMusic();
         OnGameWon?.Invoke(this, EventArgs.Empty);
     }
 }
