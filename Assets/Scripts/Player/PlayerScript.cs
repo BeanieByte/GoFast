@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour {
 
+    public static PlayerScript Instance;
+
     #region Variables
 
     [Header("Player Elements")]
@@ -1105,6 +1107,16 @@ public class PlayerScript : MonoBehaviour {
 
     public bool IsPlayerRunning() {
         if (!_isPlayerRunning) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public bool IsPlayerGrounded()
+    {
+        if (!_isGrounded)
+        {
             return false;
         }
 
