@@ -17,6 +17,12 @@ public class BombScript : MonoBehaviour {
     private float _closeToExplodingTime;
     private float _explodingTimeOffset = 3f;
 
+
+    private float _bombTickingDownCurrentTime;
+    private float _bombTickingDownMaxTime;
+    private float _bombTickingDownDefaultMaxTime = 0.2f;
+    private float _bombTickingDownFasterMaxTime = 0.1f;
+
     private void Awake() {
         _myRigidBody = GetComponent<Rigidbody2D>();
         _myExplosionTimer = _mySO.explosionTimer;
@@ -29,10 +35,16 @@ public class BombScript : MonoBehaviour {
         _setAlmostExploding = false;
         _closeToExplodingTime = _mySO.explosionTimer / _explodingTimeOffset;
 
+        //sound related variables
+        _bombTickingDownMaxTime = _bombTickingDownDefaultMaxTime;
+        _bombTickingDownCurrentTime = _bombTickingDownMaxTime;
+
     }
 
     private void FixedUpdate() {
         if (_hasExploded) { return; }
+
+        BombTickingDownSound();
 
         _myExplosionTimer -= Time.deltaTime;
 
@@ -51,6 +63,8 @@ public class BombScript : MonoBehaviour {
 
         _myVisual.AlmostExploding();
         _setAlmostExploding = true;
+
+        _bombTickingDownMaxTime = _bombTickingDownFasterMaxTime;
     }
 
     public void Explode()
@@ -59,8 +73,22 @@ public class BombScript : MonoBehaviour {
         {
             return;
         }
+        SoundManager.Instance.PlayBombExplosionSound(transform.position);
         _myVisual.Explode();
         _myRigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
         _hasExploded = true;
+    }
+
+    private void BombTickingDownSound() {
+
+        if (_bombTickingDownCurrentTime == _bombTickingDownMaxTime) {
+            SoundManager.Instance.PlayBombTickingDownSound(transform.position);
+        }
+
+        _bombTickingDownCurrentTime -= Time.deltaTime;
+
+        if (_bombTickingDownCurrentTime <= 0) {
+            _bombTickingDownCurrentTime = _bombTickingDownMaxTime;
+        }
     }
 }

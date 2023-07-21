@@ -10,6 +10,7 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
 
     [SerializeField] protected EnemySO _mySO;
     [SerializeField] protected EnemyVisualBaseScript _myVisual;
+    [SerializeField] protected EnemySoundsBaseScript _mySFXObject;
     [SerializeField] private Collider2D _touchAttackTrigger;
     [SerializeField] private Collider2D _attackTrigger;
 
@@ -160,6 +161,7 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
         if (!_mySO.isAttacker) { return; }
         if (!_canAttack) { return; }
         _myVisual.Attack();
+        _mySFXObject.PlayAttackSound();
         _currentAttackCooldownTime = _attackCooldownTime;
         _canAttack = false;
     }
@@ -174,6 +176,7 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
 
         if (_currentHealth > 0) {
             _myVisual.PlayHitAnim();
+            _mySFXObject.PlayHitSound();
             _isDead = false;
             return _isDead;
         }
@@ -197,6 +200,7 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
         }
 
         _myVisual.PlayDeadAnim();
+        _mySFXObject.PlayDeathSound();
         _isDead = true;
         return _isDead;
     }
@@ -317,6 +321,7 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
         SpawnEnemy();
 
         Damage(_mandatoryDamageForProperRespawn);
+        _mySFXObject.PlayHitSound();
     }
 
     public bool IsEnemyRespawnable()

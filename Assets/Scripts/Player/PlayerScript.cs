@@ -14,6 +14,7 @@ public class PlayerScript : MonoBehaviour {
     [Header("Player Elements")]
 
     [SerializeField] private PlayerVisualScript _playerVisual;
+    [SerializeField] private PlayerSoundsScript _playerSounds;
 
     private Rigidbody2D _playerRigidBody;
 
@@ -596,6 +597,7 @@ public class PlayerScript : MonoBehaviour {
                         _jumpCoyoteCurrentTime = _jumpCoyoteMaxTime;
                     }
 
+                    _playerSounds.PlayLandingSound();
                     _jumpState = JumpState.Grounded;
                 }
 
@@ -677,6 +679,7 @@ public class PlayerScript : MonoBehaviour {
             OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
                 health = _currentHealth
             });
+            _playerSounds.PlayDeathSound();
             Die();
             return;
         }
@@ -685,6 +688,7 @@ public class PlayerScript : MonoBehaviour {
             health = _currentHealth
         });
 
+        _playerSounds.PlayHitSound();
         StartHitInvincibleTime();
     }
 
@@ -1123,6 +1127,14 @@ public class PlayerScript : MonoBehaviour {
         return true;
     }
 
+    public bool IsWallRightInFrontOfPlayer() {
+        if (!_isWallRightInFrontOfPlayer) {
+            return false;
+        }
+
+        return true;
+    }
+
     public float MaxTurboTime() {
         return _maxTurboTime;
     }
@@ -1262,6 +1274,7 @@ public class PlayerScript : MonoBehaviour {
         if (_gotInvinciblePowerUp || _isDead) { return; }
         StopStatusConditions(); 
         _playerVisual.BurnPlayerStart();
+        _playerSounds.StartBurnConditionSound();
         _statusTimer = _maxBurnedTime;
         _isPlayerAfflictedWithStatus = true;
         ChangeAttackPower(_burnedAttackMultiplier);
@@ -1274,6 +1287,7 @@ public class PlayerScript : MonoBehaviour {
         SetPlayerMovementVelocity(_playerMoveSpeedMultiplierDefault);
         _maxAttackPower = _maxAttackPowerDefault;
         ChangeAttackPower(1);
+        _playerSounds.StopAnyStatusConditionSound();
         _playerVisual.BurnPlayerStop();
         _isPlayerAfflictedWithStatus = false;
     }
@@ -1282,6 +1296,7 @@ public class PlayerScript : MonoBehaviour {
         if (_gotInvinciblePowerUp || _isDead) { return; }
         StopStatusConditions();
         _playerVisual.ParalyzePlayerStart();
+        _playerSounds.StartParalyzedConditionSound();
         _statusTimer = _maxParalyzedTime;
         _isPlayerAfflictedWithStatus = true;
         SetPlayerMovementVelocity(_paralyzedSpeedMultiplier);
@@ -1293,6 +1308,7 @@ public class PlayerScript : MonoBehaviour {
         SetPlayerMovementVelocity(_playerMoveSpeedMultiplierDefault);
         _maxTurboTime = _maxTurboTimeDefault;
         _canTurbo = true;
+        _playerSounds.StopAnyStatusConditionSound();
         _playerVisual.ParalyzePlayerStop();
         _isPlayerAfflictedWithStatus = false;
     }
@@ -1301,6 +1317,7 @@ public class PlayerScript : MonoBehaviour {
         if (_gotInvinciblePowerUp || _isDead) { return; }
         StopStatusConditions();
         _playerVisual.FreezePlayerStart();
+        _playerSounds.StartFrozenConditionSound();
         _statusTimer = _maxFrozenTime;
         _isPlayerAfflictedWithStatus = true;
         _statusState = StatusState.Frozen;
@@ -1309,6 +1326,7 @@ public class PlayerScript : MonoBehaviour {
     private void StopPlayerWasFrozen()
     {
         _playerVisual.FreezePlayerStop();
+        _playerSounds.StopAnyStatusConditionSound();
         _isFrozen = false;
         _canJump = true;
         _canTurbo = true;
@@ -1319,6 +1337,7 @@ public class PlayerScript : MonoBehaviour {
         if (_gotInvinciblePowerUp || _isDead) { return; }
         StopStatusConditions();
         _playerVisual.PoisonPlayerStart();
+        _playerSounds.StartPoisonConditionSound();
         _statusTimer = _maxPoisonedTime;
         _isPlayerAfflictedWithStatus = true;
         _currentHealthToDecrease = Mathf.RoundToInt(_currentHealth / _poisonHealthDivider);
@@ -1360,6 +1379,7 @@ public class PlayerScript : MonoBehaviour {
 
     private void StopPlayerWasPoisoned()
     {
+        _playerSounds.StopAnyStatusConditionSound();
         _playerVisual.PoisonPlayerStop();
         _currentPoisonTimer = _defaultPoisonTimer;
         _isPlayerAfflictedWithStatus = false;
@@ -1369,6 +1389,7 @@ public class PlayerScript : MonoBehaviour {
         if (_gotInvinciblePowerUp || _isDead) { return; }
         StopStatusConditions();
         _playerVisual.SlimePlayerStart();
+        _playerSounds.StartSlimeConditionSound();
         _statusTimer = _maxSlimedTime;
         _isPlayerAfflictedWithStatus = true;
         SetPlayerMovementVelocity(_slimedSpeedMultiplier);
@@ -1381,6 +1402,7 @@ public class PlayerScript : MonoBehaviour {
         _canJump = true;
         _maxTurboTime = _maxTurboTimeDefault;
         _canTurbo = true;
+        _playerSounds.StopAnyStatusConditionSound();
         _playerVisual.SlimePlayerStop();
         _isPlayerAfflictedWithStatus = false;
     }

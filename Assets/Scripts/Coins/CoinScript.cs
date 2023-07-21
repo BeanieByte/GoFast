@@ -24,6 +24,7 @@ public class CoinScript : MonoBehaviour
     private void PickUpCoin() {
         _myTrigger.enabled = false;
         CoinManager.Instance.IncreaseCoinCounter(_mySO.value);
+        SoundManager.Instance.PlayCoinPickUpSound(transform.position);
         _myVisual.PlayPickUpAnim();
     }
 }

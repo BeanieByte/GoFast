@@ -37,6 +37,7 @@ Transform:
   - {fileID: 2204005531895419713}
   - {fileID: 1816496980962364826}
   - {fileID: 6877240940123630310}
+  - {fileID: 8346777033190124450}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -102,6 +103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mySO: {fileID: 11400000, guid: 702e754b196691c4eb896ac2866c24a2, type: 2}
   _myVisual: {fileID: 6351418446318249045}
+  _mySFXObject: {fileID: 8429982420273076841}
   _touchAttackTrigger: {fileID: 8551576845787069730}
   _attackTrigger: {fileID: 0}
   _isFacingRight: 1
@@ -236,6 +238,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e517ee42074263c4893ce22ecd822a39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5778154231183225991
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8346777033190124450}
+  - component: {fileID: 8429982420273076841}
+  m_Layer: 7
+  m_Name: BomberGoblinSounds
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8346777033190124450
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5778154231183225991}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1731944372156082105}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8429982420273076841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5778154231183225991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04db8c6f3db13ff47993ec2f5a04485d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8190133499142101859
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,7 +394,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1001 &9101771728025032124

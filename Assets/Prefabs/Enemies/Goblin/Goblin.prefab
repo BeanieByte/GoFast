@@ -35,6 +35,7 @@ Transform:
   - {fileID: 8552674221509792000}
   - {fileID: 6313184442828671763}
   - {fileID: 2204005531895419713}
+  - {fileID: 6963242107914153544}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -100,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mySO: {fileID: 11400000, guid: e42acb58fe2b1b5418c181963b145b5d, type: 2}
   _myVisual: {fileID: 5755154536714601856}
+  _mySFXObject: {fileID: 4160559145884776828}
   _touchAttackTrigger: {fileID: 8551576845787069730}
   _attackTrigger: {fileID: 729871853629614387}
   _isFacingRight: 0
@@ -175,6 +177,50 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe680398ea55c964394e37b7b0dde393, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &5206948743964489627
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6963242107914153544}
+  - component: {fileID: 4160559145884776828}
+  m_Layer: 7
+  m_Name: GoblinSounds
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6963242107914153544
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5206948743964489627}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1731944372156082105}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4160559145884776828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5206948743964489627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0a1fe73b032aea4490a6a23457c88b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &9149319903227608945
@@ -258,7 +304,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1001 &5825981879302676693

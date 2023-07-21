@@ -238,6 +238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerVisual: {fileID: 15246342360144112}
+  _playerSounds: {fileID: 8231631327100263929}
   _maxHealth: 20
   _maxAttackPower: 20
   _playerMoveSpeed: 8

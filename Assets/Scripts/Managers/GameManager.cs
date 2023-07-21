@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     public event EventHandler OnGameWon;
     public event EventHandler OnGameLost;
 
+    private bool _hasGoTextSoundPlayed;
+
     public enum State { 
         WaitingToStart,
         CountdownToStart,
@@ -41,6 +43,8 @@ public class GameManager : MonoBehaviour
 
     private void Start() {
         _countdownTimerUIScript.OnGameStart += Instance_OnGameStart;
+
+        _hasGoTextSoundPlayed = false;
     }
 
     private void Instance_OnGameStart(object sender, EventArgs e) {
@@ -63,12 +67,17 @@ public class GameManager : MonoBehaviour
                 _waitingToStartTimer -= Time.deltaTime;
                 if (_waitingToStartTimer <= 0f) {
                     _countdownTimerUIScript.gameObject.SetActive(true);
+                    SoundManager.Instance.PlayCountdownToStartSound();
                     _state = State.CountdownToStart;
                 }
                 break;
             case State.CountdownToStart:
                 break;
             case State.GamePlaying:
+                if (!_hasGoTextSoundPlayed) {
+                    SoundManager.Instance.PlayGoTextBeforeStartSound();
+                    _hasGoTextSoundPlayed = true;
+                }
                 break;
             case State.GameWon:
                 break;
@@ -85,12 +94,14 @@ public class GameManager : MonoBehaviour
 
     public void SetGameOver() {
         _state = State.GameOver;
+        SoundManager.Instance.PlayGameLostSound();
         MusicManagerScript.Instance.PauseMusic();
         OnGameLost?.Invoke(this, EventArgs.Empty);
     }
 
     public void SetGameWon() {
         _state = State.GameWon;
+        SoundManager.Instance.PlayGameWonSound();
         MusicManagerScript.Instance.PauseMusic();
         OnGameWon?.Invoke(this, EventArgs.Empty);
     }

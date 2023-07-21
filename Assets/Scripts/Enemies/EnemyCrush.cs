@@ -22,6 +22,7 @@ public class EnemyCrush : MonoBehaviour
 
             if (currentPlayerYPosition > transform.position.y && isPlayerInTheAir) {
                 OnEnemyCrushed?.Invoke(this, EventArgs.Empty);
+                SoundManager.Instance.PlayMushroomBounceSound(_myEnemyBaseGameObject.transform.position);
                 player.BounceOffCrush(_myEnemyBaseGameObject.EnemyBounceOffMultiplier());
             }
 

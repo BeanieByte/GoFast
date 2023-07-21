@@ -49,11 +49,13 @@ public class CountdownTimerUI : MonoBehaviour
         _myText.text = currentValue.ToString();
 
         if (_countdownToStartTimer <= 1 && _countdownToStartTimer >= 0.98) {
+            SoundManager.Instance.PlayCountdownToStartSound();
             _myText.fontSize = _startingFontSize;
             return;
         }
 
         if (_countdownToStartTimer <= 2 && _countdownToStartTimer >= 1.98) {
+            SoundManager.Instance.PlayCountdownToStartSound();
             _myText.fontSize = _startingFontSize;
         }
     }

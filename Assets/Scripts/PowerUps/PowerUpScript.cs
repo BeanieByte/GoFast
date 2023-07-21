@@ -47,6 +47,7 @@ public class PowerUpScript : MonoBehaviour
 
     private void PickUpPowerUp() {
         _myTrigger.enabled = false;
+        SoundManager.Instance.PlayPowerUpPickUpSound(transform.position);
         _myVisual.PlayPickUpAnim();
     }
 }

@@ -29,6 +29,7 @@ public class AudioClipReferencesSO : ScriptableObject
     public AudioClip playerSlimedStart;
     public AudioClip playerSlimedStop;
     public AudioClip wormFootsteps;
+    public AudioClip flyFootsteps;
     public AudioClip mushroomBounce;
     public AudioClip bomberGoblinThrow;
 

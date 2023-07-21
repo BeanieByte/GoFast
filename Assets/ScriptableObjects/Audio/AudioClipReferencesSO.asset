@@ -21,22 +21,23 @@ MonoBehaviour:
   death: {fileID: 8300000, guid: 124de6c622a4db049b5373c99ff11c4e, type: 3}
   burning: {fileID: 8300000, guid: f6f18fad6c6cedc498164b36709a2e08, type: 3}
   playerBurningStart: {fileID: 8300000, guid: 3622186124edf994097b84abf6720a92, type: 3}
-  playerBurningStop: {fileID: 0}
-  paralyzed: {fileID: 0}
+  playerBurningStop: {fileID: 8300000, guid: 3622186124edf994097b84abf6720a92, type: 3}
+  paralyzed: {fileID: 8300000, guid: d2447c2e6a3420a47b556ea671be1c2b, type: 3}
   playerParalyzedStart: {fileID: 8300000, guid: d2447c2e6a3420a47b556ea671be1c2b, type: 3}
-  playerParalyzedStop: {fileID: 0}
-  freezing: {fileID: 0}
+  playerParalyzedStop: {fileID: 8300000, guid: d2447c2e6a3420a47b556ea671be1c2b, type: 3}
+  freezing: {fileID: 8300000, guid: cf4aa8cad2848ba41bd1fd6e11e33dc6, type: 3}
   playerFreezeStart: {fileID: 8300000, guid: 16f959c9f06b6a74dacd0ef1f8f16f52, type: 3}
   playerFreezeStop: {fileID: 8300000, guid: fe6b1a05e3cefda44a35f4c65467ea32, type: 3}
-  poison: {fileID: 0}
+  poison: {fileID: 8300000, guid: d8f238ff4c3c1584f88d313ae73e7938, type: 3}
   playerPoisonedStart: {fileID: 8300000, guid: d8f238ff4c3c1584f88d313ae73e7938, type: 3}
-  playerPoisonedStop: {fileID: 0}
-  slimed: {fileID: 0}
-  playerSlimedStart: {fileID: 0}
-  playerSlimedStop: {fileID: 0}
-  wormFootsteps: {fileID: 0}
-  mushroomBounce: {fileID: 0}
-  bomberGoblinThrow: {fileID: 0}
+  playerPoisonedStop: {fileID: 8300000, guid: fe6b1a05e3cefda44a35f4c65467ea32, type: 3}
+  slimed: {fileID: 8300000, guid: d8f238ff4c3c1584f88d313ae73e7938, type: 3}
+  playerSlimedStart: {fileID: 8300000, guid: d8f238ff4c3c1584f88d313ae73e7938, type: 3}
+  playerSlimedStop: {fileID: 8300000, guid: fe6b1a05e3cefda44a35f4c65467ea32, type: 3}
+  wormFootsteps: {fileID: 8300000, guid: cf4aa8cad2848ba41bd1fd6e11e33dc6, type: 3}
+  flyFootsteps: {fileID: 8300000, guid: cf4aa8cad2848ba41bd1fd6e11e33dc6, type: 3}
+  mushroomBounce: {fileID: 8300000, guid: f9cfbcc3962f2c5449a425f2bdd367f6, type: 3}
+  bomberGoblinThrow: {fileID: 8300000, guid: 88e7651b9d30623459cbe1115e00a0e3, type: 3}
   coinPickUp: {fileID: 8300000, guid: a25fd2c3c52bce64bada05b765101e7a, type: 3}
   powerUpPickup: {fileID: 8300000, guid: ff527e878c39535428a50f1610a64c6a, type: 3}
   bombTickingDown: {fileID: 8300000, guid: 66654bd0acd47ca4b8de836d4b54df92, type: 3}
