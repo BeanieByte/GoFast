@@ -186,9 +186,8 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
             CanIWalk(false);
         }
 
-        if (_mySO.isAttacker && _attackTrigger != null) {
-            SetAttackTrigger(false);
-        }
+        SetAttackTrigger(false);
+
         SetTouchAttackTrigger(false);
         
         if(_isEnemyRespawnable)
@@ -218,7 +217,9 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     }
 
     protected void SetAttackTrigger(bool isActive) {
-        _attackTrigger.gameObject.SetActive(isActive);
+        if (_mySO.isAttacker && _attackTrigger != null) {
+            _attackTrigger.gameObject.SetActive(isActive);
+        }
     }
 
     public float EnemyBounceOffMultiplier() {

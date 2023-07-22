@@ -19,12 +19,19 @@ public class SoundManager : MonoBehaviour
     private float _gameCameraCurrentHeight;
     private float _gameCameraCurrentHeightOffset = 1.5f;
     private float _gameCameraWidthAndHeightDivider = 2f;
+    private float _screenSizeToWorldPositionMultiplier = 0.01f;
 
-    private float _screenSizeToWorldPositionMultiplier = 0.012f;
+    private float _gameAndUIElementsCenterPositionXOffset = 0.0001f;
+
     private float _soundSourceBorderMinXValue;
     private float _soundSourceBorderMaxXValue;
     private float _soundSourceBorderMinYValue;
     private float _soundSourceBorderMaxYValue;
+
+    private float _maxVolumeXOffset;
+    private float _maxVolumeXOffsetMultiplier = 2f;
+    private float _maxVolumeYOffset;
+    private float _maxVolumeYOffsetMultiplier = 1.4f;
 
     private float _defaultSoundVolume = 0.8f;
 
@@ -46,11 +53,17 @@ public class SoundManager : MonoBehaviour
         _gameCameraCurrentHeight = UnityEngine.Screen.height;
         _soundSourceBorderMinYValue = (_gameCamera.transform.position.y - ((_gameCameraCurrentHeight / _gameCameraWidthAndHeightDivider) * _screenSizeToWorldPositionMultiplier)) - _gameCameraCurrentHeightOffset;
         _soundSourceBorderMaxYValue = (_gameCamera.transform.position.y + ((_gameCameraCurrentHeight / _gameCameraWidthAndHeightDivider) * _screenSizeToWorldPositionMultiplier)) + _gameCameraCurrentHeightOffset;
+
+        _maxVolumeXOffset = ((_gameCameraCurrentWidth * _screenSizeToWorldPositionMultiplier) / (_gameCameraCurrentWidth / 100)) * _maxVolumeXOffsetMultiplier;
+        _maxVolumeYOffset = ((_gameCameraCurrentHeight * _screenSizeToWorldPositionMultiplier) / (_gameCameraCurrentHeight / 100)) * _maxVolumeYOffsetMultiplier;
     }
 
     private void FixedUpdate() {
 
         if (_gameCameraCurrentWidth != UnityEngine.Screen.width && _gameCameraCurrentHeight != UnityEngine.Screen.height) {
+
+            _maxVolumeXOffset = ((_gameCameraCurrentWidth * _screenSizeToWorldPositionMultiplier) / (_gameCameraCurrentWidth / 100)) * _maxVolumeXOffsetMultiplier;
+            _maxVolumeYOffset = ((_gameCameraCurrentHeight * _screenSizeToWorldPositionMultiplier) / (_gameCameraCurrentHeight / 100)) * _maxVolumeYOffsetMultiplier;
 
             _gameCameraCurrentWidth = UnityEngine.Screen.width;
             _gameCameraCurrentHeight = UnityEngine.Screen.height;
@@ -307,31 +320,31 @@ public class SoundManager : MonoBehaviour
     #region GameAndUIElements
 
     public void PlayCountdownToStartSound() {
-        AudioSource.PlayClipAtPoint(_audioClipReferencesSO.countdownToStart, _gameCamera.transform.position, _defaultSoundVolume - 0.2f);
+        AudioSource.PlayClipAtPoint(_audioClipReferencesSO.countdownToStart, new Vector3(_gameCamera.transform.position.x + _gameAndUIElementsCenterPositionXOffset, _gameCamera.transform.position.y), _defaultSoundVolume - 0.2f);
     }
 
     public void PlayGoTextBeforeStartSound() {
-        AudioSource.PlayClipAtPoint(_audioClipReferencesSO.goTextBeforeStart, _gameCamera.transform.position, _defaultSoundVolume - 0.2f);
+        AudioSource.PlayClipAtPoint(_audioClipReferencesSO.goTextBeforeStart, new Vector3(_gameCamera.transform.position.x + _gameAndUIElementsCenterPositionXOffset, _gameCamera.transform.position.y), _defaultSoundVolume - 0.2f);
     }
 
     public void PlayGameWonSound() {
-        AudioSource.PlayClipAtPoint(_audioClipReferencesSO.gameWon, _gameCamera.transform.position, _defaultSoundVolume - 0.2f);
+        AudioSource.PlayClipAtPoint(_audioClipReferencesSO.gameWon, new Vector3(_gameCamera.transform.position.x + _gameAndUIElementsCenterPositionXOffset, _gameCamera.transform.position.y), _defaultSoundVolume - 0.2f);
     }
 
     public void PlayGameLostSound() {
-        AudioSource.PlayClipAtPoint(_audioClipReferencesSO.gameLost, _gameCamera.transform.position, _defaultSoundVolume - 0.2f);
+        AudioSource.PlayClipAtPoint(_audioClipReferencesSO.gameLost, new Vector3(_gameCamera.transform.position.x + _gameAndUIElementsCenterPositionXOffset, _gameCamera.transform.position.y), _defaultSoundVolume - 0.2f);
     }
 
     public void PlayButtonHoverSound() {
-        AudioSource.PlayClipAtPoint(_audioClipReferencesSO.buttonHover, _gameCamera.transform.position, _defaultSoundVolume - 0.2f);
+        AudioSource.PlayClipAtPoint(_audioClipReferencesSO.buttonHover, new Vector3(_gameCamera.transform.position.x + _gameAndUIElementsCenterPositionXOffset, _gameCamera.transform.position.y), _defaultSoundVolume - 0.2f);
     }
 
     public void PlayButtonClickSound() {
-        AudioSource.PlayClipAtPoint(_audioClipReferencesSO.buttonClick, _gameCamera.transform.position, _defaultSoundVolume - 0.2f);
+        AudioSource.PlayClipAtPoint(_audioClipReferencesSO.buttonClick, new Vector3(_gameCamera.transform.position.x + _gameAndUIElementsCenterPositionXOffset, _gameCamera.transform.position.y), _defaultSoundVolume - 0.2f);
     }
 
     public void PlayMenuGoBackSound() {
-        AudioSource.PlayClipAtPoint(_audioClipReferencesSO.menuGoBack, _gameCamera.transform.position, _defaultSoundVolume - 0.2f);
+        AudioSource.PlayClipAtPoint(_audioClipReferencesSO.menuGoBack, new Vector3(_gameCamera.transform.position.x + _gameAndUIElementsCenterPositionXOffset, _gameCamera.transform.position.y), _defaultSoundVolume - 0.2f);
     }
 
     #endregion
@@ -358,14 +371,14 @@ public class SoundManager : MonoBehaviour
         float minXPosition = 0.3f;
         float maxXPosition = 1f;
 
-        if (currentGameObjectXPosition >= _soundSourceBorderMinXValue && currentGameObjectXPosition <= _gameCamera.transform.position.x) {
+        if (currentGameObjectXPosition >= _soundSourceBorderMinXValue && currentGameObjectXPosition <= (_gameCamera.transform.position.x - _maxVolumeXOffset)) {
 
             minXPosition = _soundSourceBorderMinXValue;
-            maxXPosition = _gameCamera.transform.position.x;
+            maxXPosition = _gameCamera.transform.position.x - +_maxVolumeXOffset;
 
-        } else if (currentGameObjectXPosition > _gameCamera.transform.position.x && currentGameObjectXPosition <= _soundSourceBorderMaxXValue) {
+        } else if (currentGameObjectXPosition > (_gameCamera.transform.position.x + _maxVolumeXOffset) && currentGameObjectXPosition <= _soundSourceBorderMaxXValue) {
 
-            minXPosition = _gameCamera.transform.position.x;
+            minXPosition = _gameCamera.transform.position.x + _maxVolumeXOffset;
             maxXPosition = _soundSourceBorderMaxXValue;
 
         }
@@ -381,14 +394,14 @@ public class SoundManager : MonoBehaviour
         float minYPosition = 0.3f;
         float maxYPosition = 1f;
 
-        if (currentGameObjectYPosition >= _soundSourceBorderMinYValue && currentGameObjectYPosition <= _gameCamera.transform.position.y) {
+        if (currentGameObjectYPosition >= _soundSourceBorderMinYValue && currentGameObjectYPosition <= (_gameCamera.transform.position.y - _maxVolumeYOffset)) {
 
             minYPosition = _soundSourceBorderMinYValue;
-            maxYPosition = _gameCamera.transform.position.y;
+            maxYPosition = _gameCamera.transform.position.y - _maxVolumeYOffset;
 
-        } else if (currentGameObjectYPosition > _gameCamera.transform.position.y && currentGameObjectYPosition <= _soundSourceBorderMaxYValue) {
+        } else if (currentGameObjectYPosition > (_gameCamera.transform.position.y + _maxVolumeYOffset) && currentGameObjectYPosition <= _soundSourceBorderMaxYValue) {
 
-            minYPosition = _gameCamera.transform.position.y;
+            minYPosition = _gameCamera.transform.position.y + _maxVolumeYOffset;
             maxYPosition = _soundSourceBorderMaxYValue;
 
         }
