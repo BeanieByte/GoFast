@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -53,13 +52,16 @@ public class GameManager : MonoBehaviour
     }
 
     private void FixedUpdate() {
-        
+
         //DEBUG ONLY, DELETE ON RELEASE
-        if(Input.GetKeyDown(KeyCode.G))
-        {
-            _countdownTimerUIScript.gameObject.SetActive(false);
-            MusicManagerScript.Instance.PlayMusic();
-            _state = State.GamePlaying;
+        //if(Input.GetKeyDown(KeyCode.G))
+        //{
+        //    _countdownTimerUIScript.gameObject.SetActive(false);
+        //    MusicManagerScript.Instance.PlayMusic();
+        //    _state = State.GamePlaying;
+        //}
+        if(Input.GetKeyDown(KeyCode.Escape)) {
+            Application.Quit();
         }
 
         switch (_state) {
