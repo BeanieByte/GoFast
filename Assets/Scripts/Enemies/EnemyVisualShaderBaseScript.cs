@@ -36,13 +36,15 @@ public class EnemyVisualShaderBaseScript : MonoBehaviour
     }
 
     private void _myVisualScript_OnEnemyHitAnimStopped(object sender, System.EventArgs e) {
-        _myMaterial.DisableKeyword("HITEFFECT_ON");
+        _myMaterial.SetFloat("_HitEffectBlend", 0f);
+        _myMaterial.SetFloat("_HitEffectGlow", 1f);
         _amIHit = false;
         _hitAnimBaseTime = 0f;
     }
 
     private void _myVisualScript_OnEnemyHitAnimStarted(object sender, System.EventArgs e) {
-        _myMaterial.EnableKeyword("HITEFFECT_ON");
+        _myMaterial.SetFloat("_HitEffectBlend", 1f);
+        _myMaterial.SetFloat("_HitEffectGlow", 1.5f);
         _amIHit = true;
     }
 

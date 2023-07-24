@@ -12,8 +12,10 @@ Material:
   m_ValidKeywords:
   - ATLAS_ON
   - FADE_ON
+  - FLICKER_ON
   - GLOW_ON
   - GRADIENT2COL_ON
+  - HITEFFECT_ON
   - HSV_ON
   - OUTDIST_ON
   - OUTTEX_ON
@@ -118,7 +120,7 @@ Material:
     - _FishEyeUvAmount: 0.35
     - _FlickerAlpha: 0.7
     - _FlickerFreq: 0.5
-    - _FlickerPercent: 0.2
+    - _FlickerPercent: 0
     - _GhostBlend: 1
     - _GhostColorBoost: 1
     - _GhostTransparency: 0
@@ -140,7 +142,7 @@ Material:
     - _GreyscaleOutline: 0
     - _HandDrawnAmount: 10
     - _HandDrawnSpeed: 5
-    - _HitEffectBlend: 1
+    - _HitEffectBlend: 0
     - _HitEffectGlow: 5
     - _HologramBlend: 1
     - _HologramMaxAlpha: 0.75

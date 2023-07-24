@@ -16,6 +16,7 @@ Material:
   - GRADIENT_ON
   - GREYSCALEOUTLINE_ON
   - GREYSCALE_ON
+  - HITEFFECT_ON
   - OUTBASE_ON
   - OUTDIST_ON
   - OUTTEX_ON
@@ -144,8 +145,8 @@ Material:
     - _GreyscaleOutline: 1
     - _HandDrawnAmount: 10
     - _HandDrawnSpeed: 5
-    - _HitEffectBlend: 1
-    - _HitEffectGlow: 5
+    - _HitEffectBlend: 0
+    - _HitEffectGlow: 1
     - _HologramBlend: 1
     - _HologramMaxAlpha: 0.75
     - _HologramMinAlpha: 0.1

@@ -35615,6 +35615,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _invincibilityTexture: {fileID: 2800000, guid: 291b2fd1537e8844db7aa718a07b5443, type: 3}
+  _gradientScroll: {fileID: 2100000, guid: 739fa491c34c78446beb8a1eb641f5d8, type: 2}
   _playerBurningMaterial: {fileID: 2100000, guid: aa9fec4fda9644048b0c8e25e20b8d78, type: 2}
   _burningAnimationParticleSystemGameObject: {fileID: 3215657369555158882}
   _playerParalyzedMaterial: {fileID: 2100000, guid: 2ee172e5854851a4a9a8b11c8c6fdc12, type: 2}

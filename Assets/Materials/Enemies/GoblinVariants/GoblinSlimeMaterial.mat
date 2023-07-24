@@ -14,6 +14,7 @@ Material:
   - DISTORT_ON
   - GLITCH_ON
   - GRADIENT2COL_ON
+  - HITEFFECT_ON
   - OUTDIST_ON
   - OUTTEX_ON
   - OVERLAY_ON
@@ -140,8 +141,8 @@ Material:
     - _GreyscaleOutline: 0
     - _HandDrawnAmount: 10
     - _HandDrawnSpeed: 5
-    - _HitEffectBlend: 1
-    - _HitEffectGlow: 5
+    - _HitEffectBlend: 0
+    - _HitEffectGlow: 1
     - _HologramBlend: 1
     - _HologramMaxAlpha: 0
     - _HologramMinAlpha: 1
