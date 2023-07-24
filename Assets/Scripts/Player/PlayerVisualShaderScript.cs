@@ -12,19 +12,6 @@ public class PlayerVisualShaderScript : MonoBehaviour {
     private Material _playerDefaultMaterial;
     private PlayerVisualScript _playerVisualScript;
 
-    private UnityEngine.Color _hitColorBeforeDamage;
-    private float _hitGlowBeforeDamange;
-    private float _hitBlendBeforeDamage;
-    private float _flickerPercentBeforeDamage;
-    private float _flickerFreqBeforeDamage;
-    private float _flickerAlphaBeforeDamage;
-
-    private UnityEngine.Color _hitColorAfterDamage;
-    private float _hitGlowAfterDamange;
-    private float _hitBlendAfterDamage;
-    private float _flickerPercentAfterDamage;
-    private float _flickerFreqAfterDamage;
-    private float _flickerAlphaAfterDamage;
 
     private bool _isPlayerHit;
     private float _hitWhiteBlendAnimationMinValue = 0.2f;
@@ -33,13 +20,9 @@ public class PlayerVisualShaderScript : MonoBehaviour {
 
 
     private float _innerOutlineThicknessBeforeInvincible;
-    private float _innerOutlineThicknessAfterInvincible;
     private float _colorRampBlendBeforeInvicinble;
-    private float _colorRampBlendAfterInvicinble;
     private float _hueShiftBeforeInvincible;
-    private float _hueShiftAfterInvincible;
     private float _hueShiftSaturationBeforeInvincible;
-    private float _hueShiftSaturationAfterInvincible;
 
     private bool _isPlayerInvincible;
     private bool _isPlayerInvincibleAlmostOver;
@@ -139,21 +122,17 @@ public class PlayerVisualShaderScript : MonoBehaviour {
         _playerRenderer.material.SetColor("_InnerOutlineColor", UnityEngine.Color.black);
         _innerOutlineThicknessBeforeInvincible = _playerRenderer.material.GetFloat("_InnerOutlineThickness");
         _playerRenderer.material.SetFloat("_InnerOutlineThickness", 3f);
-        _innerOutlineThicknessAfterInvincible = _playerRenderer.material.GetFloat("_InnerOutlineThickness");
         _playerRenderer.material.SetFloat("_InnerOutlineAlpha", 1f);
         _playerRenderer.material.SetFloat("_InnerOutlineGlow", 250f);
 
         _playerRenderer.material.SetTexture("_ColorRampTex", _invincibilityTexture);
         _colorRampBlendBeforeInvicinble = _playerRenderer.material.GetFloat("_ColorRampBlend");
         _playerRenderer.material.SetFloat("_ColorRampBlend", 1f);
-        _colorRampBlendAfterInvicinble = _playerRenderer.material.GetFloat("_ColorRampBlend");
 
         _hueShiftBeforeInvincible = _playerRenderer.material.GetFloat("_HsvShift");
         _playerRenderer.material.SetFloat("_HsvShift", 0f);
-        _hueShiftAfterInvincible = _playerRenderer.material.GetFloat("_HsvShift");
         _hueShiftSaturationBeforeInvincible = _playerRenderer.material.GetFloat("_HsvSaturation");
         _playerRenderer.material.SetFloat("_HsvSaturation", 1f);
-        _hueShiftSaturationAfterInvincible = _playerRenderer.material.GetFloat("_HsvSaturation");
     }
 
     private void _playerVisualScript_OnPlayerInvincibleAnimAlmostOver(object sender, System.EventArgs e)
@@ -167,27 +146,14 @@ public class PlayerVisualShaderScript : MonoBehaviour {
         _isPlayerInvincible = false;
         _isPlayerInvincibleAlmostOver = false;
 
-        //float currentHueShift = _playerRenderer.material.GetFloat("_HsvShift");
-        //if (currentHueShift == _hueShiftAfterInvincible) {
         _playerRenderer.material.SetFloat("_HsvShift", _hueShiftBeforeInvincible);
         if (_isPlayerBurning) {
             _playerRenderer.material.SetFloat("_HsvShift", 100f);
         }
-        //}
-        //float currentHueShiftSaturation = _playerRenderer.material.GetFloat("_HsvSaturation");
-        //if (currentHueShiftSaturation == _hueShiftSaturationAfterInvincible) {
-            _playerRenderer.material.SetFloat("_HsvSaturation", _hueShiftSaturationBeforeInvincible);
-        //}
-
-        //float currentInnerOutlineThickness = _playerRenderer.material.GetFloat("_InnerOutlineThickness");
-        //if (currentInnerOutlineThickness == _innerOutlineThicknessAfterInvincible) {
-            _playerRenderer.material.SetFloat("_InnerOutlineThickness", _innerOutlineThicknessBeforeInvincible);
-        //}
-
-        //float currentColorRampBlend = _playerRenderer.material.GetFloat("_ColorRampBlend");
-        //if (currentColorRampBlend == _colorRampBlendAfterInvicinble) {
-            _playerRenderer.material.SetFloat("_ColorRampBlend", _colorRampBlendBeforeInvicinble);
-        //}
+        _playerRenderer.material.SetFloat("_HsvSaturation", _hueShiftSaturationBeforeInvincible);
+        _playerRenderer.material.SetFloat("_InnerOutlineThickness", _innerOutlineThicknessBeforeInvincible);
+        _playerRenderer.material.SetFloat("_ColorRampBlend", _colorRampBlendBeforeInvicinble);
+        DisableHitEffect();
     }
 
     private void _playerVisualScript_OnPlayerBurnAnimStarted(object sender, System.EventArgs e) {
@@ -290,61 +256,20 @@ public class PlayerVisualShaderScript : MonoBehaviour {
     }
 
     private void EnableHitEffect() {
-        _hitColorBeforeDamage = _playerRenderer.material.GetColor("_HitEffectColor");
         _playerRenderer.material.SetColor("_HitEffectColor", UnityEngine.Color.white);
-        _hitColorAfterDamage = _playerRenderer.material.GetColor("_HitEffectColor");
-
-        _hitGlowBeforeDamange = _playerRenderer.material.GetFloat("_HitEffectGlow");
         _playerRenderer.material.SetFloat("_HitEffectGlow", 0.9f);
-        _hitGlowAfterDamange = _playerRenderer.material.GetFloat("_HitEffectGlow");
-
-        _hitBlendBeforeDamage = _playerRenderer.material.GetFloat("_HitEffectBlend");
         _playerRenderer.material.SetFloat("_HitEffectBlend", 1f);
-        _hitBlendAfterDamage = _playerRenderer.material.GetFloat("_HitEffectBlend");
-
-        _flickerPercentBeforeDamage = _playerRenderer.material.GetFloat("_FlickerPercent");
         _playerRenderer.material.SetFloat("_FlickerPercent", 0.5f);
-        _flickerPercentAfterDamage = _playerRenderer.material.GetFloat("_FlickerPercent");
-
-        _flickerFreqBeforeDamage = _playerRenderer.material.GetFloat("_FlickerFreq");
         _playerRenderer.material.SetFloat("_FlickerFreq", 1.2f);
-        _flickerFreqAfterDamage = _playerRenderer.material.GetFloat("_FlickerFreq");
-
-        _flickerAlphaBeforeDamage = _playerRenderer.material.GetFloat("_FlickerAlpha");
         _playerRenderer.material.SetFloat("_FlickerAlpha", 0f);
-        _flickerAlphaAfterDamage = _playerRenderer.material.GetFloat("_FlickerAlpha");
     }
 
     private void DisableHitEffect() {
-        //UnityEngine.Color currentHitColor = _playerRenderer.material.GetColor("_HitEffectColor");
-        //if (currentHitColor == _hitColorAfterDamage) {
-            //_playerRenderer.material.SetColor("_HitEffectColor", _hitColorBeforeDamage);
-        //}
-
-        //float currentHitGlow = _playerRenderer.material.GetFloat("_HitEffectGlow");
-        //if (currentHitGlow == _hitGlowAfterDamange) {
-            _playerRenderer.material.SetFloat("_HitEffectGlow", 0f);
-        //}
-
-        //float currentHitBlend = _playerRenderer.material.GetFloat("_HitEffectBlend");
-        //if (currentHitBlend == _hitBlendAfterDamage) {
-            _playerRenderer.material.SetFloat("_HitEffectBlend", 0f);
-        //}
-
-        //float currentFlickerPercent = _playerRenderer.material.GetFloat("_FlickerPercent");
-        //if (currentFlickerPercent == _flickerPercentAfterDamage) {
-            _playerRenderer.material.SetFloat("_FlickerPercent", 0f);
-        //}
-
-        //float currentFlickerFreq = _playerRenderer.material.GetFloat("_FlickerFreq");
-        //if (currentFlickerFreq == _flickerFreqAfterDamage) {
-            _playerRenderer.material.SetFloat("_FlickerFreq", 0f);
-        //}
-
-        //float currentFlickerAlpha = _playerRenderer.material.GetFloat("_FlickerAlpha");
-        //if (currentFlickerAlpha == _flickerAlphaAfterDamage) {
-            _playerRenderer.material.SetFloat("_FlickerAlpha", 0f);
-        //}
+        _playerRenderer.material.SetFloat("_HitEffectGlow", 0f);
+        _playerRenderer.material.SetFloat("_HitEffectBlend", 0f);
+        _playerRenderer.material.SetFloat("_FlickerPercent", 0f);
+        _playerRenderer.material.SetFloat("_FlickerFreq", 0f);
+        _playerRenderer.material.SetFloat("_FlickerAlpha", 0f);
     }
 
     #region ShaderAnimations
