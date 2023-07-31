@@ -107,4 +107,8 @@ public class GameManager : MonoBehaviour
         MusicManagerScript.Instance.PauseMusic();
         OnGameWon?.Invoke(this, EventArgs.Empty);
     }
+
+    private void OnDestroy() {
+        _countdownTimerUIScript.OnGameStart -= Instance_OnGameStart;
+    }
 }

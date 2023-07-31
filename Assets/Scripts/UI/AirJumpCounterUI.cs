@@ -19,4 +19,8 @@ public class AirJumpCounterUI : MonoBehaviour
     private void _playerScript_OnAirJumpCounterChanged(object sender, PlayerScript.OnAirJumpCounterChangedEventArgs e) {
         _myText.text = e.airJumps.ToString();
     }
+
+    private void OnDestroy() {
+        _playerScript.OnAirJumpCounterChanged -= _playerScript_OnAirJumpCounterChanged;
+    }
 }

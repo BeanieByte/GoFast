@@ -33,4 +33,9 @@ public class LoseScreenUIScript : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(_loseScreenFirstButton);
     }
+
+    private void OnDestroy() {
+
+        GameManager.Instance.OnGameLost -= Instance_OnGameLost;
+    }
 }

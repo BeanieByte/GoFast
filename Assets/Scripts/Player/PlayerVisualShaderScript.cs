@@ -326,4 +326,29 @@ public class PlayerVisualShaderScript : MonoBehaviour {
     }
 
     #endregion
+
+    private void OnDestroy() {
+
+        _playerVisualScript.OnPlayerHitAnimStarted -= _playerVisualScript_OnPlayerHitAnimStarted;
+        _playerVisualScript.OnPlayerHitAnimStopped -= _playerVisualScript_OnPlayerHitAnimStopped;
+
+        _playerVisualScript.OnPlayerInvincibleAnimStarted -= _playerVisualScript_OnPlayerInvincibleAnimStarted;
+        _playerVisualScript.OnPlayerInvincibleAnimAlmostOver -= _playerVisualScript_OnPlayerInvincibleAnimAlmostOver;
+        _playerVisualScript.OnPlayerInvincibleAnimStopped -= _playerVisualScript_OnPlayerInvincibleAnimStopped;
+
+        _playerVisualScript.OnPlayerBurnAnimStarted -= _playerVisualScript_OnPlayerBurnAnimStarted;
+        _playerVisualScript.OnPlayerBurnAnimStopped -= _playerVisualScript_OnPlayerBurnAnimStopped;
+
+        _playerVisualScript.OnPlayerParalyzedAnimStarted -= _playerVisualScript_OnPlayerParalyzedAnimStarted;
+        _playerVisualScript.OnPlayerParalyzedAnimStopped -= _playerVisualScript_OnPlayerParalyzedAnimStopped;
+
+        _playerVisualScript.OnPlayerFreezeAnimStarted -= _playerVisualScript_OnPlayerFreezeAnimStarted;
+        _playerVisualScript.OnPlayerFreezeAnimStopped -= _playerVisualScript_OnPlayerFreezeAnimStopped;
+
+        _playerVisualScript.OnPlayerPoisonedAnimStarted -= _playerVisualScript_OnPlayerPoisonedAnimStarted;
+        _playerVisualScript.OnPlayerPoisonedAnimStopped -= _playerVisualScript_OnPlayerPoisonedAnimStopped;
+
+        _playerVisualScript.OnPlayerSlimedAnimStarted -= _playerVisualScript_OnPlayerSlimedAnimStarted;
+        _playerVisualScript.OnPlayerSlimedAnimStopped -= _playerVisualScript_OnPlayerSlimedAnimStopped;
+    }
 }

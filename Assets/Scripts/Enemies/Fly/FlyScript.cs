@@ -81,4 +81,14 @@ public class FlyScript : EnemyBaseScript
     protected override void SetPlayerRadiusCheckTrigger(bool isActive) {
         _myRadiusScript.gameObject.SetActive(isActive);
     }
+
+    protected override void OnDestroy() {
+        base.OnDestroy();
+
+        _myRadiusScript.OnPlayerDetected -= _myRadiusScript_OnPlayerDetected;
+        _myRadiusScript.OnPlayerMissing -= _myRadiusScript_OnPlayerMissing;
+
+        _myVisual.GetComponent<FlyVisualScript>().OnEnemyAttackAnimStarted -= FlyScript_OnEnemyAttackAnimStarted;
+        _myVisual.GetComponent<FlyVisualScript>().OnEnemyAttackAnimStopped -= FlyScript_OnEnemyAttackAnimStopped;
+    }
 }

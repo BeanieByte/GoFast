@@ -18,4 +18,8 @@ public class CoinCounterUI : MonoBehaviour
     private void Instance_OnCoinCollected(object sender, CoinManager.OnCoinCollectedEventArgs e) {
         _myText.text = "x" + e.collectedCoins.ToString();
     }
+
+    private void OnDestroy() {
+        CoinManager.Instance.OnCoinCollected -= Instance_OnCoinCollected;
+    }
 }

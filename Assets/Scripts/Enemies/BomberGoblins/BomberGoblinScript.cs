@@ -53,4 +53,11 @@ public class BomberGoblinScript : EnemyBaseScript
         _myRadiusScript.gameObject.SetActive(false);
         _myRadiusScript.gameObject.SetActive(true);
     }
+
+    protected override void OnDestroy() {
+        base.OnDestroy();
+
+        _myRadiusScript.OnPlayerDetected -= _myRadiusScript_OnPlayerDetected;
+        _myRadiusScript.OnPlayerMissing -= _myRadiusScript_OnPlayerMissing;
+    }
 }

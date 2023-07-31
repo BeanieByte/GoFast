@@ -19,4 +19,8 @@ public class HealthCounterUI : MonoBehaviour
     private void _playerScript_OnHealthChanged(object sender, PlayerScript.OnHealthChangedEventArgs e) {
         _myText.text = e.health.ToString();
     }
+
+    private void OnDestroy() {
+        _playerScript.OnHealthChanged -= _playerScript_OnHealthChanged;
+    }
 }

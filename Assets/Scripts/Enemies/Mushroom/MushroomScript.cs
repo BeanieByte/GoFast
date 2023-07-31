@@ -23,4 +23,10 @@ public class MushroomScript : EnemyBaseScript {
         base.RespawnEnemy();
         _mushroomEnemyCrushScript.gameObject.SetActive(true);
     }
+
+    protected override void OnDestroy() {
+        base.OnDestroy();
+
+        _mushroomEnemyCrushScript.OnEnemyCrushed -= _mushroomEnemyCrushScript_OnEnemyCrushed;
+    }
 }

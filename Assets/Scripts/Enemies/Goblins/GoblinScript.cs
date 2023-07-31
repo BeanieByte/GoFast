@@ -129,4 +129,14 @@ public class GoblinScript : EnemyBaseScript
     public override bool IsEnemyWalking() {
         return _isEnemyWalking;
     }
+
+    protected override void OnDestroy() {
+        base.OnDestroy();
+
+        _myRadiusScript.OnPlayerDetected -= _myRadiusScript_OnPlayerDetected;
+        _myRadiusScript.OnPlayerMissing -= _myRadiusScript_OnPlayerMissing;
+
+        _myVisual.GetComponent<GoblinVisualScript>().OnEnemyAttackAnimStarted -= GoblinScript_OnEnemyAttackAnimStarted;
+        _myVisual.GetComponent<GoblinVisualScript>().OnEnemyAttackAnimStopped -= GoblinScript_OnEnemyAttackAnimStopped;
+    }
 }

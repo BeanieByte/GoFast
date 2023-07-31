@@ -334,4 +334,12 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     {
         return _wasIRespawnedOnce;
     }
+
+    protected virtual void OnDestroy() {
+
+        _myVisual.OnEnemyHitAnimStarted -= _myVisual_OnEnemyHitAnimStarted;
+        _myVisual.OnEnemyHitAnimStopped -= _myVisual_OnEnemyHitAnimStopped;
+
+        _myVisual.OnEnemyRespawnStarted -= _myVisual_OnEnemyRespawnStarted;
+    }
 }

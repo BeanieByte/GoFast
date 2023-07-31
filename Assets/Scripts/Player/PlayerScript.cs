@@ -930,8 +930,11 @@ public class PlayerScript : MonoBehaviour {
     }
 
     private void JumpSideEdgeNudge() {
-        transform.Translate(Vector2.up * _jumpNudgeSpeed);
-        if (!_isPlayerTryingToRun) {
+        if (_playerMoveSpeed > 0) {
+            transform.Translate(Vector2.up * _jumpNudgeSpeed);
+        }
+        /*
+        if (_playerMoveSpeed == 0) {
             if (_playerFacingRight) {
                 transform.Translate(Vector2.right * _jumpNudgeSpeed);
             }
@@ -939,6 +942,7 @@ public class PlayerScript : MonoBehaviour {
                 transform.Translate(Vector2.left * _jumpNudgeSpeed);
             }
         }
+        */
     }
 
     private void JumpUpperEdgeDetection() {

@@ -71,4 +71,9 @@ public class EnemyVisualShaderBaseScript : MonoBehaviour
             _myMaterial.SetFloat("_GradBoostY", interpolatedValue);
         }
     }
+    protected virtual void OnDestroy() {
+
+        _myVisualScript.OnEnemyHitAnimStarted -= _myVisualScript_OnEnemyHitAnimStarted;
+        _myVisualScript.OnEnemyHitAnimStopped -= _myVisualScript_OnEnemyHitAnimStopped;
+    }
 }

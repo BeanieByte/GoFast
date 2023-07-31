@@ -32,4 +32,10 @@ public class TimerUI : MonoBehaviour
         //temp = e.currentTimeText.Replace(".", ":");
         _activeTimerText.text = temp;
     }
+
+    private void OnDestroy() {
+        TimerManager.Instance.OnTimerChanged -= Instance_OnTimerChanged;
+
+        TimerManager.Instance.OnRecommendedTimeChanged -= Instance_OnRecommendedTimeChanged;
+    }
 }

@@ -101,4 +101,14 @@ public class WinScreenUIScript : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(_winScreenFirstButton);
     }
+
+    private void OnDestroy() {
+        TimerManager.Instance.OnRecommendedTimeChanged -= Instance_OnRecommendedTimeChanged;
+        TimerManager.Instance.OnTimerChanged -= Instance_OnTimerChanged;
+
+        CoinManager.Instance.OnCoinCollected -= Instance_OnCoinCollected;
+        EnemyManager.Instance.OnEnemyKilled -= Instance_OnEnemyKilled;
+
+        GameManager.Instance.OnGameWon -= Instance_OnGameWon;
+    }
 }

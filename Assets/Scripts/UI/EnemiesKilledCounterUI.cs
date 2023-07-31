@@ -18,4 +18,8 @@ public class EnemiesKilledCounterUI : MonoBehaviour
     private void Instance_OnEnemyKilled(object sender, EnemyManager.OnEnemyKilledEventArgs e) {
         _myText.text = "x" + e.totalKilledEnemies.ToString();
     }
+
+    private void OnDestroy() {
+        EnemyManager.Instance.OnEnemyKilled -= Instance_OnEnemyKilled;
+    }
 }
