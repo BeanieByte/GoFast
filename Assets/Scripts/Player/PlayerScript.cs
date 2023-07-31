@@ -33,7 +33,7 @@ public class PlayerScript : MonoBehaviour {
 
     private float _playerMoveSpeed;
     private float _playerMoveSpeedMax = 7f;
-    private float _playerMoveSpeedMin = 2f;
+    private float _playerMoveSpeedMin = 3f;
     private bool _startedIncreaingMoveSpeed;
     private float _playerMoveSpeedIncreaseMultiplier = 5f;
 
@@ -700,7 +700,7 @@ public class PlayerScript : MonoBehaviour {
         if (!GameManager.Instance.IsGamePlaying()) return;
 
 
-        if (_isInvincible) {
+        if (_isInvincible || _currentHealth == 0) {
             return;
         }
 

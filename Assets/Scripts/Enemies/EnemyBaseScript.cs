@@ -167,7 +167,7 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     }
 
     public virtual void Damage(int attackPower) {
-        if (!GameManager.Instance.IsGamePlaying()) return;
+        if (!GameManager.Instance.IsGamePlaying() || _currentHealth == 0) return;
         _currentHealth -= attackPower;
         DeadCheck();
     }
