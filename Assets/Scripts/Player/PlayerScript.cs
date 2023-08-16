@@ -689,7 +689,6 @@ public class PlayerScript : MonoBehaviour {
     public void BounceOffCrush(float jumpBoostMultiplier) {
         _jumpedOnBounceable = true;
         _jumpState = JumpState.Grounded;
-        EnemyManager.Instance.IncreaseKilledEnemiesCounter();
         RecoverTurboSpeedInstantly();
         RecoverAirJumpsInstantly();
         _lowestJumpForce = _lowestJumpForceDefault * jumpBoostMultiplier;
@@ -1229,7 +1228,6 @@ public class PlayerScript : MonoBehaviour {
     }
 
     private void PlayerKilledEnemy() {
-        EnemyManager.Instance.IncreaseKilledEnemiesCounter();
         RecoverTurboSpeedInstantly();
     }
 

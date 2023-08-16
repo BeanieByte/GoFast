@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Device;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
+using Cinemachine;
 
 public class SoundManager : MonoBehaviour
 {
@@ -15,9 +16,9 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private Camera _gameCamera;
 
     private float _gameCameraCurrentWidth;
-    private float _gameCameraCurrentWidthOffset = 3f;
+    private float _gameCameraCurrentWidthOffset = 5f;
     private float _gameCameraCurrentHeight;
-    private float _gameCameraCurrentHeightOffset = 1.5f;
+    private float _gameCameraCurrentHeightOffset = 2.5f;
     private float _gameCameraWidthAndHeightDivider = 2f;
     private float _screenSizeToWorldPositionMultiplier = 0.01f;
 

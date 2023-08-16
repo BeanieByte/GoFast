@@ -13,6 +13,7 @@ public class PlayerAttackScript : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision) {
         IDamageable damageable = collision.GetComponent<IDamageable>();
         EnemyBaseScript enemy = collision.GetComponent<EnemyBaseScript>();
+
         if (damageable == null) {
             return;
         }
@@ -20,6 +21,10 @@ public class PlayerAttackScript : MonoBehaviour
         damageable.Damage(_attackPower);
 
         if (damageable.DeadCheck() && enemy != null){
+            if (!enemy.IsEnemyRespawnable() || enemy.IsEnemyRespawnable() && !enemy.WasEnemyRespawnedBefore())
+            {
+                EnemyManager.Instance.IncreaseKilledEnemiesCounter();
+            }
             OnKillingEnemy.Invoke(this, EventArgs.Empty);
         }
 

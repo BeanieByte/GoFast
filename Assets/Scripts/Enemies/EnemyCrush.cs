@@ -21,6 +21,10 @@ public class EnemyCrush : MonoBehaviour
             bool isPlayerInTheAir = (player.PlayersYVelocity() != 0f);
 
             if (currentPlayerYPosition > transform.position.y && isPlayerInTheAir) {
+                if (!_myEnemyBaseGameObject.IsEnemyRespawnable() || _myEnemyBaseGameObject.IsEnemyRespawnable() && !_myEnemyBaseGameObject.WasEnemyRespawnedBefore())
+                {
+                    EnemyManager.Instance.IncreaseKilledEnemiesCounter();
+                }
                 OnEnemyCrushed?.Invoke(this, EventArgs.Empty);
                 SoundManager.Instance.PlayMushroomBounceSound(_myEnemyBaseGameObject.transform.position);
                 player.BounceOffCrush(_myEnemyBaseGameObject.EnemyBounceOffMultiplier());

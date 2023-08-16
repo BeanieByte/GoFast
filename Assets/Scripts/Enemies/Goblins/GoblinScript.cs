@@ -7,6 +7,7 @@ public class GoblinScript : EnemyBaseScript
     private CheckForPlayerRadiusScript _myRadiusScript;
 
     private bool _isPlayerWithinRange;
+    private float _xDistanceOffset = 0.5f;
 
     [SerializeField] private Transform _checkIfCanAttackRadiusOrigin;
     [SerializeField] private LayerMask _layerPlayer;
@@ -90,6 +91,12 @@ public class GoblinScript : EnemyBaseScript
 
         if (!_canIWalk) {
             _moveDir = Vector2.zero;
+            _myVisual.SetIsWalkingBoolFalse();
+            return;
+        }
+
+        if (transform.position.x >= _myRadiusScript.PlayersCurrentXPosition() - _xDistanceOffset && transform.position.x <= _myRadiusScript.PlayersCurrentXPosition() + _xDistanceOffset)
+        {
             _myVisual.SetIsWalkingBoolFalse();
             return;
         }

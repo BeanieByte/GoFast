@@ -39,7 +39,7 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
     protected float _currentAttackCooldownTime;
 
     [SerializeField] private bool _isEnemyRespawnable;
-    private bool _wasIRespawnedOnce = false;
+    private bool _wasIRespawnedOnce;
     private Transform _myOriginalPosition;
     private float _currentTimeUntilRespawn;
     private float _maxTimeUntilRespawn = 3f;
@@ -58,10 +58,8 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
         if (_isEnemyRespawnable)
         {
             _currentTimeUntilRespawn = _maxTimeUntilRespawn;
-
-            if (!_wasIRespawnedOnce) {
-                _myOriginalPosition = transform;
-            }
+            _wasIRespawnedOnce = false;
+            _myOriginalPosition = transform;
 
         }
 
@@ -192,10 +190,7 @@ public class EnemyBaseScript : MonoBehaviour, IDamageable
         
         if(_isEnemyRespawnable)
         {
-            _myVisual.PlayDeadAnim();
             _currentTimeUntilRespawn = _maxTimeUntilRespawn;
-            _isDead = true;
-            return _isDead;
         }
 
         _myVisual.PlayDeadAnim();
