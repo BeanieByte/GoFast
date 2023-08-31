@@ -62,6 +62,15 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""0bc3f018-5e64-47c9-bd1a-1119d333826c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -262,6 +271,473 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Turbo"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e6767486-bde9-4aad-a2d9-9dd03620302b"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""65d1fdd3-12f6-46c6-95cd-8c90af3df02f"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0640bf75-63de-4544-b03f-7ce3caca10e8"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mobile"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Menus"",
+            ""id"": ""57bc064d-1420-4392-a823-7b4c45f5fa2d"",
+            ""actions"": [
+                {
+                    ""name"": ""DirectionsPermanent"",
+                    ""type"": ""Value"",
+                    ""id"": ""ca38564c-25cf-4a9b-b6b9-42b0df16361b"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Back"",
+                    ""type"": ""Button"",
+                    ""id"": ""91d69c15-c07a-41ff-a896-9f587bd2505b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Confirm"",
+                    ""type"": ""Button"",
+                    ""id"": ""8680c72b-cf4b-4481-a1ff-0c453670c0f2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""Keyboard"",
+                    ""id"": ""4dc0e0d4-e0ba-4610-8fb8-855349a0a96f"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DirectionsPermanent"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""0bffbfda-0f2a-40c2-afd4-1ea9d38cdb83"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""DirectionsPermanent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""d8057a1b-8fbf-41da-831c-77d1348c4c80"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""DirectionsPermanent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""db1484cc-d99d-45d9-8e8c-fdaf108f4ce0"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""DirectionsPermanent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""ab75dc4d-1335-4f8c-9b9e-c3c574894d8f"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""DirectionsPermanent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b47aa30c-95fe-469c-858e-8b8589946ce3"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": ""StickDeadzone,NormalizeVector2"",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""DirectionsPermanent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a3a62446-dade-4a63-832d-0fa3a07a419d"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Confirm"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c49ba065-8402-411f-bc72-7aa645cdac93"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Confirm"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""23f9e750-a7da-478c-9c0e-7c0d168641e4"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Back"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0f9d7b61-7e69-497f-b2d4-31ad08340d2d"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Back"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""OptionsMenu"",
+            ""id"": ""f2f723d9-0296-4ef0-96a1-41af4d9f253a"",
+            ""actions"": [
+                {
+                    ""name"": ""PreviousOptionsPage"",
+                    ""type"": ""Button"",
+                    ""id"": ""93720db3-bf00-44ed-b732-7d7e62258e07"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""NextOptionsPage"",
+                    ""type"": ""Button"",
+                    ""id"": ""bca10134-db19-4951-aed4-3c36d8c6cfff"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Confirm"",
+                    ""type"": ""Button"",
+                    ""id"": ""bebedab9-41e1-403e-a228-8433dfe22617"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Back"",
+                    ""type"": ""Button"",
+                    ""id"": ""9f332207-d0ca-4d99-8736-2002c6460938"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RebindPermanent"",
+                    ""type"": ""Button"",
+                    ""id"": ""cde951fc-5439-4861-9f42-da0acbcc2715"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ResetToDefaultPermanent"",
+                    ""type"": ""Button"",
+                    ""id"": ""30733da7-8c38-4581-ac1a-038ed070e6b9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ApplyChangesPermanent"",
+                    ""type"": ""Button"",
+                    ""id"": ""e87514f8-7c1e-4bb0-9a54-2165a1d00b90"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DirectionsPermanent"",
+                    ""type"": ""Value"",
+                    ""id"": ""8e38d04a-a438-4b3c-a5ae-61616350826e"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""Keyboard"",
+                    ""id"": ""0a3b5e48-0398-45ce-932d-9aedf74f2b87"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DirectionsPermanent"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""94d84616-aa28-49b3-b034-028a8cbfe838"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""DirectionsPermanent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""d65ec9f2-5df5-4f57-8d9d-78acffab127e"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""DirectionsPermanent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""862ac502-b28b-4888-b7a3-dbddbb116289"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""DirectionsPermanent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""d381e1fe-0be2-4f1d-90a1-6b2d733729cd"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""DirectionsPermanent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""14143ba1-b604-44a3-9744-42ffe0a09a99"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": ""StickDeadzone,NormalizeVector2"",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""DirectionsPermanent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a89d25bc-787a-4d04-8d52-57a21dff4a70"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""ApplyChangesPermanent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""23d70df3-8124-4009-a4be-20d4f9d3ba7c"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ApplyChangesPermanent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c0cb271b-ae90-4b11-8d49-70d8632399bd"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""ResetToDefaultPermanent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6b1d5924-33c7-4199-aeac-3a6504387d23"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ResetToDefaultPermanent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9a599abd-4384-47b4-b26f-7ad3d56328b4"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""RebindPermanent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e1c1e652-e68b-4354-8dfc-76868a9750b1"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Back"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2a6d4574-ae4c-4076-9f47-dd3db322321c"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Back"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""46d09637-efd8-4c16-b9ad-8854cae24d14"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Confirm"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""56083e7c-e502-44bc-905a-5c1eb92eca41"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Confirm"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8eb4012a-e18c-4eb9-b4b4-7d19d5a95310"",
+                    ""path"": ""<Keyboard>/pageUp"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""NextOptionsPage"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""06132967-478c-4ca9-9fb4-a7bf2f1977fe"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""NextOptionsPage"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b97d8eb1-7a42-44d0-a845-ff5a71577b2c"",
+                    ""path"": ""<Keyboard>/pageDown"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""PreviousOptionsPage"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8f307ad1-721b-447e-9518-3e319175fd3b"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""PreviousOptionsPage"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -308,6 +784,22 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Turbo = m_Player.FindAction("Turbo", throwIfNotFound: true);
+        m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
+        // Menus
+        m_Menus = asset.FindActionMap("Menus", throwIfNotFound: true);
+        m_Menus_DirectionsPermanent = m_Menus.FindAction("DirectionsPermanent", throwIfNotFound: true);
+        m_Menus_Back = m_Menus.FindAction("Back", throwIfNotFound: true);
+        m_Menus_Confirm = m_Menus.FindAction("Confirm", throwIfNotFound: true);
+        // OptionsMenu
+        m_OptionsMenu = asset.FindActionMap("OptionsMenu", throwIfNotFound: true);
+        m_OptionsMenu_PreviousOptionsPage = m_OptionsMenu.FindAction("PreviousOptionsPage", throwIfNotFound: true);
+        m_OptionsMenu_NextOptionsPage = m_OptionsMenu.FindAction("NextOptionsPage", throwIfNotFound: true);
+        m_OptionsMenu_Confirm = m_OptionsMenu.FindAction("Confirm", throwIfNotFound: true);
+        m_OptionsMenu_Back = m_OptionsMenu.FindAction("Back", throwIfNotFound: true);
+        m_OptionsMenu_RebindPermanent = m_OptionsMenu.FindAction("RebindPermanent", throwIfNotFound: true);
+        m_OptionsMenu_ResetToDefaultPermanent = m_OptionsMenu.FindAction("ResetToDefaultPermanent", throwIfNotFound: true);
+        m_OptionsMenu_ApplyChangesPermanent = m_OptionsMenu.FindAction("ApplyChangesPermanent", throwIfNotFound: true);
+        m_OptionsMenu_DirectionsPermanent = m_OptionsMenu.FindAction("DirectionsPermanent", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -371,6 +863,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Turbo;
+    private readonly InputAction m_Player_Pause;
     public struct PlayerActions
     {
         private @GameInputActions m_Wrapper;
@@ -379,6 +872,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @Turbo => m_Wrapper.m_Player_Turbo;
+        public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -400,6 +894,9 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @Turbo.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTurbo;
                 @Turbo.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTurbo;
                 @Turbo.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTurbo;
+                @Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -416,10 +913,151 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @Turbo.started += instance.OnTurbo;
                 @Turbo.performed += instance.OnTurbo;
                 @Turbo.canceled += instance.OnTurbo;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // Menus
+    private readonly InputActionMap m_Menus;
+    private IMenusActions m_MenusActionsCallbackInterface;
+    private readonly InputAction m_Menus_DirectionsPermanent;
+    private readonly InputAction m_Menus_Back;
+    private readonly InputAction m_Menus_Confirm;
+    public struct MenusActions
+    {
+        private @GameInputActions m_Wrapper;
+        public MenusActions(@GameInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @DirectionsPermanent => m_Wrapper.m_Menus_DirectionsPermanent;
+        public InputAction @Back => m_Wrapper.m_Menus_Back;
+        public InputAction @Confirm => m_Wrapper.m_Menus_Confirm;
+        public InputActionMap Get() { return m_Wrapper.m_Menus; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MenusActions set) { return set.Get(); }
+        public void SetCallbacks(IMenusActions instance)
+        {
+            if (m_Wrapper.m_MenusActionsCallbackInterface != null)
+            {
+                @DirectionsPermanent.started -= m_Wrapper.m_MenusActionsCallbackInterface.OnDirectionsPermanent;
+                @DirectionsPermanent.performed -= m_Wrapper.m_MenusActionsCallbackInterface.OnDirectionsPermanent;
+                @DirectionsPermanent.canceled -= m_Wrapper.m_MenusActionsCallbackInterface.OnDirectionsPermanent;
+                @Back.started -= m_Wrapper.m_MenusActionsCallbackInterface.OnBack;
+                @Back.performed -= m_Wrapper.m_MenusActionsCallbackInterface.OnBack;
+                @Back.canceled -= m_Wrapper.m_MenusActionsCallbackInterface.OnBack;
+                @Confirm.started -= m_Wrapper.m_MenusActionsCallbackInterface.OnConfirm;
+                @Confirm.performed -= m_Wrapper.m_MenusActionsCallbackInterface.OnConfirm;
+                @Confirm.canceled -= m_Wrapper.m_MenusActionsCallbackInterface.OnConfirm;
+            }
+            m_Wrapper.m_MenusActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @DirectionsPermanent.started += instance.OnDirectionsPermanent;
+                @DirectionsPermanent.performed += instance.OnDirectionsPermanent;
+                @DirectionsPermanent.canceled += instance.OnDirectionsPermanent;
+                @Back.started += instance.OnBack;
+                @Back.performed += instance.OnBack;
+                @Back.canceled += instance.OnBack;
+                @Confirm.started += instance.OnConfirm;
+                @Confirm.performed += instance.OnConfirm;
+                @Confirm.canceled += instance.OnConfirm;
+            }
+        }
+    }
+    public MenusActions @Menus => new MenusActions(this);
+
+    // OptionsMenu
+    private readonly InputActionMap m_OptionsMenu;
+    private IOptionsMenuActions m_OptionsMenuActionsCallbackInterface;
+    private readonly InputAction m_OptionsMenu_PreviousOptionsPage;
+    private readonly InputAction m_OptionsMenu_NextOptionsPage;
+    private readonly InputAction m_OptionsMenu_Confirm;
+    private readonly InputAction m_OptionsMenu_Back;
+    private readonly InputAction m_OptionsMenu_RebindPermanent;
+    private readonly InputAction m_OptionsMenu_ResetToDefaultPermanent;
+    private readonly InputAction m_OptionsMenu_ApplyChangesPermanent;
+    private readonly InputAction m_OptionsMenu_DirectionsPermanent;
+    public struct OptionsMenuActions
+    {
+        private @GameInputActions m_Wrapper;
+        public OptionsMenuActions(@GameInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @PreviousOptionsPage => m_Wrapper.m_OptionsMenu_PreviousOptionsPage;
+        public InputAction @NextOptionsPage => m_Wrapper.m_OptionsMenu_NextOptionsPage;
+        public InputAction @Confirm => m_Wrapper.m_OptionsMenu_Confirm;
+        public InputAction @Back => m_Wrapper.m_OptionsMenu_Back;
+        public InputAction @RebindPermanent => m_Wrapper.m_OptionsMenu_RebindPermanent;
+        public InputAction @ResetToDefaultPermanent => m_Wrapper.m_OptionsMenu_ResetToDefaultPermanent;
+        public InputAction @ApplyChangesPermanent => m_Wrapper.m_OptionsMenu_ApplyChangesPermanent;
+        public InputAction @DirectionsPermanent => m_Wrapper.m_OptionsMenu_DirectionsPermanent;
+        public InputActionMap Get() { return m_Wrapper.m_OptionsMenu; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(OptionsMenuActions set) { return set.Get(); }
+        public void SetCallbacks(IOptionsMenuActions instance)
+        {
+            if (m_Wrapper.m_OptionsMenuActionsCallbackInterface != null)
+            {
+                @PreviousOptionsPage.started -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnPreviousOptionsPage;
+                @PreviousOptionsPage.performed -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnPreviousOptionsPage;
+                @PreviousOptionsPage.canceled -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnPreviousOptionsPage;
+                @NextOptionsPage.started -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnNextOptionsPage;
+                @NextOptionsPage.performed -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnNextOptionsPage;
+                @NextOptionsPage.canceled -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnNextOptionsPage;
+                @Confirm.started -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnConfirm;
+                @Confirm.performed -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnConfirm;
+                @Confirm.canceled -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnConfirm;
+                @Back.started -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnBack;
+                @Back.performed -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnBack;
+                @Back.canceled -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnBack;
+                @RebindPermanent.started -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnRebindPermanent;
+                @RebindPermanent.performed -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnRebindPermanent;
+                @RebindPermanent.canceled -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnRebindPermanent;
+                @ResetToDefaultPermanent.started -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnResetToDefaultPermanent;
+                @ResetToDefaultPermanent.performed -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnResetToDefaultPermanent;
+                @ResetToDefaultPermanent.canceled -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnResetToDefaultPermanent;
+                @ApplyChangesPermanent.started -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnApplyChangesPermanent;
+                @ApplyChangesPermanent.performed -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnApplyChangesPermanent;
+                @ApplyChangesPermanent.canceled -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnApplyChangesPermanent;
+                @DirectionsPermanent.started -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnDirectionsPermanent;
+                @DirectionsPermanent.performed -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnDirectionsPermanent;
+                @DirectionsPermanent.canceled -= m_Wrapper.m_OptionsMenuActionsCallbackInterface.OnDirectionsPermanent;
+            }
+            m_Wrapper.m_OptionsMenuActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @PreviousOptionsPage.started += instance.OnPreviousOptionsPage;
+                @PreviousOptionsPage.performed += instance.OnPreviousOptionsPage;
+                @PreviousOptionsPage.canceled += instance.OnPreviousOptionsPage;
+                @NextOptionsPage.started += instance.OnNextOptionsPage;
+                @NextOptionsPage.performed += instance.OnNextOptionsPage;
+                @NextOptionsPage.canceled += instance.OnNextOptionsPage;
+                @Confirm.started += instance.OnConfirm;
+                @Confirm.performed += instance.OnConfirm;
+                @Confirm.canceled += instance.OnConfirm;
+                @Back.started += instance.OnBack;
+                @Back.performed += instance.OnBack;
+                @Back.canceled += instance.OnBack;
+                @RebindPermanent.started += instance.OnRebindPermanent;
+                @RebindPermanent.performed += instance.OnRebindPermanent;
+                @RebindPermanent.canceled += instance.OnRebindPermanent;
+                @ResetToDefaultPermanent.started += instance.OnResetToDefaultPermanent;
+                @ResetToDefaultPermanent.performed += instance.OnResetToDefaultPermanent;
+                @ResetToDefaultPermanent.canceled += instance.OnResetToDefaultPermanent;
+                @ApplyChangesPermanent.started += instance.OnApplyChangesPermanent;
+                @ApplyChangesPermanent.performed += instance.OnApplyChangesPermanent;
+                @ApplyChangesPermanent.canceled += instance.OnApplyChangesPermanent;
+                @DirectionsPermanent.started += instance.OnDirectionsPermanent;
+                @DirectionsPermanent.performed += instance.OnDirectionsPermanent;
+                @DirectionsPermanent.canceled += instance.OnDirectionsPermanent;
+            }
+        }
+    }
+    public OptionsMenuActions @OptionsMenu => new OptionsMenuActions(this);
     private int m_KeyboardSchemeIndex = -1;
     public InputControlScheme KeyboardScheme
     {
@@ -453,5 +1091,23 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnTurbo(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
+    }
+    public interface IMenusActions
+    {
+        void OnDirectionsPermanent(InputAction.CallbackContext context);
+        void OnBack(InputAction.CallbackContext context);
+        void OnConfirm(InputAction.CallbackContext context);
+    }
+    public interface IOptionsMenuActions
+    {
+        void OnPreviousOptionsPage(InputAction.CallbackContext context);
+        void OnNextOptionsPage(InputAction.CallbackContext context);
+        void OnConfirm(InputAction.CallbackContext context);
+        void OnBack(InputAction.CallbackContext context);
+        void OnRebindPermanent(InputAction.CallbackContext context);
+        void OnResetToDefaultPermanent(InputAction.CallbackContext context);
+        void OnApplyChangesPermanent(InputAction.CallbackContext context);
+        void OnDirectionsPermanent(InputAction.CallbackContext context);
     }
 }
