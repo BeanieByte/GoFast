@@ -1,2 +1,2 @@
 # GoFast
- My first fully developed game
+ A game concept meant to showcase some of my coding abilities
