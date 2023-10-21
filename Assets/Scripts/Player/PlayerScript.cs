@@ -96,7 +96,7 @@ public class PlayerScript : MonoBehaviour {
 
     private bool _jumpedOnBounceable;
 
-    private float _jumpApexModifierMaxTime = 0.25f;
+    private float _jumpApexModifierMaxTime = 0.07f;
     private float _jumpApexModifierCurrentTime;
     private float _jumpApexModifierMaxPlayerForce = 1.4f;
     private float _jumpApexModifierDefaultPlayerForce = 1.2f;

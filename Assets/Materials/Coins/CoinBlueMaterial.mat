@@ -148,9 +148,9 @@ Material:
     - _InnerOutlineAlpha: 1
     - _InnerOutlineGlow: 4
     - _InnerOutlineThickness: 1
-    - _MaxXUV: 0.6666667
+    - _MaxXUV: 0.5
     - _MaxYUV: 1
-    - _MinXUV: 0.5
+    - _MinXUV: 0.33333334
     - _MinYUV: 0
     - _MotionBlurAngle: 0.1
     - _MotionBlurDist: 1.25
